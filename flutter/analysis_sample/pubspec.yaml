@@ -1,0 +1,28 @@
+name: analysis_sample
+description: id3 Analysis sample.
+
+publish_to: 'none' 
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.16.1 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  id3_android_license:
+    path: ../id3_android_license
+  id3_face:
+    path: ../../sdk/dart/id3_face
+  camera: ^0.9.4+14
+  path_provider: ^2.0.9
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^1.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/models/
