@@ -108,7 +108,7 @@ namespace id3.Face.Samples.RecognitionCLI
 	         * When using the SDK face matcher the id3FaceTemplateBufferType_Normal must be used.
 	        */
             Console.Write("Export template 1 as file...");
-            faceTemplate1.Save(FaceTemplateBufferType.Normal,"../../../../../data/template1.bin");
+            faceTemplate1.ToFile(FaceTemplateBufferType.Normal,"../../../../../data/template1.bin");
             Console.Write("Export template 2 as buffer...");
             byte[] template2Buffer = faceTemplate2.ToBuffer(FaceTemplateBufferType.Normal);
 

@@ -222,7 +222,7 @@ int main(int argc, char **argv)
 	 */
 	std::cout << "Export reference template as file" << std::endl;
 	std::string reference_template_path = data_dir + "reference_template.bin";
-	err = id3FaceTemplate_Save(reference_template,id3FaceTemplateBufferType_Normal,reference_template_path.c_str());
+	err = id3FaceTemplate_ToFile(reference_template,id3FaceTemplateBufferType_Normal,reference_template_path.c_str());
 	check(err, "id3FaceTemplate_Save");
 	/**
 	 * Face templates can also directly be exported into a buffer.

@@ -1,5 +1,10 @@
 # id3 Face SDK Samples Changelog
 
+## Version 9.1.0.0 (2022-04-12)
+- Update to id3 Face SDK 9.1.0
+    - Renamed _Save() APIs to _ToFile()
+    - Handle color based PAD confidence score in PAD samples
+
 ## Version 9.0.4.1 (2022-03-28)
 - Added Java sample
 

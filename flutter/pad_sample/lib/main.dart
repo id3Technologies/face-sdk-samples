@@ -95,7 +95,7 @@ Future<void> loadModels() async {
       .load('assets/models/face_attack_support_detector_v1a.id3nn');
   sdk.FaceLibrary.loadModelBuffer(
     faceAttackSupportDetector.buffer.asUint8List(),
-    sdk.FaceModel.faceAttackSupportDetector1A,
+    sdk.FaceModel.faceAttackSupportDetector2A,
     sdk.ProcessingUnit.cpu,
   );
   final faceBlurrinessDetector =
@@ -106,10 +106,10 @@ Future<void> loadModels() async {
     sdk.ProcessingUnit.cpu,
   );
   final faceColorPad =
-      await rootBundle.load('assets/models/face_color_pad_v1a.id3nn');
+      await rootBundle.load('assets/models/face_color_pad_v2a.id3nn');
   sdk.FaceLibrary.loadModelBuffer(
     faceColorPad.buffer.asUint8List(),
-    sdk.FaceModel.faceColorBasedPad1A,
+    sdk.FaceModel.faceColorBasedPad2A,
     sdk.ProcessingUnit.cpu,
   );
   final faceMoireDetector =
@@ -337,6 +337,7 @@ class AnalyzeFaceResult {
     required this.portraitImage,
     required this.blurScore,
     required this.colorScore,
+    required this.colorScoreConfidence,
     required this.detectedAttackSupport,
     required this.moireScore,
     this.errorCode = 0,
@@ -347,6 +348,7 @@ class AnalyzeFaceResult {
       portraitImage: Uint8List(0),
       blurScore: 0,
       colorScore: 0,
+      colorScoreConfidence: 0,
       detectedAttackSupport: sdk.FaceAttackSupport.none,
       moireScore: 0,
       errorCode: errorCode,
@@ -355,6 +357,7 @@ class AnalyzeFaceResult {
 
   final int blurScore;
   final int colorScore;
+  final int colorScoreConfidence;
   final sdk.FaceAttackSupport detectedAttackSupport;
   final int errorCode;
   final int moireScore;
@@ -395,7 +398,10 @@ AnalyzeFaceResult onAnalyze(CaptureProcessResult result) {
 
     final blurScore = facePad.computeBlurrinessScore(image, detectedFace);
 
-    final colorScore = facePad.computeColorBasedScore(image, detectedFace);
+    final colorScoreResults =
+        facePad.computeColorBasedScore(image, detectedFace);
+    int colorScore = colorScoreResults.struct.Score;
+    int colorScoreConfidence = colorScoreResults.struct.Confidence;
 
     final moireScore = facePad.computeMoireScore(image, detectedFace);
 
@@ -406,11 +412,13 @@ AnalyzeFaceResult onAnalyze(CaptureProcessResult result) {
     croppingBounds.dispose();
     cropped.dispose();
     detectedAttackSupport.dispose();
+    colorScoreResults.dispose();
 
     return AnalyzeFaceResult(
       portraitImage: jpg,
       blurScore: blurScore,
       colorScore: colorScore,
+      colorScoreConfidence: colorScoreConfidence,
       detectedAttackSupport: faceAttackSupport,
       moireScore: moireScore,
     );

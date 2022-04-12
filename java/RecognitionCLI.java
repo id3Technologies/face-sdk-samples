@@ -102,7 +102,7 @@ public class RecognitionCLI {
          * When using the SDK face matcher the id3FaceTemplateBufferType_Normal must be used.
          */
         System.out.println("Export template 1 as file...");
-        faceTemplate1.save(FaceTemplateBufferType.NORMAL,"../data/template1.bin");
+        faceTemplate1.toFile(FaceTemplateBufferType.NORMAL,"../data/template1.bin");
         System.out.println("Export template 2 as buffer...");
         byte[] template2Buffer = faceTemplate2.toBuffer(FaceTemplateBufferType.NORMAL);
 

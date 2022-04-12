@@ -93,9 +93,9 @@ namespace id3.Face.Samples.PadWF
                 */
                 FaceLibrary.LoadModel(modelPath, FaceModel.FaceDetector3B, ProcessingUnit.Cpu);
                 FaceLibrary.LoadModel(modelPath, FaceModel.FaceBlurrinessDetector1A, ProcessingUnit.Cpu);
-                FaceLibrary.LoadModel(modelPath, FaceModel.FaceColorBasedPad1A, ProcessingUnit.Cpu);
+                FaceLibrary.LoadModel(modelPath, FaceModel.FaceColorBasedPad2A, ProcessingUnit.Cpu);
                 FaceLibrary.LoadModel(modelPath, FaceModel.FaceMoireDetector1A, ProcessingUnit.Cpu);
-                FaceLibrary.LoadModel(modelPath, FaceModel.FaceAttackSupportDetector1A, ProcessingUnit.Cpu);
+                FaceLibrary.LoadModel(modelPath, FaceModel.FaceAttackSupportDetector2A, ProcessingUnit.Cpu);
 
                 /*
                  * Init objects.
@@ -158,12 +158,13 @@ namespace id3.Face.Samples.PadWF
             /*
              * Compute PAD scores.
              */
-            int colorScore = facePad.ComputeColorBasedScore(image, detectedFace);
+            ColorBasedPadResult colorScoreResult = facePad.ComputeColorBasedScore(image, detectedFace);
             int moireScore = facePad.ComputeMoireScore(image, detectedFace);
             int blurrinessScore = facePad.ComputeBlurrinessScore(image, detectedFace);
             DetectedFaceAttackSupport attackSupport = facePad.DetectAttackSupport(image, detectedFace);
 
-            labelColorPadScore.Text = "Color PAD score: " + colorScore;
+            labelColorPadScore.Text = "Color PAD score: " + colorScoreResult.Score;
+            labelColorPadScore.Text = "Color PAD confidence: " + colorScoreResult.Confidence;
             labelMoireScore.Text = "Moiré score: " + moireScore;
             labelBlurrinessScore.Text = "Blurriness score: " + blurrinessScore;
             labelAttackSupportScore.Text = "Attack support score: " + attackSupport.Score;
