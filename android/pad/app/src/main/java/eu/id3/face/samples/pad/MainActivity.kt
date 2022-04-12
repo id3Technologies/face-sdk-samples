@@ -117,10 +117,18 @@ class MainActivity : AppCompatActivity(), CameraFragment.FaceProcessorListener {
                     padAnalysisText.append(okLabel)
                     padAnalysisText.append(" : Authentic colors\n")
                 } else {
-                    isBonaFide = false
-                    notOkLabel.setSpan(ForegroundColorSpan(colorNotOk), 0, 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                    padAnalysisText.append(notOkLabel)
-                    padAnalysisText.append(" : Non-authentic colors\n")
+                    /** Check if color score confidence is enough to reject the user. */
+                    if(analyzeLargestFaceResult.getColorScoreConfidence() >= Parameters.colorScoreConfidenceThreshold) {
+                        isBonaFide = false
+                        notOkLabel.setSpan(ForegroundColorSpan(colorNotOk), 0, 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                        padAnalysisText.append(notOkLabel)
+                        padAnalysisText.append(" : Non-authentic colors\n")
+                    } else {
+                        isBonaFide = false
+                        notOkLabel.setSpan(ForegroundColorSpan(colorNotOk), 0, 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                        padAnalysisText.append(notOkLabel)
+                        padAnalysisText.append(" : Image quality too low to get a confident decision\n")
+                    }
                 }
 
                 /** Check if Moiré score is below max threshold or not and print feedback. */

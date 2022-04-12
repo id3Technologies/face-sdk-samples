@@ -108,7 +108,7 @@ namespace id3.Face.Samples.CompressToWebpCLI
                 else
                 {
                     // Here we save to a file but you can also simply keep the buffer
-                    crop.Save("compressed_" + webpQuality + "Q.webp", webpQuality);
+                    crop.ToFile("compressed_" + webpQuality + "Q.webp", webpQuality);
                     break;
                 }
             }

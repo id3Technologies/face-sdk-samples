@@ -7,7 +7,8 @@ internal object Parameters {
     const val detectorThreadCount = 4
     const val detectorConfidenceThreshold = 70
     const val blurScoreMaxThreshold = 20
-    const val colorScoreThreshold = 80
+    const val colorScoreThreshold = 90
+    const val colorScoreConfidenceThreshold = 70
     const val moireScoreThreshold = 10
     const val maxProcessingImageSize = 512
 }

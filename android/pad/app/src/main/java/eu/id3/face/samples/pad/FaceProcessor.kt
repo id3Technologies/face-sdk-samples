@@ -78,6 +78,7 @@ class FaceProcessor(context: Context) {
         private var detectedFaceAttackSupport: DetectedFaceAttackSupport,
         private var blurScore: Int,
         private var colorScore: Int,
+        private var colorScoreConfidence: Int,
         private var moireScore: Int,
         private var errorCode: Int
     ) {
@@ -95,6 +96,10 @@ class FaceProcessor(context: Context) {
 
         fun getColorScore(): Int {
             return colorScore
+        }
+
+        fun getColorScoreConfidence(): Int {
+            return colorScoreConfidence
         }
 
         fun getMoireScore(): Int {
@@ -118,7 +123,7 @@ class FaceProcessor(context: Context) {
             val blurScore = facePad.computeBlurrinessScore(image, detectedFace)
 
             /** Computes color-based PAD score. */
-            val colorScore = facePad.computeColorBasedScore(image, detectedFace)
+            val colorScoreResult = facePad.computeColorBasedScore(image, detectedFace)
 
             /** Computes Moiré score. */
             val moireScore = facePad.computeMoireScore(image, detectedFace)
@@ -135,13 +140,14 @@ class FaceProcessor(context: Context) {
                 jpegPortraitImageBuffer,
                 detectedAttackSupport,
                 blurScore,
-                colorScore,
+                colorScoreResult.score,
+                colorScoreResult.confidence,
                 moireScore,
                 0
             )
         }
         catch (e: FaceException) {
-            return AnalyzeLargestFaceResult(ByteArray(0), DetectedFaceAttackSupport(), 0, 0, 0, e.errorCode)
+            return AnalyzeLargestFaceResult(ByteArray(0), DetectedFaceAttackSupport(), 0, 0, 0, 0, e.errorCode)
         }
     }
 

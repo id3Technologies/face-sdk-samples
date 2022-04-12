@@ -36,9 +36,9 @@ The following models are required per project:
     * face_occlusion_detector_v1a.id3nn
     * face_pose_estimator_v1a.id3nn
 * PAD
-    * face_attack_support_detector_v1a.id3nn
+    * face_attack_support_detector_v2a.id3nn
     * face_blurriness_detector_v1a.id3nn
-    * face_color_pad_v1a.id3nn
+    * face_color_pad_v2a.id3nn
     * face_detector_v3b.id3nn
     * face_moire_detector_v1a.id3nn
 * Recognition
