@@ -92,7 +92,7 @@ Future<void> loadModels() async {
   );
 
   final faceAttackSupportDetector = await rootBundle
-      .load('assets/models/face_attack_support_detector_v1a.id3nn');
+      .load('assets/models/face_attack_support_detector_v2a.id3nn');
   sdk.FaceLibrary.loadModelBuffer(
     faceAttackSupportDetector.buffer.asUint8List(),
     sdk.FaceModel.faceAttackSupportDetector2A,

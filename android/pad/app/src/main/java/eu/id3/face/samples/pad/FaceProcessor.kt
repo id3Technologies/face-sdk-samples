@@ -37,12 +37,12 @@ class FaceProcessor(context: Context) {
              * First load the models from the Assets and then initialize the FacePad object.
              */
             FaceLibrary.loadModelBuffer(
-                context.assets.open("models/face_attack_support_detector_v1a.id3nn").readBytes(),
-                FaceModel.FACE_ATTACK_SUPPORT_DETECTOR_1A, ProcessingUnit.CPU
+                context.assets.open("models/face_attack_support_detector_v2a.id3nn").readBytes(),
+                FaceModel.FACE_ATTACK_SUPPORT_DETECTOR_2A, ProcessingUnit.CPU
             )
             FaceLibrary.loadModelBuffer(
-                context.assets.open("models/face_color_pad_v1a.id3nn").readBytes(),
-                FaceModel.FACE_COLOR_BASED_PAD_1A, ProcessingUnit.CPU
+                context.assets.open("models/face_color_pad_v2a.id3nn").readBytes(),
+                FaceModel.FACE_COLOR_BASED_PAD_2A, ProcessingUnit.CPU
             )
             FaceLibrary.loadModelBuffer(
                 context.assets.open("models/face_blurriness_detector_v1a.id3nn").readBytes(),
