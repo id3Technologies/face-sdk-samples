@@ -1,5 +1,8 @@
 # id3 Face SDK Samples Changelog
 
+## Version 9.1.1.0 (2022-03-26)
+- Updated to id3 Face SDK 9.1.1
+
 ## Version 9.1.0.1 (2022-04-21)
 - Corrected issue in android and flutter PAD samples
     - Now correctly loading models version 2A for face attack support detector and color pad
