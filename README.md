@@ -17,8 +17,8 @@ The version of this repository is made of 4 digits:
 This strategy is employed to ensure version consistency among the various supported languages. When updating the Face SDK version, all the samples are updated as well.
 
 For this release of the samples the version numbers are : 
-* Samples version: **9.1.1.0**
-* Required id3 Face SDK version: **9.1.1**
+* Samples version: **9.1.2.0**
+* Required id3 Face SDK version: **9.1.2**
 
 ## Getting started
 
