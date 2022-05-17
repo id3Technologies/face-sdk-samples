@@ -1,5 +1,8 @@
 # id3 Face SDK Samples Changelog
 
+## Version 9.1.5.0 (2022-05-17)
+- Updated to id3 Face SDK 9.1.5
+
 ## Version 9.1.3.0 (2022-05-09)
 - Updated to id3 Face SDK 9.1.3
 
