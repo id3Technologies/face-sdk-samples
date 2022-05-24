@@ -32,7 +32,6 @@
             this.buttonStartCapture = new System.Windows.Forms.Button();
             this.buttonComputePad = new System.Windows.Forms.Button();
             this.labelColorPadScore = new System.Windows.Forms.Label();
-            this.labelMoireScore = new System.Windows.Forms.Label();
             this.labelBlurrinessScore = new System.Windows.Forms.Label();
             this.labelAttackSupportScore = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
@@ -73,15 +72,6 @@
             this.labelColorPadScore.TabIndex = 3;
             this.labelColorPadScore.Text = "Color PAD score: ";
             // 
-            // labelMoireScore
-            // 
-            this.labelMoireScore.AutoSize = true;
-            this.labelMoireScore.Location = new System.Drawing.Point(735, 113);
-            this.labelMoireScore.Name = "labelMoireScore";
-            this.labelMoireScore.Size = new System.Drawing.Size(68, 13);
-            this.labelMoireScore.TabIndex = 4;
-            this.labelMoireScore.Text = "Moiré score: ";
-            // 
             // labelBlurrinessScore
             // 
             this.labelBlurrinessScore.AutoSize = true;
@@ -107,7 +97,6 @@
             this.ClientSize = new System.Drawing.Size(947, 648);
             this.Controls.Add(this.labelAttackSupportScore);
             this.Controls.Add(this.labelBlurrinessScore);
-            this.Controls.Add(this.labelMoireScore);
             this.Controls.Add(this.labelColorPadScore);
             this.Controls.Add(this.buttonComputePad);
             this.Controls.Add(this.buttonStartCapture);
@@ -126,7 +115,6 @@
         private System.Windows.Forms.Button buttonStartCapture;
         private System.Windows.Forms.Button buttonComputePad;
         private System.Windows.Forms.Label labelColorPadScore;
-        private System.Windows.Forms.Label labelMoireScore;
         private System.Windows.Forms.Label labelBlurrinessScore;
         private System.Windows.Forms.Label labelAttackSupportScore;
     }

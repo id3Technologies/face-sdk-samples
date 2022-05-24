@@ -3,8 +3,6 @@ package eu.id3.face.samples.recognition
 import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
-import android.graphics.Color
-import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -22,8 +20,6 @@ private const val LOG_TAG = "MainActivity"
  * You can enroll a face and match it with another face thanks to the camera.
  */
 class MainActivity : AppCompatActivity(), CameraFragment.FaceProcessorListener {
-    private var permissionsGranted: Boolean = false
-
     /** View elements */
     private lateinit var startCaptureButton: Button
     private lateinit var enrollButton: Button
@@ -136,10 +132,6 @@ class MainActivity : AppCompatActivity(), CameraFragment.FaceProcessorListener {
         /** Initialize the capture fragment. */
         captureFragment =
             supportFragmentManager.findFragmentById(R.id.cameraFragment) as CameraFragment
-        val boundsPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-        boundsPaint.color = Color.GREEN
-        boundsPaint.strokeWidth = 3.toFloat()
-        captureFragment.setBoundsPaint(boundsPaint)
         captureFragment.setProcessor(faceProcessor)
 
         /** Initialize the other view elements. */
@@ -176,6 +168,7 @@ class MainActivity : AppCompatActivity(), CameraFragment.FaceProcessorListener {
                     resources.getString(R.string.start_capture_button_label)
 
                 isCapturing = false
+                isTemplateEnrolled = false
                 captureFragment.stopCapture()
             } else {
                 /** Reset the button text before starting the capture. */
@@ -200,7 +193,7 @@ class MainActivity : AppCompatActivity(), CameraFragment.FaceProcessorListener {
         matchButton.setOnClickListener {
             captureFragment.requestTemplateVerification()
         }
-        matchButton.isEnabled = isCapturing && isTemplateEnrolled
+        matchButton.isEnabled = isCapturing
     }
 
     /**
@@ -228,8 +221,6 @@ class MainActivity : AppCompatActivity(), CameraFragment.FaceProcessorListener {
                 }
             }
         }
-
-        permissionsGranted = true
     }
 
     private fun hasRequestedPermissions(requested_permissions: Array<String>): Boolean {

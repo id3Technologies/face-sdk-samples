@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <fragment
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/cameraFragment"
         android:name="eu.id3.face.samples.pad.CameraFragment"
         android:layout_width="192dp"

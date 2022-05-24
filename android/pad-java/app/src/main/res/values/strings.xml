@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">id3FacePadSampleJava</string>
+    <string name="start_capture_button_label">Start Capture</string>
+    <string name="stop_capture_button_label">Stop Capture</string>
+    <string name="analyze_face_button_label">Analyze Face</string>
+    <string name="portrait_face_view_description">Displays the face to analyze</string>
+</resources>

@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.*
-import android.graphics.ImageFormat
 import android.hardware.camera2.*
 import android.hardware.camera2.params.OutputConfiguration
 import android.hardware.camera2.params.SessionConfiguration
@@ -19,7 +18,6 @@ import android.util.Size
 import android.view.*
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
-import eu.id3.face.*
 import java.util.*
 import kotlin.system.exitProcess
 
@@ -61,24 +59,24 @@ class CameraFragment : Fragment() {
         }
     private var cameraId: String = ""
     var cameraDevice: CameraDevice? = null
-    private val cameraDeviceStateCallback: CameraDevice.StateCallback = object : CameraDevice.StateCallback() {
-        override fun onOpened(camera: CameraDevice) {
-            //This is called when the camera is open
-            Log.e(LOG_TAG, "onOpened")
-            cameraDevice = camera
-            createCameraPreview()
-        }
+    private val cameraDeviceStateCallback: CameraDevice.StateCallback =
+        object : CameraDevice.StateCallback() {
+            override fun onOpened(camera: CameraDevice) {
+                //This is called when the camera is open
+                cameraDevice = camera
+                createCameraPreview()
+            }
 
-        override fun onDisconnected(camera: CameraDevice) {
-            cameraDevice?.close()
-            cameraDevice = null
-        }
+            override fun onDisconnected(camera: CameraDevice) {
+                cameraDevice?.close()
+                cameraDevice = null
+            }
 
-        override fun onError(camera: CameraDevice, error: Int) {
-            cameraDevice?.close()
-            cameraDevice = null
+            override fun onError(camera: CameraDevice, error: Int) {
+                cameraDevice?.close()
+                cameraDevice = null
+            }
         }
-    }
     private var cameraCaptureSessions: CameraCaptureSession? = null
     private var captureRequestBuilder: CaptureRequest.Builder? = null
     private var imageDimension: Size? = null
@@ -126,6 +124,11 @@ class CameraFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         cameraPreview = view.findViewById(R.id.cameraPreview)
         boundsView = view.findViewById(R.id.boundsView)
+        val boundsPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+        boundsPaint.color = Color.GREEN
+        boundsPaint.strokeWidth = 3.toFloat()
+        boundsPaint.style = Paint.Style.STROKE
+        boundsView.setPaint(boundsPaint)
         boundsView.setWillNotDraw(false)
         boundsView.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
     }
@@ -289,7 +292,7 @@ class CameraFragment : Fragment() {
             for (camId in manager.cameraIdList) {
                 val characteristics = manager.getCameraCharacteristics(camId)
                 val cOrientation = characteristics.get(CameraCharacteristics.LENS_FACING)
-                if (cOrientation == CameraCharacteristics.LENS_FACING_FRONT) {
+                if (cOrientation == Parameters.cameraType) {
                     cameraId = camId
                     break
                 }
@@ -385,15 +388,11 @@ class CameraFragment : Fragment() {
             if (ActivityCompat.checkSelfPermission(
                     this.requireContext(),
                     Manifest.permission.CAMERA
-                ) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(
-                    this.requireContext(),
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
                 ActivityCompat.requestPermissions(
                     this.requireActivity(),
-                    arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    arrayOf(Manifest.permission.CAMERA),
                     REQUEST_CAMERA_PERMISSION
                 )
                 return
@@ -411,8 +410,10 @@ class CameraFragment : Fragment() {
      * Closes the camera.
      */
     private fun closeCamera() {
-        cameraDevice!!.close()
-        imageReader!!.close()
+        if (cameraDevice != null)
+            cameraDevice!!.close()
+        if (imageReader != null)
+            imageReader!!.close()
     }
 
     /**
@@ -460,8 +461,8 @@ class CameraFragment : Fragment() {
              */
             processingImage.downscale(Parameters.maxProcessingImageSize)
 
-            /** Track faces. */
-            val detectedFace = faceProcessor?.trackLargestFace(processingImage)
+            /** Detect faces. */
+            val detectedFace = faceProcessor?.detectLargestFace(processingImage)
             if (detectedFace != null) {
                 val bounds = detectedFace.bounds
 
@@ -479,14 +480,16 @@ class CameraFragment : Fragment() {
 
                 /** Enroll template if requested by UI. */
                 if (needsToEnrollTemplate) {
-                    val enrollLargestFaceResult = faceProcessor!!.enrollLargestFace(processingImage, detectedFace)
+                    val enrollLargestFaceResult =
+                        faceProcessor!!.enrollLargestFace(processingImage, detectedFace)
                     faceProcessorListener!!.onLargestFaceEnrolled(enrollLargestFaceResult)
                     needsToEnrollTemplate = false
                 }
 
                 /** Verify template if requested by UI. */
                 if (needsToVerifyTemplate) {
-                    val verifyLargestFaceResult = faceProcessor!!.verifyLargestFace(processingImage, detectedFace)
+                    val verifyLargestFaceResult =
+                        faceProcessor!!.verifyLargestFace(processingImage, detectedFace)
                     faceProcessorListener!!.onLargestFaceVerified(verifyLargestFaceResult)
                     needsToVerifyTemplate = false
                 }
@@ -496,7 +499,6 @@ class CameraFragment : Fragment() {
         } else {
             boundsView.update(null, 0, 0)
         }
-
         image.close()
     }
 

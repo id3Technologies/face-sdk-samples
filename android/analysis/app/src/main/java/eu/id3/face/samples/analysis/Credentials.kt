@@ -1,12 +1,14 @@
 package eu.id3.face.samples.analysis
 
 import android.util.Log
-import eu.id3.face.*
+import eu.id3.face.FaceException
+import eu.id3.face.FaceLibrary
+import eu.id3.face.License
+import eu.id3.face.LicenseHardwareCodeType
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.lang.Exception
 
 private const val LOG_TAG = "Credentials"
 
@@ -26,7 +28,7 @@ internal object Credentials {
     private fun getAccountPassword() = "password"
 
     /** Package reference is ... */
-    private fun getPackageReference() = "00000000"
+    private fun getPackageReference() = "86FM2780"
 
     /**
      * Any id3 SDK needs a valid license to work.
@@ -68,7 +70,7 @@ internal object Credentials {
                 try {
                     lic = License.activateSerialKeyBuffer(
                         hardwareCode,
-                        getLicenseSerialKey(), "Activated from analysis sample"
+                        getLicenseSerialKey(), "Activated from recognition sample"
                     )
                 } catch (e1: FaceException) {
                     e1.printStackTrace()

@@ -234,10 +234,6 @@ class MainActivity : AppCompatActivity(), CameraFragment.FaceProcessorListener {
         /** Initialize the capture fragment. */
         captureFragment =
             supportFragmentManager.findFragmentById(R.id.cameraFragment) as CameraFragment
-        val boundsPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-        boundsPaint.color = Color.GREEN
-        boundsPaint.strokeWidth = 3.toFloat()
-        captureFragment.setBoundsPaint(boundsPaint)
         captureFragment.setProcessor(faceProcessor)
 
         /** Initialize the other view elements. */

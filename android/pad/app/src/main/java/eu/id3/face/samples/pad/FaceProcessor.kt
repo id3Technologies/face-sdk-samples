@@ -3,7 +3,6 @@ package eu.id3.face.samples.pad
 import android.content.Context
 import android.media.Image
 import android.util.Log
-import android.widget.Toast
 import eu.id3.face.*
 import java.nio.ByteBuffer
 
@@ -48,10 +47,6 @@ class FaceProcessor(context: Context) {
                 context.assets.open("models/face_blurriness_detector_v1a.id3nn").readBytes(),
                 FaceModel.FACE_BLURRINESS_DETECTOR_1A, ProcessingUnit.CPU
             )
-            FaceLibrary.loadModelBuffer(
-                context.assets.open("models/face_moire_detector_v1a.id3nn").readBytes(),
-                FaceModel.FACE_MOIRE_DETECTOR_1A, ProcessingUnit.CPU
-            )
             facePad = FacePad()
 
             Log.v(LOG_TAG, "Load models: OK !")
@@ -61,9 +56,9 @@ class FaceProcessor(context: Context) {
         }
     }
 
-    fun trackLargestFace(image: eu.id3.face.Image): DetectedFace? {
+    fun detectLargestFace(image: eu.id3.face.Image): DetectedFace? {
         /** Track faces in the image. */
-        faceDetector.trackFaces(image, detectedFaceList)
+        val detectedFaceList = faceDetector.detectFaces(image)
         return if (detectedFaceList.count > 0) {
             /** At least one face was detected! Return the largest one. */
             detectedFaceList.largestFace
@@ -79,7 +74,6 @@ class FaceProcessor(context: Context) {
         private var blurScore: Int,
         private var colorScore: Int,
         private var colorScoreConfidence: Int,
-        private var moireScore: Int,
         private var errorCode: Int
     ) {
         fun getJpegPortraitImageBuffer(): ByteArray {
@@ -102,10 +96,6 @@ class FaceProcessor(context: Context) {
             return colorScoreConfidence
         }
 
-        fun getMoireScore(): Int {
-            return moireScore
-        }
-
         fun getErrorCode(): Int {
             return errorCode
         }
@@ -125,9 +115,6 @@ class FaceProcessor(context: Context) {
             /** Computes color-based PAD score. */
             val colorScoreResult = facePad.computeColorBasedScore(image, detectedFace)
 
-            /** Computes Moiré score. */
-            val moireScore = facePad.computeMoireScore(image, detectedFace)
-
             /** Extracts the portrait image of the detected face to display it. */
             val portraitBounds = detectedFace.getPortraitBounds(0.25f, 0.45f, 1.33f)
             val portraitImage = image.extractRoi(portraitBounds)
@@ -142,12 +129,17 @@ class FaceProcessor(context: Context) {
                 blurScore,
                 colorScoreResult.score,
                 colorScoreResult.confidence,
-                moireScore,
                 0
             )
-        }
-        catch (e: FaceException) {
-            return AnalyzeLargestFaceResult(ByteArray(0), DetectedFaceAttackSupport(), 0, 0, 0, 0, e.errorCode)
+        } catch (e: FaceException) {
+            return AnalyzeLargestFaceResult(
+                ByteArray(0),
+                DetectedFaceAttackSupport(),
+                0,
+                0,
+                0,
+                e.errorCode
+            )
         }
     }
 

@@ -1,5 +1,11 @@
 # id3 Face SDK Samples Changelog
 
+## Version 9.1.5.1 (2022-05-23)
+- Added Java versions of the android samples (same implementation)
+- Corrected potential issue in detected face drawing in android samples for fast devices
+- Added camera type (front or backward facing) parameter in android samples
+- Removed Moiré computation from android, flutter and C# PAD samples
+
 ## Version 9.1.5.0 (2022-05-17)
 - Updated to id3 Face SDK 9.1.5
 

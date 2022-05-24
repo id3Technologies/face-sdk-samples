@@ -48,7 +48,6 @@ The following models are required per project:
     * face_blurriness_detector_v1a.id3nn
     * face_color_pad_v2a.id3nn
     * face_detector_v3b.id3nn
-    * face_moire_detector_v1a.id3nn
 * Recognition
     * face_detector_v3b.id3nn
     * face_encoder_v9b.id3nn
