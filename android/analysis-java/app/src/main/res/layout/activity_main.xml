@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/cameraFragment"
+        android:name="eu.id3.face.samples.analysisjava.CameraFragment"
+        android:layout_width="192dp"
+        android:layout_height="256dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout="@layout/fragment_camera" />
+
+    <Button
+        android:id="@+id/startCaptureButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:maxWidth="360dp"
+        android:maxHeight="40dp"
+        android:text="@string/start_capture_button_label"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/analyzeFaceButton"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cameraFragment" />
+
+    <Button
+        android:id="@+id/analyzeFaceButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/analyze_face_button_label"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/startCaptureButton"
+        app:layout_constraintTop_toBottomOf="@+id/cameraFragment" />
+
+    <ImageView
+        android:id="@+id/portraitFaceView"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="60dp"
+        android:contentDescription="@string/portrait_face_view_description"
+        app:layout_constraintEnd_toStartOf="@+id/analysisAnalysisTextView"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/startCaptureButton"
+        app:layout_constraintVertical_bias="1.0"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/analysisAnalysisTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="60dp"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/portraitFaceView"
+        app:layout_constraintTop_toBottomOf="@+id/startCaptureButton" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

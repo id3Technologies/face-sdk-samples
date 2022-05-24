@@ -1,5 +1,7 @@
 package eu.id3.face.samples.analysis
 
+import android.hardware.camera2.CameraCharacteristics
+
 /**
  * Contains the parameters needed in the app. Values of these parameters can be changed and should not be seen as "the perfect" values.
  */
@@ -20,4 +22,5 @@ internal object Parameters {
     const val smileMaxThreshold = 75
 
     const val maxProcessingImageSize = 512
+    const val cameraType = CameraCharacteristics.LENS_FACING_FRONT
 }

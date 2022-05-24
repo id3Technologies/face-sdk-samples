@@ -1,6 +1,7 @@
 package eu.id3.face.samples.recognition
 
 import android.content.Context
+import android.hardware.camera2.CameraCharacteristics
 import android.media.Image
 import android.util.Log
 import eu.id3.face.*
@@ -13,7 +14,6 @@ class FaceProcessor(context: Context) {
     private lateinit var faceDetector: FaceDetector
     private lateinit var faceEncoder: FaceEncoder
 
-    private var detectedFaceList = DetectedFaceList()
     private var enrolledTemplate: FaceTemplate? = null
 
     init {
@@ -55,9 +55,9 @@ class FaceProcessor(context: Context) {
         }
     }
 
-    fun trackLargestFace(image: eu.id3.face.Image): DetectedFace? {
+    fun detectLargestFace(image: eu.id3.face.Image): DetectedFace? {
         /** Track faces in the image. */
-        faceDetector.trackFaces(image, detectedFaceList)
+        val detectedFaceList = faceDetector.detectFaces(image)
         return if (detectedFaceList.count > 0) {
             /** At least one face was detected! Return the largest one. */
             detectedFaceList.largestFace
@@ -93,7 +93,9 @@ class FaceProcessor(context: Context) {
         /** Extracts the portrait image of the detected face to display it. */
         val portraitBounds = detectedFace.getPortraitBounds(0.25f, 0.45f, 1.33f)
         val portraitImage = image.extractRoi(portraitBounds)
-        portraitImage.flip(true, false)
+        if (Parameters.cameraType == CameraCharacteristics.LENS_FACING_FRONT) {
+            portraitImage.flip(true, false)
+        }
 
         /** Compress the portrait image buffer as a JPEG buffer. */
         val jpegPortraitImageBuffer = portraitImage.toBuffer(ImageFormat.JPEG, 75.0f)

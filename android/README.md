@@ -1,6 +1,6 @@
 # Face SDK Android samples
 
-This repository contains Android Kotlin samples of **id3 Technologies** Face SDK.
+This repository contains Android samples of **id3 Technologies** Face SDK. Implementation in Kotlin and Java are provided. Both are identical regarding id3 Face SDK usage.
 
 ## Requirements
 
@@ -40,7 +40,6 @@ The following models are required per project:
     * face_blurriness_detector_v1a.id3nn
     * face_color_pad_v2a.id3nn
     * face_detector_v3b.id3nn
-    * face_moire_detector_v1a.id3nn
 * Recognition
     * face_detector_v3b.id3nn
     * face_encoder_v9b.id3nn
@@ -48,7 +47,7 @@ The following models are required per project:
 
 ## License
 
-Each project has a source file called **Credentials.kt**. Replace the zeros by your valid license serial key in the following line:
+Each project has a source file called **Credentials.kt** or **Credentials.java**. Replace the zeros by your valid license serial key in the following line:
 
     private fun getLicenseSerialKey() = "0000-0000-0000-0000"
 

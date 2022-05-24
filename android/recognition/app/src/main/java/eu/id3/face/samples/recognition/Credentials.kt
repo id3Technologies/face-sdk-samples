@@ -9,7 +9,6 @@ import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.lang.Exception
 
 private const val LOG_TAG = "Credentials"
 

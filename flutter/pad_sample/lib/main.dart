@@ -112,13 +112,6 @@ Future<void> loadModels() async {
     sdk.FaceModel.faceColorBasedPad2A,
     sdk.ProcessingUnit.cpu,
   );
-  final faceMoireDetector =
-      await rootBundle.load('assets/models/face_moire_detector_v1a.id3nn');
-  sdk.FaceLibrary.loadModelBuffer(
-    faceMoireDetector.buffer.asUint8List(),
-    sdk.FaceModel.faceMoireDetector1A,
-    sdk.ProcessingUnit.cpu,
-  );
 }
 
 class App extends StatelessWidget {
@@ -271,11 +264,6 @@ class _CapturePageState extends State<CapturePage> {
                           spoofText: "Non-authentic colors",
                         ),
                         PadResult(
-                          spoofCondition: analyzeResult.isMoireSpoof,
-                          bonaFideText: "No moire effect",
-                          spoofText: "Moire effect detected",
-                        ),
-                        PadResult(
                           spoofCondition: analyzeResult.isSpoof,
                           bonaFideText: "The presentation is bona-fide",
                           spoofText: "The presentation is an attack",
@@ -339,7 +327,6 @@ class AnalyzeFaceResult {
     required this.colorScore,
     required this.colorScoreConfidence,
     required this.detectedAttackSupport,
-    required this.moireScore,
     this.errorCode = 0,
   });
 
@@ -350,7 +337,6 @@ class AnalyzeFaceResult {
       colorScore: 0,
       colorScoreConfidence: 0,
       detectedAttackSupport: sdk.FaceAttackSupport.none,
-      moireScore: 0,
       errorCode: errorCode,
     );
   }
@@ -360,7 +346,6 @@ class AnalyzeFaceResult {
   final int colorScoreConfidence;
   final sdk.FaceAttackSupport detectedAttackSupport;
   final int errorCode;
-  final int moireScore;
   final Uint8List portraitImage;
 
   bool get isAttackSpoof => detectedAttackSupport != sdk.FaceAttackSupport.none;
@@ -369,10 +354,7 @@ class AnalyzeFaceResult {
 
   bool get isColorSpoof => colorScore < colorScoreThreshold;
 
-  bool get isMoireSpoof => moireScore >= moireScoreThreshold;
-
-  bool get isSpoof =>
-      isAttackSpoof || isBlurSpoof || isColorSpoof || isMoireSpoof;
+  bool get isSpoof => isAttackSpoof || isBlurSpoof || isColorSpoof;
 }
 
 AnalyzeFaceResult onAnalyze(CaptureProcessResult result) {
@@ -403,8 +385,6 @@ AnalyzeFaceResult onAnalyze(CaptureProcessResult result) {
     int colorScore = colorScoreResults.struct.Score;
     int colorScoreConfidence = colorScoreResults.struct.Confidence;
 
-    final moireScore = facePad.computeMoireScore(image, detectedFace);
-
     final jpg = cropped.toBuffer(sdk.ImageFormat.jpeg, 75);
 
     image.dispose();
@@ -420,7 +400,6 @@ AnalyzeFaceResult onAnalyze(CaptureProcessResult result) {
       colorScore: colorScore,
       colorScoreConfidence: colorScoreConfidence,
       detectedAttackSupport: faceAttackSupport,
-      moireScore: moireScore,
     );
   } on sdk.FaceException catch (e) {
     return AnalyzeFaceResult.error(e.errorCode);

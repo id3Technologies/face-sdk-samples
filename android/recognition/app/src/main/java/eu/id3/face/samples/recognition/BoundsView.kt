@@ -2,6 +2,7 @@ package eu.id3.face.samples.recognition
 
 import android.content.Context
 import android.graphics.*
+import android.hardware.camera2.CameraCharacteristics
 import android.util.AttributeSet
 import android.view.View
 
@@ -10,6 +11,7 @@ import android.view.View
  */
 class BoundsView : View {
     private var isCapturing = false
+    private var isDrawing = false
     private var bounds: Rect? = null
     private var boundsPaint: Paint? = null
 
@@ -33,56 +35,31 @@ class BoundsView : View {
      */
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-
         if (isCapturing) {
             scaleRect(bounds!!)
-
-            canvas.apply {
-                drawLine(
-                    bounds!!.left.toFloat(),
-                    bounds!!.top.toFloat(),
-                    bounds!!.right.toFloat(),
-                    bounds!!.top.toFloat(),
-                    boundsPaint!!
-                )
-                drawLine(
-                    bounds!!.right.toFloat(),
-                    bounds!!.top.toFloat(),
-                    bounds!!.right.toFloat(),
-                    bounds!!.bottom.toFloat(),
-                    boundsPaint!!
-                )
-                drawLine(
-                    bounds!!.right.toFloat(),
-                    bounds!!.bottom.toFloat(),
-                    bounds!!.left.toFloat(),
-                    bounds!!.bottom.toFloat(),
-                    boundsPaint!!
-                )
-                drawLine(
-                    bounds!!.left.toFloat(),
-                    bounds!!.bottom.toFloat(),
-                    bounds!!.left.toFloat(),
-                    bounds!!.top.toFloat(),
-                    boundsPaint!!
-                )
-            }
+            canvas.drawRect(bounds!!, boundsPaint!!)
         } else {
-            canvas.apply {
-                drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
-            }
+            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
         }
+        isDrawing = false
     }
 
     /**
      * Updates the bounds this view needs.
      */
     fun update(bounds: Rect?, processingWidth: Int, processingHeight: Int) {
-        isCapturing = bounds != null
-        this.bounds = bounds
-        this.processingWidth = processingWidth
-        this.processingHeight = processingHeight
-        postInvalidate()
+        if (!isDrawing) {
+            if (bounds == null) {
+                isCapturing = false
+            } else {
+                isCapturing = true
+                this.processingWidth = processingWidth
+                this.processingHeight = processingHeight
+            }
+            this.bounds = bounds
+            isDrawing = true
+            postInvalidate()
+        }
     }
 
     /**
@@ -122,8 +99,13 @@ class BoundsView : View {
      * is flipped compared to this preview so we need to mirror coordinates.
      */
     private fun scaleRect(rect: Rect) {
-        rect.left = this.measuredWidth - rect.left * this.measuredWidth / processingWidth
-        rect.right = this.measuredWidth - rect.right * this.measuredWidth / processingWidth
+        if (Parameters.cameraType == CameraCharacteristics.LENS_FACING_FRONT) {
+            rect.left = this.measuredWidth - rect.left * this.measuredWidth / processingWidth
+            rect.right = this.measuredWidth - rect.right * this.measuredWidth / processingWidth
+        } else {
+            rect.left = rect.left * this.measuredWidth / processingWidth
+            rect.right = rect.right * this.measuredWidth / processingWidth
+        }
         rect.top = rect.top * this.measuredHeight / processingHeight
         rect.bottom = rect.bottom * this.measuredHeight / processingHeight
     }

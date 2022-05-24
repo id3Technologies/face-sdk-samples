@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.graphics.Paint
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
@@ -34,8 +33,6 @@ private const val colorNotOk = Color.RED
  * You can enroll a face and match it with another face thanks to the camera.
  */
 class MainActivity : AppCompatActivity(), CameraFragment.FaceProcessorListener {
-    private var permissionsGranted: Boolean = false
-
     /** View elements */
     private lateinit var startCaptureButton: Button
     private lateinit var analyzeButton: Button
@@ -89,66 +86,99 @@ class MainActivity : AppCompatActivity(), CameraFragment.FaceProcessorListener {
 
                 /** Check if detected attack support score is below threshold or not and print feedback. */
                 if (analyzeLargestFaceResult.getDetectedAttackSupport().attackSupport == FaceAttackSupport.NONE) {
-                    okLabel.setSpan(ForegroundColorSpan(colorOk), 0, 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    okLabel.setSpan(
+                        ForegroundColorSpan(colorOk),
+                        0,
+                        2,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
                     padAnalysisText.append(okLabel)
                     padAnalysisText.append(" : No attack support\n")
                 } else {
                     isBonaFide = false
-                    notOkLabel.setSpan(ForegroundColorSpan(colorNotOk), 0, 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    notOkLabel.setSpan(
+                        ForegroundColorSpan(colorNotOk),
+                        0,
+                        6,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
                     padAnalysisText.append(notOkLabel)
                     padAnalysisText.append(" : Attack support detected: " + analyzeLargestFaceResult.getDetectedAttackSupport().attackSupport.name + "\n")
                 }
 
                 /** Check if blur score is below max threshold or not and print feedback. */
                 if (analyzeLargestFaceResult.getBlurScore() < Parameters.blurScoreMaxThreshold) {
-                    okLabel.setSpan(ForegroundColorSpan(colorOk), 0, 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    okLabel.setSpan(
+                        ForegroundColorSpan(colorOk),
+                        0,
+                        2,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
                     padAnalysisText.append(okLabel)
                     padAnalysisText.append(" : Not blurry\n")
                 } else {
                     isBonaFide = false
-                    notOkLabel.setSpan(ForegroundColorSpan(colorNotOk), 0, 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    notOkLabel.setSpan(
+                        ForegroundColorSpan(colorNotOk),
+                        0,
+                        6,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
                     padAnalysisText.append(notOkLabel)
                     padAnalysisText.append(" : Blurry\n")
                 }
 
                 /** Check if color score is above min threshold or not and print feedback. */
                 if (analyzeLargestFaceResult.getColorScore() >= Parameters.colorScoreThreshold) {
-                    okLabel.setSpan(ForegroundColorSpan(colorOk), 0, 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    okLabel.setSpan(
+                        ForegroundColorSpan(colorOk),
+                        0,
+                        2,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
                     padAnalysisText.append(okLabel)
                     padAnalysisText.append(" : Authentic colors\n")
                 } else {
                     /** Check if color score confidence is enough to reject the user. */
-                    if(analyzeLargestFaceResult.getColorScoreConfidence() >= Parameters.colorScoreConfidenceThreshold) {
+                    if (analyzeLargestFaceResult.getColorScoreConfidence() >= Parameters.colorScoreConfidenceThreshold) {
                         isBonaFide = false
-                        notOkLabel.setSpan(ForegroundColorSpan(colorNotOk), 0, 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                        notOkLabel.setSpan(
+                            ForegroundColorSpan(colorNotOk),
+                            0,
+                            6,
+                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
                         padAnalysisText.append(notOkLabel)
                         padAnalysisText.append(" : Non-authentic colors\n")
                     } else {
                         isBonaFide = false
-                        notOkLabel.setSpan(ForegroundColorSpan(colorNotOk), 0, 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                        notOkLabel.setSpan(
+                            ForegroundColorSpan(colorNotOk),
+                            0,
+                            6,
+                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
                         padAnalysisText.append(notOkLabel)
                         padAnalysisText.append(" : Image quality too low to get a confident decision\n")
                     }
                 }
 
-                /** Check if Moiré score is below max threshold or not and print feedback. */
-                if (analyzeLargestFaceResult.getMoireScore() < Parameters.moireScoreThreshold) {
-                    okLabel.setSpan(ForegroundColorSpan(colorOk), 0, 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                    padAnalysisText.append(okLabel)
-                    padAnalysisText.append(" : No Moiré effect\n\n")
-                } else {
-                    isBonaFide = false
-                    notOkLabel.setSpan(ForegroundColorSpan(colorNotOk), 0, 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                    padAnalysisText.append(notOkLabel)
-                    padAnalysisText.append(" : Moiré effect detected\n\n")
-                }
-
                 if (isBonaFide) {
-                    okLabel.setSpan(ForegroundColorSpan(colorOk), 0, 2, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    okLabel.setSpan(
+                        ForegroundColorSpan(colorOk),
+                        0,
+                        2,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
                     padAnalysisText.append(okLabel)
                     padAnalysisText.append(" : The presentation is bona-fide")
                 } else {
-                    notOkLabel.setSpan(ForegroundColorSpan(colorNotOk), 0, 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    notOkLabel.setSpan(
+                        ForegroundColorSpan(colorNotOk),
+                        0,
+                        6,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
                     padAnalysisText.append(notOkLabel)
                     padAnalysisText.append(" : The presentation is an attack")
                 }
@@ -156,7 +186,11 @@ class MainActivity : AppCompatActivity(), CameraFragment.FaceProcessorListener {
                 padAnalysisTextView.text = padAnalysisText
             } else {
                 if (errorCode == FaceError.INVALID_IOD.value) {
-                    Toast.makeText(this, "Face is too far, get closer to the camera.", Toast.LENGTH_SHORT)
+                    Toast.makeText(
+                        this,
+                        "Face is too far, get closer to the camera.",
+                        Toast.LENGTH_SHORT
+                    )
                         .show()
                 }
             }
@@ -167,10 +201,6 @@ class MainActivity : AppCompatActivity(), CameraFragment.FaceProcessorListener {
         /** Initialize the capture fragment. */
         captureFragment =
             supportFragmentManager.findFragmentById(R.id.cameraFragment) as CameraFragment
-        val boundsPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-        boundsPaint.color = Color.GREEN
-        boundsPaint.strokeWidth = 3.toFloat()
-        captureFragment.setBoundsPaint(boundsPaint)
         captureFragment.setProcessor(faceProcessor)
 
         /** Initialize the other view elements. */
@@ -241,8 +271,6 @@ class MainActivity : AppCompatActivity(), CameraFragment.FaceProcessorListener {
                 }
             }
         }
-
-        permissionsGranted = true
     }
 
     private fun hasRequestedPermissions(requested_permissions: Array<String>): Boolean {
