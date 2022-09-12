@@ -185,7 +185,7 @@ class MainActivity : AppCompatActivity(), CameraFragment.FaceProcessorListener {
 
                 padAnalysisTextView.text = padAnalysisText
             } else {
-                if (errorCode == FaceError.INVALID_IOD.value) {
+                if (errorCode == FaceError.IOD_TOO_SMALL.value) {
                     Toast.makeText(
                         this,
                         "Face is too far, get closer to the camera.",

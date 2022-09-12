@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'dart:isolate';
-import 'dart:typed_data';
 import 'package:async/async.dart';
 import 'package:benchmark_sample/benchmarks.dart';
 import 'utils.dart';

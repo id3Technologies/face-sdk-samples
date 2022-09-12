@@ -1,5 +1,9 @@
 # id3 Face SDK Samples Changelog
 
+## Version 9.3.0.0 (2022-09-12)
+- Updated to id3 Face SDK 9.3.0
+- Added android tracking samples
+
 ## Version 9.1.5.1 (2022-05-23)
 - Added Java versions of the android samples (same implementation)
 - Corrected potential issue in detected face drawing in android samples for fast devices

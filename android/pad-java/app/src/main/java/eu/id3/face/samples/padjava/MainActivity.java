@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements FaceProcessorList
 
                 padAnalysisTextView.setText(padAnalysisText);
             } else {
-                if (errorCode == FaceError.INVALID_IOD.getValue()) {
+                if (errorCode == FaceError.IOD_TOO_SMALL.getValue()) {
                     Toast.makeText(
                                     this,
                                     "Face is too far, get closer to the camera.",
