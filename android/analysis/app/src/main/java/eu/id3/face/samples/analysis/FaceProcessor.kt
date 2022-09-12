@@ -39,8 +39,8 @@ class FaceProcessor(context: Context) {
                 FaceModel.FACE_POSE_ESTIMATOR_1A, ProcessingUnit.CPU
             )
             FaceLibrary.loadModelBuffer(
-                context.assets.open("models/face_occlusion_detector_v1a.id3nn").readBytes(),
-                FaceModel.FACE_OCCLUSION_DETECTOR_1A, ProcessingUnit.CPU
+                context.assets.open("models/face_occlusion_detector_v2a.id3nn").readBytes(),
+                FaceModel.FACE_OCCLUSION_DETECTOR_2A, ProcessingUnit.CPU
             )
             FaceLibrary.loadModelBuffer(
                 context.assets.open("models/face_attributes_classifier_v2a.id3nn").readBytes(),

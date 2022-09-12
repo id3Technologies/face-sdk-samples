@@ -55,7 +55,7 @@ The following models are required per project:
 * Analysis
     * face_attributes_classifier_v2a.id3nn
     * face_detector_v3b.id3nn
-    * face_occlusion_detector_v1a.id3nn
+    * face_occlusion_detector_v2a.id3nn
     * face_pose_estimator_v1a.id3nn
 
 ## License

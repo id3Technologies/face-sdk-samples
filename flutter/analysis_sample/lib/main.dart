@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -96,10 +95,10 @@ Future<void> loadModels() async {
     sdk.ProcessingUnit.cpu,
   );
   final faceBlurrinessDetector =
-      await rootBundle.load('assets/models/face_occlusion_detector_v1a.id3nn');
+      await rootBundle.load('assets/models/face_occlusion_detector_v2a.id3nn');
   sdk.FaceLibrary.loadModelBuffer(
     faceBlurrinessDetector.buffer.asUint8List(),
-    sdk.FaceModel.faceOcclusionDetector1A,
+    sdk.FaceModel.faceOcclusionDetector2A,
     sdk.ProcessingUnit.cpu,
   );
   final faceColorPad = await rootBundle

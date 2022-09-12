@@ -20,7 +20,7 @@ int main(int argc, char **argv)
 	/**
    	 * Fill in the correct path to the license.
    	 */
-	std::string license_path = "your_license_path_here";
+	std::string license_path = "C:\\ProgramData\\id3\\id3FaceSDKv9.lic";
 	/**
    	 * Fill in the correct path to the downloaded models.
    	 */

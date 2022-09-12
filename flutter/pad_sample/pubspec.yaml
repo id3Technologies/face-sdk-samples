@@ -14,7 +14,7 @@ dependencies:
     path: ../id3_android_license
   id3_face:
     path: ../../sdk/dart/id3_face
-  camera: ^0.9.4+14
+  camera: ^0.10.0+1 
   path_provider: ^2.0.9
   
 dev_dependencies:
