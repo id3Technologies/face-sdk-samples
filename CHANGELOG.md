@@ -1,4 +1,7 @@
 # id3 Face SDK Samples Changelog
+## Version 9.3.0.1 (2022-09-21)
+- Added android recognition-camerax sample
+    - Demonstrating how to use the id3Face SDK with the Android CameraX API
 
 ## Version 9.3.0.0 (2022-09-12)
 - Updated to id3 Face SDK 9.3.0
