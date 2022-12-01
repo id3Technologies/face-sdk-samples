@@ -11,12 +11,12 @@ class Credentials {
 
     static func getAccountLogin() -> String {
         // id3 account login is ...
-        return ***REMOVED***;
+        return "login";
     }
 
     static func getAccountPassword() -> String {
         // id3 account password is ...
-        return ***REMOVED***;
+        return "password";
     }
 
     static func getPackageReference() -> String {
