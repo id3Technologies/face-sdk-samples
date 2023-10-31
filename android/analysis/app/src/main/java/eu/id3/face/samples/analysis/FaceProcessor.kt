@@ -156,7 +156,7 @@ class FaceProcessor(context: Context) {
                 h,
                 uvPixelStride,
                 uvRowStride,
-                PixelFormat.BGR_24BITS
+                PixelFormat.BGR_24_BITS
             )
         }
     }

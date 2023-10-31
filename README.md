@@ -17,8 +17,8 @@ The version of this repository is made of 4 digits:
 This strategy is employed to ensure version consistency among the various supported languages. When updating the Face SDK version, all the samples are updated as well.
 
 For this release of the samples the version numbers are : 
-* Samples version: **9.3.2.0**
-* Required id3 Face SDK version: **9.3.2**
+* Samples version: **9.9.1.0**
+* Required id3 Face SDK version: **9.9.1**
 
 ## Getting started
 
@@ -84,9 +84,9 @@ This license file can be retrieved through different methods depending of your o
     - id3 recommends to run the activation at the first launch of the app and then store the license on the device for further uses, this is the behavior which is demonstrated in the mobile samples of this repository
     - For example the following code retrieves a license on android in Kotlin calling the Java API:
         ```kotlin
-        val hardwareCode = License.getHostHardwareCode(LicenseHardwareCodeType.ANDROID)
+        val hardwareCode = FaceLicense.getHostHardwareCode(LicenseHardwareCodeType.ANDROID)
         var licenseBuffer: ByteArray? = null
-        licenseBuffer = License.activateSerialKeyBuffer(hardwareCode, "XXXX-XXXX-XXXX-XXXX", "Activated from Android")
+        licenseBuffer = FaceLicense.activateSerialKeyBuffer(hardwareCode, "XXXX-XXXX-XXXX-XXXX", "Activated from Android")
         ```
     - Notes:
         - To use the activation APIs you must ensure that your application have the internet usage permission
@@ -104,8 +104,8 @@ This license file can be retrieved through different methods depending of your o
     - Using the FaceLicense_Activate...() APIs from the SDK:
         - For example the following code retrieves a license file using the C# API:
             ```c#
-            string hardwareCode = id3.Face.License.GetHostHardwareCode(id3.Face.LicenseHardwareCodeType.WindowsOs);
-            id3.Face.License.ActivateSerialKey(hardwareCode,"XXXX-XXXX-XXXX-XXXX", "Activated through C# API", "data/id3Face.lic");
+            string hardwareCode = id3.Face.FaceLicense.GetHostHardwareCode(id3.Face.LicenseHardwareCodeType.WindowsOs);
+            id3.Face.FaceLicense.ActivateSerialKey(hardwareCode,"XXXX-XXXX-XXXX-XXXX", "Activated through C# API", "data/id3Face.lic");
             ```
         - Please see API documentation for more details about usage (retrieve license as file, as buffer, ...)
     - Using the License Manager tool in *sdk/activation/windows-tool* (only on Windows)

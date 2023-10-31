@@ -72,7 +72,8 @@ namespace id3.Face.Samples.PadWF
                  * Before calling any function of the SDK you must first check a valid license file.
                  * To get such a file please use the provided activation tool.
                  */
-                FaceLibrary.CheckLicense(@"your_license_path_here");
+                string licensePath = Environment.GetEnvironmentVariable("ID3_LICENSE_PATH");
+                FaceLicense.CheckLicense(licensePath);
             }
             catch (FaceException ex)
             {
@@ -91,10 +92,10 @@ namespace id3.Face.Samples.PadWF
                 /*
                 * Once a model is loaded in the desired processing unit (CPU or GPU) several instances of the associated processor can be created.
                 */
-                FaceLibrary.LoadModel(modelPath, FaceModel.FaceDetector3B, ProcessingUnit.Cpu);
+                FaceLibrary.LoadModel(modelPath, FaceModel.FaceDetector4B, ProcessingUnit.Cpu);
                 FaceLibrary.LoadModel(modelPath, FaceModel.FaceBlurrinessDetector1A, ProcessingUnit.Cpu);
                 FaceLibrary.LoadModel(modelPath, FaceModel.FaceColorBasedPad2A, ProcessingUnit.Cpu);
-                FaceLibrary.LoadModel(modelPath, FaceModel.FaceAttackSupportDetector2A, ProcessingUnit.Cpu);
+                FaceLibrary.LoadModel(modelPath, FaceModel.FaceAttackSupportDetector3A, ProcessingUnit.Cpu);
 
                 /*
                  * Init objects.
@@ -102,8 +103,8 @@ namespace id3.Face.Samples.PadWF
                 detectedFaceList = new DetectedFaceList();
                 faceDetector = new FaceDetector()
                 {
-                    ConfidenceThreshold = 70,
-                    Model = FaceModel.FaceDetector3B,
+                    ConfidenceThreshold = 50,
+                    Model = FaceModel.FaceDetector4B,
                     ProcessingUnit = ProcessingUnit.Cpu,
                     ThreadCount = 4
                 };

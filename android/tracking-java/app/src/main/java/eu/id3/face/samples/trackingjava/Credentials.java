@@ -9,7 +9,7 @@ import java.io.IOException;
 
 import eu.id3.face.FaceException;
 import eu.id3.face.FaceLibrary;
-import eu.id3.face.License;
+import eu.id3.face.FaceLicense;
 import eu.id3.face.LicenseHardwareCodeType;
 
 /**
@@ -21,19 +21,28 @@ class Credentials {
     /**
      * Serial key is...
      */
-    private final static String licenseSerialKey = "0000-0000-0000-0000";
+    private static String getLicenseSerialKey() {
+        return "0000-0000-0000-0000";
+    }
     /**
      * id3 account login is ...
      */
-    private final static String accountLogin = "login";
+    private static String getAccountLogin() {
+        return "login";
+    }
     /**
      * id3 account password is ...
      */
-    private final static String accountPassword = "password";
+    private static String getAccountPassword() {
+        return "password";
+    }
     /**
      * Package reference is ...
      */
-    private final static String packageReference = "86FM2780";
+    private static String getPackageReference() {
+        return "00000000";
+    }
+
 
     /**
      * Any id3 SDK needs a valid license to work.
@@ -51,6 +60,11 @@ class Credentials {
     public static boolean registerSdkLicense(String licenseFilePath) {
         File licenseFile = new File(licenseFilePath);
         String LOG_TAG = "Credentials Class";
+        String licenseSerialKey = getLicenseSerialKey();
+        String accountLogin = getAccountLogin();
+        String accountPassword = getAccountPassword();
+        String packageReference = getPackageReference();
+
         if (!licenseFile.exists()) {
             Log.v(LOG_TAG, "License file not found on file system.");
 
@@ -71,12 +85,12 @@ class Credentials {
                 return false;
             }
 
-            String hardwareCode = License.getHostHardwareCode(LicenseHardwareCodeType.ANDROID);
+            String hardwareCode = FaceLicense.getHostHardwareCode(LicenseHardwareCodeType.ANDROID);
             if (!licenseSerialKey.equals("0000-0000-0000-0000")) {
                 try {
-                    lic = License.activateSerialKeyBuffer(
+                    lic = FaceLicense.activateSerialKeyBuffer(
                             hardwareCode,
-                            licenseSerialKey, "Activated from tracking sample"
+                            licenseSerialKey, "Activated from recognition sample"
                     );
                 } catch (FaceException e1) {
                     e1.printStackTrace();
@@ -92,7 +106,7 @@ class Credentials {
                     !packageReference.equals("00000000")
             ) {
                 try {
-                    lic = License.activateBuffer(
+                    lic = FaceLicense.activateBuffer(
                             hardwareCode,
                             accountLogin,
                             accountPassword,
@@ -125,7 +139,7 @@ class Credentials {
         /* Once the license is downloaded inside the app's folder, try to check it to allow usage
          * of the SDK functions. */
         try {
-            FaceLibrary.checkLicense(licenseFilePath);
+            FaceLicense.checkLicense(licenseFilePath);
         } catch (FaceException e) {
             Log.e(LOG_TAG, "License check failed: " + e.getMessage());
             e.printStackTrace();

@@ -17,7 +17,8 @@ namespace id3.Face.Samples.CompressToWebpCLI
             {
                 // Before calling any function of the SDK you must first check a valid license file.
                 // To get such a file please use the provided activation tool.
-                FaceLibrary.CheckLicense(@"your_license_path_here");
+                string licensePath = Environment.GetEnvironmentVariable("ID3_LICENSE_PATH");
+                FaceLicense.CheckLicense(licensePath);
             }
             catch (FaceException ex)
             {
@@ -34,7 +35,7 @@ namespace id3.Face.Samples.CompressToWebpCLI
             * Once a model is loaded in the desired processing unit (CPU or GPU) several instances of the associated processor can be created.
             * For instance in this sample, we load a detector.
             */
-            FaceLibrary.LoadModel(modelPath, FaceModel.FaceDetector3B, ProcessingUnit.Cpu);
+            FaceLibrary.LoadModel(modelPath, FaceModel.FaceDetector4B, ProcessingUnit.Cpu);
 
             /*
              * Load sample image from file.
@@ -43,13 +44,13 @@ namespace id3.Face.Samples.CompressToWebpCLI
             /*
              * Initialize an instance of face detector that will run on the CPU.
              * This instance has several parameters that can be set:
-             * - ConfidenceThreshold: the detection score above which proposals will be considered as detected faces. Default value is 70. In the range [0:100].
+             * - ConfidenceThreshold: the detection score above which proposals will be considered as detected faces. Default value is 50. In the range [0:100].
              * - ThreadCount : allocating more than 1 thread here can increase the speed of the process.
              */
             FaceDetector faceDetector = new FaceDetector()
             {
-                ConfidenceThreshold = 70,
-                Model = FaceModel.FaceDetector3B,
+                ConfidenceThreshold = 50,
+                Model = FaceModel.FaceDetector4B,
                 ProcessingUnit = ProcessingUnit.Cpu,
                 ThreadCount = 4
             };

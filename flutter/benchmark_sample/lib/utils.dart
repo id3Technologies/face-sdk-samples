@@ -2,13 +2,13 @@ import 'package:flutter/services.dart';
 import 'package:id3_face/id3_face.dart' as sdk;
 
 Future<void> loadBiometricParameters() async {
-  final _images = <Uint8List>[];
+  final imgs = <Uint8List>[];
   for (int i = 0; i < 3; i++) {
     final imageBytes =
         (await rootBundle.load("assets/images/im$i.jpg")).buffer.asUint8List();
-    _images.add(imageBytes);
+    imgs.add(imageBytes);
   }
-  images = _images;
+  images = imgs;
 }
 
 Future<Uint8List> loadAsset(String assetName) async {
@@ -17,8 +17,8 @@ Future<Uint8List> loadAsset(String assetName) async {
 }
 
 Future<void> loadAllAssets() async {
-  faceDetector3AModelBytes = await loadAsset('face_detector_v3a.id3nn');
-  faceDetector3BModelBytes = await loadAsset('face_detector_v3b.id3nn');
+  faceDetector4AModelBytes = await loadAsset('face_detector_v4a.id3nn');
+  faceDetector4BModelBytes = await loadAsset('face_detector_v4b.id3nn');
   faceEncoder9AModelBytes = await loadAsset('face_encoder_v9a.id3nn');
   faceEncoder9BModelBytes = await loadAsset('face_encoder_v9b.id3nn');
   faceQualityModelBytes =
@@ -26,8 +26,8 @@ Future<void> loadAllAssets() async {
 }
 
 late List<Uint8List> images;
-late Uint8List faceDetector3AModelBytes;
-late Uint8List faceDetector3BModelBytes;
+late Uint8List faceDetector4AModelBytes;
+late Uint8List faceDetector4BModelBytes;
 late Uint8List faceEncoder9AModelBytes;
 late Uint8List faceEncoder9BModelBytes;
 late Uint8List faceQualityModelBytes;
@@ -36,10 +36,10 @@ const separator = "--------------------------------------------------------";
 extension FaceModelX on sdk.FaceModel {
   String get modelNumber {
     switch (this) {
-      case sdk.FaceModel.faceDetector3A:
-        return "3A";
-      case sdk.FaceModel.faceDetector3B:
-        return "3B";
+      case sdk.FaceModel.faceDetector4A:
+        return "4A";
+      case sdk.FaceModel.faceDetector4B:
+        return "4B";
       case sdk.FaceModel.faceEncoder9A:
         return "9A";
       case sdk.FaceModel.faceEncoder9B:

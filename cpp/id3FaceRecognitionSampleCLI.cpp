@@ -20,7 +20,7 @@ int main(int argc, char **argv)
 	/**
    	 * Fill in the correct path to the license.
    	 */
-	std::string license_path = "C:\\ProgramData\\id3\\id3FaceSDKv9.lic";
+	std::string license_path = std::getenv("ID3_LICENSE_PATH");
 	/**
    	 * Fill in the correct path to the downloaded models.
    	 */
@@ -35,8 +35,8 @@ int main(int argc, char **argv)
    	 * It is required to call the id3FaceLicense_CheckLicense() function before calling any other function of the SDK.
    	 */
 	std::cout << "Checking license" << std::endl;
-	err = id3FaceLibrary_CheckLicense(license_path.c_str(), nullptr);
-	check(err, "id3FaceLibrary_CheckLicense");
+	err = id3FaceLicense_CheckLicense(license_path.c_str(), nullptr);
+	check(err, "id3FaceLicense_CheckLicense");
 	/**
    	 * Load two pictures from files.
    	 */
@@ -59,7 +59,7 @@ int main(int argc, char **argv)
 	 * It only has to be called once and then multiple instances of ID3_FACE_DETECTOR can be created.
      */
 	std::cout << "Loading face detector 3B model" << std::endl;
-	err = id3FaceLibrary_LoadModel(models_dir.c_str(), id3FaceModel_FaceDetector3B, id3FaceProcessingUnit_Cpu);
+	err = id3FaceLibrary_LoadModel(models_dir.c_str(), id3FaceModel_FaceDetector4B, id3FaceProcessingUnit_Cpu);
 	check(err, "id3FaceLibrary_LoadModel");
 	/**
    	 * Once the model is loaded, it is now possible to instantiate an ID3_FACE_DETECTOR object.
@@ -68,15 +68,15 @@ int main(int argc, char **argv)
 	check(err, "id3FaceDetector_Initialize");
 	/**
    	 * Once the instance is initialized, it is now possible to set its parameters.
-   	 * - ConfidenceThreshold: default value is 70, a smaller value will increase the number of detections (true ones and
+   	 * - ConfidenceThreshold: default value is 50, a smaller value will increase the number of detections (true ones and
    	 * false ones), a greater value will decrease it.
-	 * - Model: default value is FaceDetector3A which is the best accuracy one, for greater speed use FaceDetector3B - see documentation 
+	 * - Model: default value is FaceDetector4A which is the best accuracy one, for greater speed use FaceDetector4B - see documentation 
 	 * to get the exact performance trade-offs.
    	 * - ThreadCount: allocating more than 1 thread here can increase the speed of the process.
    	 */
-	err = id3FaceDetector_SetConfidenceThreshold(detector, 70);
+	err = id3FaceDetector_SetConfidenceThreshold(detector, 50);
 	check(err, "id3FaceDetector_SetConfidenceThreshold");
-	err = id3FaceDetector_SetModel(detector, id3FaceModel_FaceDetector3B);
+	err = id3FaceDetector_SetModel(detector, id3FaceModel_FaceDetector4B);
 	check(err, "id3FaceDetector_SetModel");
 	err = id3FaceDetector_SetThreadCount(detector, 4);
 	check(err, "id3FaceDetector_SetThreadCount");
@@ -222,7 +222,7 @@ int main(int argc, char **argv)
 	 */
 	std::cout << "Export reference template as file" << std::endl;
 	std::string reference_template_path = data_dir + "reference_template.bin";
-	err = id3FaceTemplate_ToFile(reference_template,id3FaceTemplateBufferType_Normal,reference_template_path.c_str());
+	err = id3FaceTemplate_ToFile(reference_template, reference_template_path.c_str());
 	check(err, "id3FaceTemplate_Save");
 	/**
 	 * Face templates can also directly be exported into a buffer.
@@ -234,11 +234,11 @@ int main(int argc, char **argv)
 	std::cout << "Export probe template as buffer" << std::endl;
 	int probe_template_buffer_size = 0;
 	unsigned char* probe_template_buffer = nullptr;
-	err = id3FaceTemplate_ToBuffer(probe_template,id3FaceTemplateBufferType_Normal,probe_template_buffer,&probe_template_buffer_size);
+	err = id3FaceTemplate_ToBuffer(probe_template, probe_template_buffer, &probe_template_buffer_size);
 	if(err == id3FaceError_InsufficientBuffer) // expected error as an empty buffer has been provided
 	{
 		probe_template_buffer = (unsigned char*)malloc(probe_template_buffer_size);
-		err = id3FaceTemplate_ToBuffer(probe_template,id3FaceTemplateBufferType_Normal,probe_template_buffer,&probe_template_buffer_size);
+		err = id3FaceTemplate_ToBuffer(probe_template, probe_template_buffer, &probe_template_buffer_size);
 		check(err, "id3FaceTemplate_ToBuffer with allocated buffer");
 		// probe_template_buffer now contains the exported template and could be stored, etc
 		free(probe_template_buffer);
@@ -265,5 +265,5 @@ int main(int argc, char **argv)
 	err = id3FaceImage_Dispose(&probe_image);
 	err = id3FaceImage_Dispose(&reference_image);
 	err = id3FaceLibrary_UnloadModel(id3FaceModel_FaceEncoder9A, id3FaceProcessingUnit_Cpu);
-	err = id3FaceLibrary_UnloadModel(id3FaceModel_FaceDetector3B, id3FaceProcessingUnit_Cpu);
+	err = id3FaceLibrary_UnloadModel(id3FaceModel_FaceDetector4B, id3FaceProcessingUnit_Cpu);
 }

@@ -3,7 +3,7 @@ package eu.id3.face.samples.recognition_camerax
 import android.util.Log
 import eu.id3.face.FaceException
 import eu.id3.face.FaceLibrary
-import eu.id3.face.License
+import eu.id3.face.FaceLicense
 import eu.id3.face.LicenseHardwareCodeType
 import java.io.BufferedOutputStream
 import java.io.File
@@ -28,7 +28,7 @@ internal object Credentials {
     private fun getAccountPassword() = "password"
 
     /** Package reference is ... */
-    private fun getPackageReference() = "86FM2780"
+    private fun getPackageReference() = "00000000"
 
     /**
      * Any id3 SDK needs a valid license to work.
@@ -44,6 +44,7 @@ internal object Credentials {
      * This API needs the login/password and product package of the SDK.
      */
     fun registerSdkLicense(licenseFilePath: String): Boolean {
+        Log.e("ACCOUNT",getAccountLogin())
         val licenseFile = File(licenseFilePath)
         if (!licenseFile.exists()) {
             Log.v(LOG_TAG, "License file not found on file system.")
@@ -65,10 +66,10 @@ internal object Credentials {
                 return false
             }
 
-            val hardwareCode = License.getHostHardwareCode(LicenseHardwareCodeType.ANDROID)
+            val hardwareCode = FaceLicense.getHostHardwareCode(LicenseHardwareCodeType.ANDROID)
             if (getLicenseSerialKey() != "0000-0000-0000-0000") {
                 try {
-                    lic = License.activateSerialKeyBuffer(
+                    lic = FaceLicense.activateSerialKeyBuffer(
                         hardwareCode,
                         getLicenseSerialKey(), "Activated from recognition sample"
                     )
@@ -86,7 +87,7 @@ internal object Credentials {
                 getPackageReference() != "00000000"
             ) {
                 try {
-                    lic = License.activateBuffer(
+                    lic = FaceLicense.activateBuffer(
                         hardwareCode,
                         getAccountLogin(),
                         getAccountPassword(),
@@ -119,7 +120,7 @@ internal object Credentials {
         /** Once the license is downloaded inside the app's folder, try to check it to allow usage
          * of the SDK functions. */
         try {
-            FaceLibrary.checkLicense(licenseFilePath)
+            FaceLicense.checkLicense(licenseFilePath)
         } catch (e: FaceException) {
             Log.e(LOG_TAG, "License check failed: " + e.message)
             e.printStackTrace()

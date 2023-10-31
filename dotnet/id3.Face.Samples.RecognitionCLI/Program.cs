@@ -17,7 +17,8 @@ namespace id3.Face.Samples.RecognitionCLI
             {
                 // Before calling any function of the SDK you must first check a valid license file.
                 // To get such a file please use the provided activation tool.
-                FaceLibrary.CheckLicense(@"your_license_path_here");
+                string licensePath = Environment.GetEnvironmentVariable("ID3_LICENSE_PATH");
+                FaceLicense.CheckLicense(licensePath);
             }
             catch (FaceException ex)
             {
@@ -35,7 +36,7 @@ namespace id3.Face.Samples.RecognitionCLI
             * For instance in this sample, we load a detector and an encoder.
             */
             Console.Write("Loading models... ");
-            FaceLibrary.LoadModel(modelPath, FaceModel.FaceDetector3B, ProcessingUnit.Cpu);
+            FaceLibrary.LoadModel(modelPath, FaceModel.FaceDetector4B, ProcessingUnit.Cpu);
             FaceLibrary.LoadModel(modelPath, FaceModel.FaceEncoder9A, ProcessingUnit.Cpu);
             Console.Write("Done.\n");
             /*
@@ -53,8 +54,8 @@ namespace id3.Face.Samples.RecognitionCLI
              */
             FaceDetector faceDetector = new FaceDetector()
             {
-                ConfidenceThreshold = 70,
-                Model = FaceModel.FaceDetector3B,
+                ConfidenceThreshold = 50,
+                Model = FaceModel.FaceDetector4B,
                 ThreadCount = 4
             };
             /*
@@ -108,9 +109,9 @@ namespace id3.Face.Samples.RecognitionCLI
 	         * When using the SDK face matcher the id3FaceTemplateBufferType_Normal must be used.
 	        */
             Console.Write("Export template 1 as file...");
-            faceTemplate1.ToFile(FaceTemplateBufferType.Normal,"../../../../../data/template1.bin");
+            faceTemplate1.ToFile("../../../../../data/template1.bin");
             Console.Write("Export template 2 as buffer...");
-            byte[] template2Buffer = faceTemplate2.ToBuffer(FaceTemplateBufferType.Normal);
+            byte[] template2Buffer = faceTemplate2.ToBuffer();
 
             Console.WriteLine("Sample terminated successfully.");
             Console.ReadKey();

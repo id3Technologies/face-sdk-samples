@@ -257,7 +257,7 @@ class MainActivity : AppCompatActivity() {
                 src.height,
                 src.planes[1].pixelStride,
                 src.planes[1].rowStride,
-                PixelFormat.BGR_24BITS
+                PixelFormat.BGR_24_BITS
             )
         }
     }

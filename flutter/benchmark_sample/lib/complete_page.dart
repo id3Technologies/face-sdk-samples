@@ -7,7 +7,7 @@ class CompletePage extends StatefulWidget {
   const CompletePage({Key? key}) : super(key: key);
 
   @override
-  _CompletePageState createState() => _CompletePageState();
+  State<CompletePage> createState() => _CompletePageState();
 }
 
 class _CompletePageState extends State<CompletePage> {

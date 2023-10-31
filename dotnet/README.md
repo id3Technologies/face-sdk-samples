@@ -22,8 +22,10 @@ Also, for the Windows Form projects, references to **OpenCvSharp** and **OpenCvS
 
 ### Filling the license path
 
-Before to build any of the .NET samples, you need to fill in the path to your license in the source code. Look for the following line in **Program.cs** or **Form1.cs** and replace expression 'your_license_path_here' with your correct path.
+Before to build any of the .NET samples, you need to fill in the path to your license in the source code. Look for the following line in **Program.cs** or **Form1.cs** and add your correct path :
 
-    FaceLibrary.CheckLicense(@"your_license_path_here");
+    string licensePath = Environment.GetEnvironmentVariable("ID3_LICENSE_PATH");
+    
+You may also set the environment variable : `export ID3_LICENSE_PATH=<path/to/license.lic>`
 
 Once everything is ready, you can now build the samples and launch them.

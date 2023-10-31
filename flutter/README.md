@@ -60,9 +60,17 @@ The following models are required per project:
 
 ## License
 
-Each project has a source file called **credentials.dart**. Replace the zeros by your valid license serial key in the following line:
+Each project has a source file called **credentials.dart**. Either set the following environment variables (the serial key or the triplet login/password/reference) : 
+```
+export ID3_LICENSE_SERIAL_KEY=<value>
+export ID3_ACCOUNT_LOGIN=<value>
+export ID3_ACCOUNT_PASSWORD=<value>
+export ID3_PACKAGE_REFERENCE=<value>
+```
 
-    String serialKey = "0000-0000-0000-0000";
+Or replace the zeros by your valid license serial key in the following line:
+
+    String serialKey() => Platform.environment['ID3_LICENSE_SERIAL_KEY'] ?? "0000-0000-0000-0000";
 
 License can also be retrieved using a login/password/product reference triplet.
 

@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:id3_android_license/id3_android_license.dart';
 import 'package:id3_face/id3_face.dart' as sdk;
 import 'package:path_provider/path_provider.dart';
 
@@ -14,13 +13,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   String hardwareCode;
   if (Platform.isAndroid) {
-    hardwareCode = await Id3AndroidLicense.getAndroidHardwareCode();
+   hardwareCode =
+        sdk.FaceLicense.getHostHardwareCode(sdk.LicenseHardwareCodeType.android);
   } else {
     hardwareCode =
-        sdk.License.getHostHardwareCode(sdk.LicenseHardwareCodeType.iOS);
+        sdk.FaceLicense.getHostHardwareCode(sdk.LicenseHardwareCodeType.iOS);
   }
   await activateLicense(hardwareCode);
-  //await loadModels();
 
   await loadBiometricParameters();
   await loadAllAssets();
@@ -60,39 +59,31 @@ Future<void> activateLicense(String hardwareCode) async {
     For deployment purposes there is also an API to use your id3 account to retrieve the license file.
     This API need the login/password and product package of the SDK you use.
   */
-  final licensePath = (await getTemporaryDirectory()).path +
-      '/id3/id3license/id3license_$productReference.lic';
+  final licensePath = '${(await getTemporaryDirectory()).path}/id3/id3license/id3license_$productReference.lic';
   final licenseFile = File(licensePath);
   try {
-    if (Platform.isAndroid) {
-      await Id3AndroidLicense.checkLicenseAndroid(licensePath);
-    } else {
-      sdk.FaceLibrary.checkLicense(licensePath);
-    }
+    sdk.FaceLicense.checkLicense(licensePath);
   } catch (_) {
     Uint8List? licenseBytes;
-    if (serialKey != "0000-0000-0000-0000") {
-      licenseBytes = sdk.License.activateSerialKeyBuffer(
+    if (serialKey() != "0000-0000-0000-0000") {
+      licenseBytes = sdk.FaceLicense.activateSerialKeyBuffer(
         hardwareCode,
-        serialKey,
+        serialKey(),
         "Activated from Face capture sample",
       );
     }
 
-    if (login != "login" &&
-        password != "password" &&
-        productReference != "00000000") {
-      licenseBytes = sdk.License.activateBuffer(hardwareCode, login, password,
-          productReference, "Activated from face capture sample");
+    if (login() != "login" &&
+        password() != "password" &&
+        productReference() != "00000000") {
+      licenseBytes = sdk.FaceLicense.activateBuffer(hardwareCode, login(), password(),
+          productReference(), "Activated from face capture sample");
     }
     if (!licenseFile.existsSync()) {
       licenseFile.createSync(recursive: true);
     }
     licenseFile.writeAsBytesSync(licenseBytes!);
-    if (Platform.isAndroid) {
-      await Id3AndroidLicense.checkLicenseAndroid(licensePath);
-    } else {
-      sdk.FaceLibrary.checkLicense(licensePath);
-    }
+   
+    sdk.FaceLicense.checkLicense(licensePath);
   }
 }

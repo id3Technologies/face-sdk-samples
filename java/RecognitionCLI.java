@@ -11,7 +11,8 @@ public class RecognitionCLI {
 
         // Before calling any function of the SDK you must first check a valid license file.
         // To get such a file please use the provided activation tool.
-        FaceLibrary.checkLicense("your_license_path_here");
+        String licensePath = System.getenv("ID3_LICENSE_PATH");
+        FaceLicense.checkLicense(licensePath);
 
         /*
          * The Face SDK heavily relies on deep learning and hence requires trained models to run.
@@ -23,15 +24,15 @@ public class RecognitionCLI {
          * For instance in this sample, we load a detector and an encoder.
          */
         System.out.println("Loading models... ");
-        FaceLibrary.loadModel(modelPath, FaceModel.FACE_DETECTOR_3B, ProcessingUnit.CPU);
+        FaceLibrary.loadModel(modelPath, FaceModel.FACE_DETECTOR_4B, ProcessingUnit.CPU);
         FaceLibrary.loadModel(modelPath, FaceModel.FACE_ENCODER_9A, ProcessingUnit.CPU);
         System.out.println("Done.\n");
         /*
          * Load sample images from files.
          */
         System.out.println("Loading images from files... ");
-        Image image1 = Image.fromFile("../data/image1.jpg", PixelFormat.BGR_24BITS);
-        Image image2 = Image.fromFile("../data/image2.jpg", PixelFormat.BGR_24BITS);
+        Image image1 = Image.fromFile("../data/image1.jpg", PixelFormat.BGR_24_BITS);
+        Image image2 = Image.fromFile("../data/image2.jpg", PixelFormat.BGR_24_BITS);
         System.out.println("Done.\n");
         /*
          * Initialize an instance of face detector that will run on the CPU.
@@ -41,7 +42,7 @@ public class RecognitionCLI {
          */
         FaceDetector faceDetector = new FaceDetector();
         faceDetector.setConfidenceThreshold(70);
-        faceDetector.setModel(FaceModel.FACE_DETECTOR_3B);
+        faceDetector.setModel(FaceModel.FACE_DETECTOR_4B);
         faceDetector.setThreadCount(4);
         /*
          * Detect faces in the images.
@@ -102,9 +103,9 @@ public class RecognitionCLI {
          * When using the SDK face matcher the id3FaceTemplateBufferType_Normal must be used.
          */
         System.out.println("Export template 1 as file...");
-        faceTemplate1.toFile(FaceTemplateBufferType.NORMAL,"../data/template1.bin");
+        faceTemplate1.toFile("../data/template1.bin");
         System.out.println("Export template 2 as buffer...");
-        byte[] template2Buffer = faceTemplate2.toBuffer(FaceTemplateBufferType.NORMAL);
+        byte[] template2Buffer = faceTemplate2.toBuffer();
 
         /**
          * When the face match will be performed on a smartcard then it is most likely that
@@ -120,7 +121,7 @@ public class RecognitionCLI {
          */
         int matchingThreshold = 744; // Using threshold for FalseMatchRate 1/10k for id3 FaceEncoder 9A (from id3 GC452 documentation)
         byte referenceDataQualifier = 1;
-        byte[] referenceTemplateBIT = faceTemplate1.toBit(matchingThreshold,referenceDataQualifier);
+        byte[] referenceTemplateBIT = faceTemplate1.toBit(matchingThreshold, referenceDataQualifier);
         
         /**
          * To verify a template in a card, most implementations take a Biometric DataTemplate (BDT) buffer as input.
@@ -141,7 +142,7 @@ public class RecognitionCLI {
          * Unload models
          */
         FaceLibrary.unloadModel(FaceModel.FACE_ENCODER_9A, ProcessingUnit.CPU);
-        FaceLibrary.unloadModel(FaceModel.FACE_DETECTOR_3B, ProcessingUnit.CPU);
+        FaceLibrary.unloadModel(FaceModel.FACE_DETECTOR_4B, ProcessingUnit.CPU);
 
         System.out.println("Sample terminated successfully.");
     }

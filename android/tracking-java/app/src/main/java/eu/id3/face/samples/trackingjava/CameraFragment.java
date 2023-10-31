@@ -437,7 +437,7 @@ public class CameraFragment extends Fragment {
                         h,
                         uvPixelStride,
                         uvRowStride,
-                        PixelFormat.BGR_24BITS
+                        PixelFormat.BGR_24_BITS
                 );
 
                 /* Rotate image if necessary. */

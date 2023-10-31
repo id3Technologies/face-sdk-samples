@@ -47,9 +47,20 @@ The following models are required per project:
 
 ## License
 
-Each project has a source file called **Credentials.kt** or **Credentials.java**. Replace the zeros by your valid license serial key in the following line:
+Each project has a source file called **Credentials.kt** or **Credentials.java**, reading license necessary information in environment variables or in code. 
 
-    private fun getLicenseSerialKey() = "0000-0000-0000-0000"
+Either set the following environment variables (the serial key or the triplet login/password/reference) : 
+```
+export ID3_LICENSE_SERIAL_KEY=<value>
+export ID3_ACCOUNT_LOGIN=<value>
+export ID3_ACCOUNT_PASSWORD=<value>
+export ID3_PACKAGE_REFERENCE=<value>
+./gradlew generateDebugBuildConfig
+```
+
+Or replace the zeros by your valid license serial key in the following line:
+
+    private fun getLicenseSerialKey() = System.getenv("ID3_LICENSE_SERIAL_KEY") ?: "0000-0000-0000-0000"
 
 The license file will be downloaded into the app file system the first time you launch the sample, so you will an internet connexion. 
 

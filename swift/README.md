@@ -10,5 +10,11 @@ This sample does not contains either the id3Face SDK framework or the required m
     - face_detector_v3b.id3nn
     - face_encoding_quality_estimator_v3a.id3nn
     - face_encoder_v9b.id3nn
-4. Update the Credentials.swift source file with either a serial key or your id3 account credentials
-
+4. Rename `Credentials.swift.template'
+4. Update the `Credentials.swift` source file with either a serial key or your id3 account credentials : You may overwrite the values in the code or set the following environment variables :
+```
+export ID3_LICENSE_SERIAL_KEY=<value>
+export ID3_ACCOUNT_LOGIN=<value>
+export ID3_ACCOUNT_PASSWORD=<value>
+export ID3_PACKAGE_REFERENCE=<value>
+```

@@ -8,7 +8,7 @@ class TargetedPage extends StatefulWidget {
   const TargetedPage({Key? key}) : super(key: key);
 
   @override
-  _TargetedPageState createState() => _TargetedPageState();
+  State<TargetedPage> createState() => _TargetedPageState();
 }
 
 class _TargetedPageState extends State<TargetedPage> {
@@ -17,12 +17,12 @@ class _TargetedPageState extends State<TargetedPage> {
     return Column(
       children: [
         BenchmarkSection(
-          benchName: "DETECTOR 3A BENCHMARK",
-          benchmark: detector3ABenchmark,
+          benchName: "DETECTOR 4A BENCHMARK",
+          benchmark: detector4ABenchmark,
         ),
         BenchmarkSection(
-          benchName: "DETECTOR 3B BENCHMARK",
-          benchmark: detector3BBenchmark,
+          benchName: "DETECTOR 4B BENCHMARK",
+          benchmark: detector4BBenchmark,
         ),
         BenchmarkSection(
           benchName: "QUALITY BENCHMARK",

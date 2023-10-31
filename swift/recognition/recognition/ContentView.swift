@@ -47,11 +47,11 @@ struct ContentView: View {
             */
             let nsdata_detector = NSDataAsset(name: "face_detector_v3b")!.data
             try FaceLibrary.loadModelBuffer(modelBuffer: [UInt8](nsdata_detector),
-                                            faceModel: FaceModel.faceDetector3B,
+                                            faceModel: FaceModel.faceDetector4B,
                                             processingUnit: ProcessingUnit.cpu)
             
             faceDetector = try FaceDetector()
-            try faceDetector!.setModel(model: FaceModel.faceDetector3B)
+            try faceDetector!.setModel(model: FaceModel.faceDetector4B)
             try faceDetector!.setThreadCount(threadCount: Parameters.detectorThreadCount)
             
             // Load the quality analyser in the same way
@@ -116,7 +116,7 @@ struct ContentView: View {
         do {
             NSLog("Beginning register...\n")
             
-            let hardwareCode: String = try License.getHostHardwareCode(hardwareCodeType: LicenseHardwareCodeType.iOS)
+            let hardwareCode: String = try FaceLicense.getHostHardwareCode(hardwareCodeType: LicenseHardwareCodeType.iOS)
 
             // Check if the license is registered in the device
             let documentsDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
@@ -128,15 +128,15 @@ struct ContentView: View {
                 NSLog("The license is saved in this device")
                 
                 // The license has been founded, now we check if this license is valid
-                try FaceLibrary.checkLicense(licensePath: licenseURL.path)
+                try FaceLicense.checkLicense(licensePath: licenseURL.path)
                 NSLog("Check License: OK !")
             
             } else {
                 // The license has not been found
-                let hardwareCode: String = try License.getHostHardwareCode(hardwareCodeType: LicenseHardwareCodeType.iOS)
+                let hardwareCode: String = try FaceLicense.getHostHardwareCode(hardwareCodeType: LicenseHardwareCodeType.iOS)
                 
                 NSLog("Hardware code: " + hardwareCode + "  OK !\n")
-                let licBuff = try License.activateBuffer(hardwareCode: hardwareCode,
+                let licBuff = try FaceLicense.activateBuffer(hardwareCode: hardwareCode,
                                            login: Credentials.getAccountLogin(),
                                            password: Credentials.getAccountPassword(),
                                            productReference: Credentials.getPackageReference(),
@@ -146,7 +146,7 @@ struct ContentView: View {
                 NSLog("License saved: OK !\n")
                 
                 // Finally checking the license file to enable SDK functions
-                try FaceLibrary.checkLicense(licensePath: licenseURL.path)
+                try FaceLicense.checkLicense(licensePath: licenseURL.path)
                 NSLog("Check License: OK !")
             }
         } catch let error as FaceException {

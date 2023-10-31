@@ -17,9 +17,13 @@ There are some source code modifications to make before to build.
 
 To run the sample you will need a license file. To retrieve this file you can use the CLI tool to get your hardware ID and then use either the windows activation tool to retrieve the file or contact id3 with it.
 
-id3 Face SDK needs to check this license before any other operation. You need to fill in the path to your license in the source files:
+id3 Face SDK needs to check this license before any other operation. You need to overwrite the path to your license in the source files: 
 
-    std::string license_path = "your_license_path_here";
+```
+std::string license_path = std::getenv("ID3_LICENSE_PATH");
+```
+
+You may also set the environment variable : `export ID3_LICENSE_PATH=<path/to/license.lic>`
 
 ### Models directory
 

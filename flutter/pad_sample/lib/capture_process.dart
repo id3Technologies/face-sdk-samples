@@ -83,7 +83,7 @@ class CaptureProcess {
 
     final faceDetector = FaceDetector();
     faceDetector
-      ..setModel(FaceModel.faceDetector3B)
+      ..setModel(FaceModel.faceDetector4B)
       ..setNmsIouThreshold(0);
 
     receivePort.listen((dynamic message) async {

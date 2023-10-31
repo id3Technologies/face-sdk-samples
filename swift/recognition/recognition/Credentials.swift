@@ -21,6 +21,6 @@ class Credentials {
 
     static func getPackageReference() -> String {
         // Package reference is ...
-        return "86FM2780";
+        return "00000000";
     }
 }

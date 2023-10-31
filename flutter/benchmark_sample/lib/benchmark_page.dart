@@ -7,7 +7,7 @@ class BenchmarkPage extends StatefulWidget {
   const BenchmarkPage({Key? key}) : super(key: key);
 
   @override
-  _BenchmarkPageState createState() => _BenchmarkPageState();
+  State<BenchmarkPage> createState() => _BenchmarkPageState();
 }
 
 class _BenchmarkPageState extends State<BenchmarkPage> {

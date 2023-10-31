@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:id3_android_license/id3_android_license.dart';
 import 'package:id3_face/id3_face.dart' as sdk;
 import 'package:path_provider/path_provider.dart';
 
@@ -15,12 +14,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   String hardwareCode;
 
-  // for android we need to pass by platform channel
   if (Platform.isAndroid) {
-    hardwareCode = await Id3AndroidLicense.getAndroidHardwareCode();
+    hardwareCode =
+        sdk.FaceLicense.getHostHardwareCode(sdk.LicenseHardwareCodeType.android);
   } else {
     hardwareCode =
-        sdk.License.getHostHardwareCode(sdk.LicenseHardwareCodeType.iOS);
+        sdk.FaceLicense.getHostHardwareCode(sdk.LicenseHardwareCodeType.iOS);
   }
 
   await activateLicense(hardwareCode);
@@ -46,50 +45,41 @@ Future<void> activateLicense(String hardwareCode) async {
     For deployment purposes there is also an API to use your id3 account to retrieve the license file.
     This API need the login/password and product package of the SDK you use.
   */
-  final licensePath = (await getTemporaryDirectory()).path +
-      '/id3/id3license/id3license_$productReference.lic';
+  final licensePath = '${(await getTemporaryDirectory()).path}/id3/id3license/id3license_$productReference.lic';
   final licenseFile = File(licensePath);
   try {
-    // same here to check license on android we need to pass by platform channel
-    if (Platform.isAndroid) {
-      await Id3AndroidLicense.checkLicenseAndroid(licensePath);
-    } else {
-      sdk.FaceLibrary.checkLicense(licensePath);
-    }
+   sdk.FaceLicense.checkLicense(licensePath);
   } catch (_) {
     Uint8List? licenseBytes;
-    if (serialKey != "0000-0000-0000-0000") {
-      licenseBytes = sdk.License.activateSerialKeyBuffer(
+    if (serialKey() != "0000-0000-0000-0000") {
+      licenseBytes = sdk.FaceLicense.activateSerialKeyBuffer(
         hardwareCode,
-        serialKey,
+        serialKey(),
         "Activated from Face capture sample",
       );
     }
 
-    if (login != "login" &&
-        password != "password" &&
-        productReference != "00000000") {
-      licenseBytes = sdk.License.activateBuffer(hardwareCode, login, password,
-          productReference, "Activated from face capture sample");
+    if (login() != "login" &&
+        password() != "password" &&
+        productReference() != "00000000") {
+      licenseBytes = sdk.FaceLicense.activateBuffer(hardwareCode, login(), password(),
+          productReference(), "Activated from face capture sample");
     }
     if (!licenseFile.existsSync()) {
       licenseFile.createSync(recursive: true);
     }
     licenseFile.writeAsBytesSync(licenseBytes!);
-    if (Platform.isAndroid) {
-      await Id3AndroidLicense.checkLicenseAndroid(licensePath);
-    } else {
-      sdk.FaceLibrary.checkLicense(licensePath);
-    }
+ 
+    sdk.FaceLicense.checkLicense(licensePath);
   }
 }
 
 Future<void> loadModels() async {
   final faceDetector =
-      await rootBundle.load('assets/models/face_detector_v3b.id3nn');
+      await rootBundle.load('assets/models/face_detector_v4b.id3nn');
   sdk.FaceLibrary.loadModelBuffer(
     faceDetector.buffer.asUint8List(),
-    sdk.FaceModel.faceDetector3B,
+    sdk.FaceModel.faceDetector4B,
     sdk.ProcessingUnit.cpu,
   );
   final faceEncoder =
@@ -283,7 +273,7 @@ EnrollResult onEnroll(CaptureProcessResult result) {
 
   return EnrollResult(
     jpg,
-    template.toBuffer(sdk.FaceTemplateBufferType.normal),
+    template.toBuffer(),
     quality,
   );
 }

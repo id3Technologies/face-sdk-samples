@@ -14,7 +14,13 @@ Once everything is setup you can proceed to the following steps.
 
 ### Filling the license path
 
-Before to build any of the JAVA samples, you need to fill in the path to your license in the source code. Look for the following line in **RecognitionCLI.java** and replace expression 'your_license_path_here' with your correct path.
+Before to build any of the JAVA samples, you need to fill in the path to your license in the source code. Look for the following line in **RecognitionCLI.java** and overwrite `licensePath` with your correct path.
+
+```
+std::string license_path = std::getenv("ID3_LICENSE_PATH");
+```
+
+You may also set the environment variable : `export ID3_LICENSE_PATH=<path/to/license.lic>`
 
 ### Ensuring models are present
 
