@@ -4,14 +4,14 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
-
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
+using System.Collections.Concurrent;
+using System.Runtime.InteropServices;
+using id3.Face;
 
 namespace id3.Face.Samples.PadWF
 {
-    using System.Runtime.InteropServices;
-    using id3.Face;
 
     public partial class Form1 : Form
     {
@@ -21,19 +21,30 @@ namespace id3.Face.Samples.PadWF
             public long IndexToDraw;
         }
 
+        class QueueData
+        {
+            public DetectedFace detectedFace;
+            public Image image;
+        }
+
+        class FacePadResult
+        {
+            public FacePadResult() {}
+            public FacePadResult(string message) { this.message = message; }
+            public string message;
+            public int blurrinessScore;
+            public ColorBasedPadResult colorScoreResult;
+            public DetectedFaceAttackSupport attackSupport;
+        }
+
         Bitmap[] bitmapBuffer;
         BackgroundWorker camera;
+        BackgroundWorker pad;
+        ConcurrentQueue<QueueData> queue;
         VideoCapture capture;
         bool isCameraRunning = false;
 
-        /*
-         * id3Face SDK objects.
-        */
-        Image image;
-        DetectedFaceList detectedFaceList;
-        FaceDetector faceDetector;
-        FacePad facePad;
-
+        // id3Face SDK objects.
         public Form1()
         {
             InitializeComponent();
@@ -42,8 +53,6 @@ namespace id3.Face.Samples.PadWF
 
             // UI elements
             buttonStartCapture.Click += ButtonStartCapture_Click;
-            buttonComputePad.Click += ButtonComputePad_Click;
-            buttonComputePad.Enabled = false;
             buttonStartCapture.Enabled = IsCameraPlugged();
 
             if (!buttonStartCapture.Enabled)
@@ -51,6 +60,56 @@ namespace id3.Face.Samples.PadWF
                 MessageBox.Show("Please plug-in a webcam before to use this sample.");
                 Environment.Exit(-1);
             }
+
+            // id3 Face SDK objects
+            try
+            {
+                /*
+                 * Before calling any function of the SDK you must first check a valid license file.
+                 * To get such a file please use the provided activation tool.
+                 */
+                FaceLicense.CheckLicense(@"..\..\..\..\id3Face.lic");
+            }
+            catch (FaceException ex)
+            {
+                MessageBox.Show("Error during license check: " + ex.Message);
+                Environment.Exit(-1);
+            }
+
+            // Bitmap buffer for UI/process
+            bitmapBuffer = new Bitmap[2];
+
+            /*
+             * The Face SDK heavily relies on deep learning technics and hence requires trained models to run.
+             * Fill in the correct path to the downloaded models.
+             */
+            string modelPath = @"..\..\..\..\models";
+
+            try
+            {
+                // Once a model is loaded in the desired processing unit (CPU or GPU) several instances of the associated processor can be created.
+                FaceLibrary.LoadModel(modelPath, FaceModel.FaceDetector4B, ProcessingUnit.Cpu);
+                FaceLibrary.LoadModel(modelPath, FaceModel.FaceBlurrinessDetector1A, ProcessingUnit.Cpu);
+                FaceLibrary.LoadModel(modelPath, FaceModel.FaceColorBasedPad2A, ProcessingUnit.Cpu);
+                FaceLibrary.LoadModel(modelPath, FaceModel.FaceAttackSupportDetector3A, ProcessingUnit.Cpu);
+            }
+            catch (FaceException ex)
+            {
+                MessageBox.Show("Error during face objects initialization: " + ex.Message);
+                Environment.Exit(-1);
+            }
+
+            queue = new ConcurrentQueue<QueueData>();
+
+            // PAD background worker
+            pad = new BackgroundWorker()
+            {
+                WorkerReportsProgress = true,
+                WorkerSupportsCancellation = true
+            };
+            pad.DoWork += Pad_DoWork;
+            pad.ProgressChanged += Pad_ProgressChanged;
+            pad.RunWorkerAsync();
 
             // Camera background worker
             camera = new BackgroundWorker()
@@ -61,64 +120,11 @@ namespace id3.Face.Samples.PadWF
             camera.DoWork += Camera_DoWork;
             camera.ProgressChanged += Camera_ProgressChanged;
             camera.RunWorkerCompleted += Camera_RunWorkerCompleted;
-
-            // Bitmap buffer for UI/process
-            bitmapBuffer = new Bitmap[2];
-
-            // id3 Face SDK objects
-            try
-            {
-                /*
-                 * Before calling any function of the SDK you must first check a valid license file.
-                 * To get such a file please use the provided activation tool.
-                 */
-                string licensePath = Environment.GetEnvironmentVariable("ID3_LICENSE_PATH");
-                FaceLicense.CheckLicense(licensePath);
-            }
-            catch (FaceException ex)
-            {
-                MessageBox.Show("Error during license check: " + ex.Message);
-                Environment.Exit(-1);
-            }
-
-            /*
-             * The Face SDK heavily relies on deep learning technics and hence requires trained models to run.
-             * Fill in the correct path to the downloaded models.
-             */
-            string modelPath = "..\\..\\..\\..\\..\\sdk\\models";
-
-            try
-            {
-                /*
-                * Once a model is loaded in the desired processing unit (CPU or GPU) several instances of the associated processor can be created.
-                */
-                FaceLibrary.LoadModel(modelPath, FaceModel.FaceDetector4B, ProcessingUnit.Cpu);
-                FaceLibrary.LoadModel(modelPath, FaceModel.FaceBlurrinessDetector1A, ProcessingUnit.Cpu);
-                FaceLibrary.LoadModel(modelPath, FaceModel.FaceColorBasedPad2A, ProcessingUnit.Cpu);
-                FaceLibrary.LoadModel(modelPath, FaceModel.FaceAttackSupportDetector3A, ProcessingUnit.Cpu);
-
-                /*
-                 * Init objects.
-                 */
-                detectedFaceList = new DetectedFaceList();
-                faceDetector = new FaceDetector()
-                {
-                    ConfidenceThreshold = 50,
-                    Model = FaceModel.FaceDetector4B,
-                    ProcessingUnit = ProcessingUnit.Cpu,
-                    ThreadCount = 4
-                };
-                facePad = new FacePad();
-            }
-            catch (FaceException ex)
-            {
-                MessageBox.Show("Error during face objects initialization: " + ex.Message);
-                Environment.Exit(-1);
-            }
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
+            pad.CancelAsync();
             if (isCameraRunning)
             {
                 StopCaptureCamera();
@@ -133,46 +139,79 @@ namespace id3.Face.Samples.PadWF
             {
                 StartCaptureCamera();
                 buttonStartCapture.Text = "Stop capture";
-                buttonComputePad.Enabled = true;
             }
             else
             {
                 StopCaptureCamera();
                 buttonStartCapture.Text = "Start capture";
-                buttonComputePad.Enabled = false;
             }
         }
 
-        private void ButtonComputePad_Click(object sender, EventArgs e)
+        private void Pad_DoWork(object sender, DoWorkEventArgs e)
         {
-            if (detectedFaceList.GetCount() != 1)
+            var facePad = new FacePad();
+            while (!pad.CancellationPending)
             {
-                return;
+                QueueData queueData;
+                if (queue.TryDequeue(out queueData))
+                {
+                    // Compute PAD scores.
+                    try
+                    {
+                        var facePadResult = new FacePadResult()
+                        {
+                            blurrinessScore = facePad.ComputeBlurrinessScore(queueData.image, queueData.detectedFace),
+                            colorScoreResult = facePad.ComputeColorBasedScore(queueData.image, queueData.detectedFace),
+                            attackSupport = facePad.DetectAttackSupport(queueData.image, queueData.detectedFace)
+                        };
+                        pad.ReportProgress(0, facePadResult);
+                    }
+                    catch (FaceException ex)
+                    {
+                        pad.ReportProgress(0, new FacePadResult(ex.Message));
+                    }
+                    catch (Exception ex)
+                    {
+                        Trace.WriteLine(ex.Message);
+                    }
+                }
             }
+        }
 
-            /*
-             * Select the largerst face in case there are several persons on the picture.
-             */
-            DetectedFace detectedFace = detectedFaceList.GetLargestFace();
-
-            /*
-             * Compute PAD scores.
-             */
-            ColorBasedPadResult colorScoreResult = facePad.ComputeColorBasedScore(image, detectedFace);
-            int blurrinessScore = facePad.ComputeBlurrinessScore(image, detectedFace);
-            DetectedFaceAttackSupport attackSupport = facePad.DetectAttackSupport(image, detectedFace);
-
-            labelColorPadScore.Text = "Color PAD score: " + colorScoreResult.Score;
-            labelColorPadScore.Text = "Color PAD confidence: " + colorScoreResult.Confidence;
-            labelBlurrinessScore.Text = "Blurriness score: " + blurrinessScore;
-            labelAttackSupportScore.Text = "Attack support score: " + attackSupport.Score;
+        private void Pad_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            var facePadResult = (FacePadResult)e.UserState;
+            if(string.IsNullOrEmpty(facePadResult.message))
+            {
+                labelColorPadScore.Text = $"Color PAD score: {facePadResult.colorScoreResult.Score}";
+                labelColorPadConfidence.Text = $"Color PAD confidence: {facePadResult.colorScoreResult.Confidence}";
+                labelBlurrinessScore.Text = $"Blurriness score: {facePadResult.blurrinessScore}";
+                labelAttackSupportScore.Text = $"Attack support score: {facePadResult.attackSupport.Score}";
+                labelPadStatus.Text = "PAD Status: ok";
+            }
+            else
+            {
+                labelColorPadScore.Text = "Color PAD score:";
+                labelColorPadConfidence.Text = "Color PAD confidence:";
+                labelBlurrinessScore.Text = "Blurriness score:";
+                labelAttackSupportScore.Text = "Attack support score:";
+                labelPadStatus.Text = $"PAD Status: {facePadResult.message}";
+            }
         }
 
         // Camera events
 
         private void Camera_DoWork(object sender, DoWorkEventArgs e)
         {
-            Mat frame = new Mat();
+            var detectedFaceList = new DetectedFaceList();
+            var faceDetector = new FaceDetector()
+            {
+                ConfidenceThreshold = 50,
+                ProcessingUnit = ProcessingUnit.Cpu,
+                ThreadCount = 4
+            };
+
+            var frame = new Mat();
             capture = new VideoCapture(0);
             capture.Open(0);
 
@@ -193,12 +232,12 @@ namespace id3.Face.Samples.PadWF
                     // Create image from the first frame
                     byte[] pixels = new byte[3 * frame.Width * frame.Height];
                     Marshal.Copy(frame.Data, pixels, 0, 3 * frame.Width * frame.Height);
-                    image = Image.FromRawBuffer(pixels, frame.Width, frame.Height, 3 * frame.Width, PixelFormat.Bgr24Bits, PixelFormat.Bgr24Bits);
+                    var image = Image.FromRawBuffer(pixels, frame.Width, frame.Height, 3 * frame.Width, PixelFormat.Bgr24Bits, PixelFormat.Bgr24Bits);
 
                     // Resize for real-time capacity
                     scale = image.Downscale(maxSize);
 
-                    Stopwatch stopWatch = Stopwatch.StartNew();
+                    var stopWatch = Stopwatch.StartNew();
 
                     // Track faces
                     faceDetector.TrackFaces(image, detectedFaceList);
@@ -206,22 +245,31 @@ namespace id3.Face.Samples.PadWF
                     long trackTime = stopWatch.ElapsedMilliseconds;
 
                     // For each detected face...
-                    for (int i = 0; i < detectedFaceList.GetCount(); i++)
+                    foreach (DetectedFace detectedFace in detectedFaceList)
                     {
-                        DetectedFace detectedFace = detectedFaceList.Get(i);
-
                         // ...draw results
                         using (Graphics gr = Graphics.FromImage(bitmap))
                         {
-                            detectedFace.Rescale(scale);
-
+                            detectedFace.Rescale(1 / scale);
                             gr.DrawRectangle(new Pen(Color.Green, 2), ConvertRectangle(detectedFace.Bounds));
+                        }
+                    }
+                    if (detectedFaceList.Count != 0)
+                    {
+                        if (queue.Count == 0)
+                        {
+                            var queueData = new QueueData()
+                            {
+                                detectedFace = (DetectedFace)detectedFaceList.GetLargestFace().Clone(),
+                                image = (Image)image.Clone()
+                            };
+                            queue.Enqueue(queueData);
                         }
                     }
 
                     bitmapBuffer[bitmapIndex] = bitmap;
 
-                    WorkerProgress workerProgress = new WorkerProgress()
+                    var workerProgress = new WorkerProgress()
                     {
                         TrackTime = trackTime,
                         IndexToDraw = bitmapIndex
@@ -237,7 +285,7 @@ namespace id3.Face.Samples.PadWF
 
         private void Camera_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            WorkerProgress workerProgress = (WorkerProgress)e.UserState;
+            var workerProgress = (WorkerProgress)e.UserState;
             pictureBoxPreview.Image = bitmapBuffer[workerProgress.IndexToDraw];
         }
 

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace id3.Face.Samples.PadWF.Properties {
+namespace id3FaceSearchSampleWPF.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace id3.Face.Samples.PadWF.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("id3.Face.Samples.PadWF.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("id3FaceSearchSampleWPF.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -57,6 +57,26 @@ namespace id3.Face.Samples.PadWF.Properties {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap face_demo_lightgray_128 {
+            get {
+                object obj = ResourceManager.GetObject("face_demo_lightgray_128", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une ressource localisée de type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap if_open_32_white {
+            get {
+                object obj = ResourceManager.GetObject("if_open_32_white", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }

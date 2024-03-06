@@ -28,10 +28,8 @@ Once everything is setup you can proceed to the following steps.
 Before to execute any of the Python samples, you need to fill in the path to your license in the source code. Look for the following line in the `*.py` files and overwrite `license_path` with your correct path.
 
 ```
-license_path = os.getenv("ID3_LICENSE_PATH")
+license_path = "../id3Face.lic"
 ```
-
-You may also set the environment variable : `export ID3_LICENSE_PATH=<path/to/license.lic>`
 
 ### Ensuring models are present
 

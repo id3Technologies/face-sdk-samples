@@ -79,12 +79,11 @@ namespace id3.Face.Samples.RecognitionWF
                  * Before calling any function of the SDK you must first check a valid license file.
                  * To get such a file please use the provided activation tool.
                  */
-                string licensePath = Environment.GetEnvironmentVariable("ID3_LICENSE_PATH");
-                FaceLicense.CheckLicense(licensePath);
+                FaceLicense.CheckLicense(@"..\..\..\..\id3Face.lic");
             }
             catch (FaceException ex)
             {
-                MessageBox.Show("Error during license check: " + ex.Message);
+                MessageBox.Show($"Error during license check: {ex.Message}");
                 Environment.Exit(-1);
             }
 
@@ -92,7 +91,7 @@ namespace id3.Face.Samples.RecognitionWF
              * The Face SDK heavily relies on deep learning technics and hence requires trained models to run.
              * Fill in the correct path to the downloaded models.
              */
-            string modelPath = "..\\..\\..\\..\\..\\sdk\\models";
+            string modelPath = @"..\..\..\..\models";
 
             try
             {
@@ -125,7 +124,7 @@ namespace id3.Face.Samples.RecognitionWF
             }
             catch (FaceException ex)
             {
-                MessageBox.Show("Error during face objects initialization: " + ex.Message);
+                MessageBox.Show($"Error during face objects initialization: {ex.Message}");
                 Environment.Exit(-1);
             }
         }
@@ -182,7 +181,7 @@ namespace id3.Face.Samples.RecognitionWF
 
             int score = faceMatcher.CompareTemplates(candidate, enrollee);
 
-            labelMatchScore.Text = string.Format("Match score: {0}", score);
+            labelMatchScore.Text = $"Match score: {score}";
         }
 
         // Camera events
@@ -254,7 +253,7 @@ namespace id3.Face.Samples.RecognitionWF
         {
             WorkerProgress workerProgress = (WorkerProgress)e.UserState;
             pictureBoxPreview.Image = bitmapBuffer[workerProgress.IndexToDraw];
-            labelDetectionTime.Text = string.Format("Detection time: {0} ms", workerProgress.TrackTime);
+            labelDetectionTime.Text = $"Detection time: {workerProgress.TrackTime} ms";
         }
 
         private void Camera_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)

@@ -4,21 +4,20 @@ public class RecognitionCLI {
 
     public static void main(String[] args) {
         System.out.println("-------------------------------");
-        System.out.println("id3.Face.Samples.RecognitionCLI");
+        System.out.println("id3 Face Samples RecognitionCLI");
         System.out.println("-------------------------------");
 
         // This basic sample shows how to encode two faces and compare them.
 
         // Before calling any function of the SDK you must first check a valid license file.
         // To get such a file please use the provided activation tool.
-        String licensePath = System.getenv("ID3_LICENSE_PATH");
-        FaceLicense.checkLicense(licensePath);
+        FaceLicense.checkLicense("../id3Face.lic");
 
         /*
          * The Face SDK heavily relies on deep learning and hence requires trained models to run.
          * Fill in the correct path to the downloaded models.
          */
-        String modelPath = "../sdk/models";
+        String modelPath = "../models";
         /*
          * Once a model is loaded in the desired processing unit (CPU or GPU) several instances of the associated processor can be created.
          * For instance in this sample, we load a detector and an encoder.
@@ -34,6 +33,9 @@ public class RecognitionCLI {
         Image image1 = Image.fromFile("../data/image1.jpg", PixelFormat.BGR_24_BITS);
         Image image2 = Image.fromFile("../data/image2.jpg", PixelFormat.BGR_24_BITS);
         System.out.println("Done.\n");
+
+        // Resize to 512 because of detector limit.
+        image1.resize(512, 0);
         /*
          * Initialize an instance of face detector that will run on the CPU.
          * This instance has several parameters that can be set:

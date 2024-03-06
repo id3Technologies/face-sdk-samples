@@ -46,39 +46,35 @@
             // 
             // pictureBoxPreview
             // 
-            this.pictureBoxPreview.Location = new System.Drawing.Point(56, 15);
-            this.pictureBoxPreview.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pictureBoxPreview.Location = new System.Drawing.Point(42, 12);
             this.pictureBoxPreview.Name = "pictureBoxPreview";
-            this.pictureBoxPreview.Size = new System.Drawing.Size(853, 591);
+            this.pictureBoxPreview.Size = new System.Drawing.Size(640, 480);
             this.pictureBoxPreview.TabIndex = 0;
             this.pictureBoxPreview.TabStop = false;
             // 
             // buttonStartCapture
             // 
-            this.buttonStartCapture.Location = new System.Drawing.Point(56, 652);
-            this.buttonStartCapture.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.buttonStartCapture.Location = new System.Drawing.Point(42, 530);
             this.buttonStartCapture.Name = "buttonStartCapture";
-            this.buttonStartCapture.Size = new System.Drawing.Size(212, 90);
+            this.buttonStartCapture.Size = new System.Drawing.Size(159, 73);
             this.buttonStartCapture.TabIndex = 1;
             this.buttonStartCapture.Text = "Start capture";
             this.buttonStartCapture.UseVisualStyleBackColor = true;
             // 
             // buttonEnroll
             // 
-            this.buttonEnroll.Location = new System.Drawing.Point(381, 652);
-            this.buttonEnroll.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.buttonEnroll.Location = new System.Drawing.Point(287, 530);
             this.buttonEnroll.Name = "buttonEnroll";
-            this.buttonEnroll.Size = new System.Drawing.Size(212, 90);
+            this.buttonEnroll.Size = new System.Drawing.Size(159, 73);
             this.buttonEnroll.TabIndex = 2;
             this.buttonEnroll.Text = "Enroll";
             this.buttonEnroll.UseVisualStyleBackColor = true;
             // 
             // buttonMatch
             // 
-            this.buttonMatch.Location = new System.Drawing.Point(697, 652);
-            this.buttonMatch.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.buttonMatch.Location = new System.Drawing.Point(523, 530);
             this.buttonMatch.Name = "buttonMatch";
-            this.buttonMatch.Size = new System.Drawing.Size(212, 90);
+            this.buttonMatch.Size = new System.Drawing.Size(159, 73);
             this.buttonMatch.TabIndex = 3;
             this.buttonMatch.Text = "Match";
             this.buttonMatch.UseVisualStyleBackColor = true;
@@ -86,10 +82,9 @@
             // pictureBoxCandidate
             // 
             this.pictureBoxCandidate.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxCandidate.Image")));
-            this.pictureBoxCandidate.Location = new System.Drawing.Point(987, 343);
-            this.pictureBoxCandidate.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pictureBoxCandidate.Location = new System.Drawing.Point(740, 279);
             this.pictureBoxCandidate.Name = "pictureBoxCandidate";
-            this.pictureBoxCandidate.Size = new System.Drawing.Size(200, 246);
+            this.pictureBoxCandidate.Size = new System.Drawing.Size(150, 200);
             this.pictureBoxCandidate.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBoxCandidate.TabIndex = 5;
             this.pictureBoxCandidate.TabStop = false;
@@ -98,10 +93,9 @@
             // 
             this.pictureBoxEnrollee.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxEnrollee.Image")));
             this.pictureBoxEnrollee.InitialImage = null;
-            this.pictureBoxEnrollee.Location = new System.Drawing.Point(987, 15);
-            this.pictureBoxEnrollee.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pictureBoxEnrollee.Location = new System.Drawing.Point(740, 12);
             this.pictureBoxEnrollee.Name = "pictureBoxEnrollee";
-            this.pictureBoxEnrollee.Size = new System.Drawing.Size(200, 246);
+            this.pictureBoxEnrollee.Size = new System.Drawing.Size(150, 200);
             this.pictureBoxEnrollee.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBoxEnrollee.TabIndex = 6;
             this.pictureBoxEnrollee.TabStop = false;
@@ -109,48 +103,44 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(983, 265);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Location = new System.Drawing.Point(737, 215);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(60, 17);
+            this.label1.Size = new System.Drawing.Size(45, 13);
             this.label1.TabIndex = 7;
             this.label1.Text = "Enrollee";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(983, 593);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Location = new System.Drawing.Point(737, 482);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(72, 17);
+            this.label2.Size = new System.Drawing.Size(55, 13);
             this.label2.TabIndex = 8;
             this.label2.Text = "Candidate";
             // 
             // labelMatchScore
             // 
             this.labelMatchScore.AutoSize = true;
-            this.labelMatchScore.Location = new System.Drawing.Point(983, 726);
-            this.labelMatchScore.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelMatchScore.Location = new System.Drawing.Point(737, 590);
             this.labelMatchScore.Name = "labelMatchScore";
-            this.labelMatchScore.Size = new System.Drawing.Size(98, 17);
+            this.labelMatchScore.Size = new System.Drawing.Size(75, 13);
             this.labelMatchScore.TabIndex = 9;
             this.labelMatchScore.Text = "Match score: -";
             // 
             // labelDetectionTime
             // 
             this.labelDetectionTime.AutoSize = true;
-            this.labelDetectionTime.Location = new System.Drawing.Point(983, 652);
-            this.labelDetectionTime.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelDetectionTime.Location = new System.Drawing.Point(737, 530);
             this.labelDetectionTime.Name = "labelDetectionTime";
-            this.labelDetectionTime.Size = new System.Drawing.Size(111, 17);
+            this.labelDetectionTime.Size = new System.Drawing.Size(84, 13);
             this.labelDetectionTime.TabIndex = 10;
             this.labelDetectionTime.Text = "Detection time: -";
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1263, 798);
+            this.ClientSize = new System.Drawing.Size(947, 648);
             this.Controls.Add(this.labelDetectionTime);
             this.Controls.Add(this.labelMatchScore);
             this.Controls.Add(this.label2);
@@ -161,7 +151,6 @@
             this.Controls.Add(this.buttonEnroll);
             this.Controls.Add(this.buttonStartCapture);
             this.Controls.Add(this.pictureBoxPreview);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "Form1";
             this.Text = "id3Face Recognition Sample";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).EndInit();

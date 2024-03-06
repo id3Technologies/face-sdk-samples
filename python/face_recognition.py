@@ -6,14 +6,13 @@ import os
 # Before calling any function of the SDK you must first check a valid license file.
 # To get such a file please use the provided activation tool.
 
-license_path = os.getenv("ID3_LICENSE_PATH")
-id3face.FaceLicense.check_license(license_path)
+id3face.FaceLicense.check_license("../id3Face.lic")
 
 """
 The Face SDK heavily relies on deep learning and hence requires trained models to run.
 Fill in the correct path to the downloaded models.
 """
-modelPath = "../sdk/models"
+modelPath = "../models"
 """
 Once a model is loaded in the desired processing unit (CPU or GPU) several instances of the associated processor can be created.
 For instance in this sample, we load a detector and an encoder.
@@ -108,7 +107,7 @@ faceTemplate1.to_file("../data/template1.bin")
 """
 Unload models
 """
-id3face.FaceLibrary.unload_model(id3face.FaceModel_FaceDetector4B, id3face.ProcessingUnit.CPU)
-id3face.FaceLibrary.unloadModel(id3face.FaceModel.FACE_ENCODER_9A, id3face.ProcessingUnit.CPU)
+id3face.FaceLibrary.unload_model(id3face.FaceModel.FACE_DETECTOR_4B, id3face.ProcessingUnit.CPU)
+id3face.FaceLibrary.unload_model(id3face.FaceModel.FACE_ENCODER_9A, id3face.ProcessingUnit.CPU)
 
 print("Sample terminated successfully.")

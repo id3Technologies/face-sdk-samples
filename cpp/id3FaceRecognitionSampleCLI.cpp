@@ -20,11 +20,11 @@ int main(int argc, char **argv)
 	/**
    	 * Fill in the correct path to the license.
    	 */
-	std::string license_path = std::getenv("ID3_LICENSE_PATH");
+	std::string license_path = "../../../id3Face.lic";
 	/**
    	 * Fill in the correct path to the downloaded models.
    	 */
-	std::string models_dir = "../../../sdk/models/";
+	std::string models_dir = "../../../models/";
 	/**
    	 * All functions of the API return an error code.
    	 */
@@ -46,6 +46,9 @@ int main(int argc, char **argv)
 	err = id3FaceImage_Initialize(&reference_image);
 	err = id3FaceImage_FromFile(reference_image, image1_path.c_str(), id3FacePixelFormat_Bgr24Bits);
 	check(err, "id3FaceImage_FromFile");
+    // Resize to 512 because of detector limit.
+    id3FaceImage_Resize(reference_image, 512, 0);
+    //
 	std::string image2_path = data_dir + "image2.jpg";
 	std::cout << "Loading probe image: " << image2_path.c_str() << std::endl;
 	ID3_FACE_IMAGE probe_image;
@@ -122,7 +125,7 @@ int main(int argc, char **argv)
 	check(err, "id3DetectedFaceList_Initialize");
 	err = id3DetectedFaceList_Initialize(&probe_list);
 	check(err, "id3DetectedFaceList_Initialize");
-	/**
+    /**
    	 * Detect faces in the images.
    	 */
 	std::cout << "Detecting faces" << std::endl;
@@ -247,9 +250,9 @@ int main(int argc, char **argv)
 		check(err, "id3FaceTemplate_ToBuffer with empty buffer");
 	}
 
-	std::cout << std::endl
-		 << "Press any key..." << std::endl;
-	std::cin.get();
+	//std::cout << std::endl
+	//	 << "Press any key..." << std::endl;
+	//std::cin.get();
 	/**
 	 * Dispose of all objects and unload models.
 	 */

@@ -1,0 +1,58 @@
+﻿<Page x:Class="id3FaceSearchSampleWPF.PageDatabase"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:sys="clr-namespace:System;assembly=mscorlib"
+      xmlns:local="clr-namespace:id3FaceSearchSampleWPF"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="FaceDatabasePage">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Background="#E0233B55" Height="42" Margin="0" Panel.ZIndex="10" Opacity="0.9" VerticalAlignment="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="100"/>
+            </Grid.ColumnDefinitions>
+            <Label x:Name="labelTitle" Grid.Column="0" Content="Watch List" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Foreground="White" FontSize="14"/>
+            <StackPanel  x:Name="panelProgress" Orientation="Vertical" Grid.ColumnSpan="2" Margin="0,0,10,0" HorizontalAlignment="Right" Visibility="Visible">
+                <TextBlock x:Name="labelProcessing"  HorizontalAlignment="Left" Margin="10,6,0,4"  Foreground="White" FontSize="10" VerticalAlignment="Top" Width="100" Text="Processing..."/>
+                <ProgressBar x:Name="progressBar" HorizontalAlignment="Left" Margin="10,0,0,2" Height="10" Width="217" Foreground="#FF7FB2FB" VerticalAlignment="Top"/>
+            </StackPanel>
+            <Button x:Name="buttonLoadImg" Grid.Column="1" HorizontalAlignment="Right" Width="32" Margin="0,0,4,0" Height="32" Click="ButtonLoadImg_Click" Background="{x:Null}" BorderThickness="0" >
+                <Image Source="Resources/if_open_32_white.png" Stretch="Fill"></Image>
+            </Button>
+        </Grid>
+        <ScrollViewer Grid.Row="1" Margin="0,0,0,0" VerticalScrollBarVisibility="Auto" Background="White" PreviewMouseWheel="MatchPairList_PreviewMouseWheel" SizeChanged="ScrollViewer_SizeChanged">
+            <ScrollViewer.Resources>
+                <sys:Double x:Key="{x:Static SystemParameters.VerticalScrollBarWidthKey}">8</sys:Double>
+            </ScrollViewer.Resources>
+                <ListView x:Name="MatchPairList" BorderBrush="White" VerticalContentAlignment="Stretch" Cursor="Hand" HorizontalContentAlignment="Stretch" >
+                    <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem} }"/>
+                </ListView.ItemContainerStyle>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                        <UniformGrid Columns="{Binding ColumnCount}"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Vertical" VerticalAlignment="Stretch" Margin="2,4,2,0" >
+                            <Rectangle RadiusX="10" RadiusY="10" Width="120" Height="160">
+                                    <Rectangle.Fill>
+                                        <ImageBrush ImageSource="{Binding BitmapSource}" Stretch="UniformToFill"/>
+                                    </Rectangle.Fill>
+                                </Rectangle>
+                                <TextBlock Text="{Binding Title}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="90" TextAlignment="Center" FontSize="10" TextTrimming="CharacterEllipsis" Height="16" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+        </ScrollViewer>
+    </Grid>
+</Page>

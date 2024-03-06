@@ -5,14 +5,13 @@ import os
 
 # Before calling any function of the SDK you must first check a valid license file.
 # To get such a file please use the provided activation tool.
-license_path = os.getenv("ID3_LICENSE_PATH")
-id3face.FaceLicense.check_license(license_path)
+id3face.FaceLicense.check_license("../id3Face.lic")
 
 """
 The Face SDK heavily relies on deep learning and hence requires trained models to run.
 Fill in the correct path to the downloaded models.
 """
-modelPath = "../sdk/models"
+modelPath = "../models"
 
 """
 Once a model is loaded in the desired processing unit (CPU or GPU) several instances of the associated processor can be created.
@@ -81,9 +80,12 @@ try:
     #Draw landmarks
     for i in range(landmarks.count):
         ldm = landmarks.get(i)
-        cv2.circle(image_cv, (ldm.X, ldm.Y), 3, (0,255,0), 2)
+        cv2.circle(image_cv, (ldm.x, ldm.y), 3, (0,255,0), 2)
     
     cv2.imwrite("../data/image1_landmarks.png", image_cv)
+
+    #cv2.imshow('image1 landmarks', image_cv)
+    #cv2.waitKey(0)
 
 except ImportError:
     print("Install opencv-python to plot and visualize the landmarks on the image")

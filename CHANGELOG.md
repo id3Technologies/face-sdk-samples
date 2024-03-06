@@ -1,6 +1,10 @@
 # id3 Face Toolkit Samples Changelog
+
+## Version 9.10.0.0 (2024-03-06)
+- Updated to id3 Face Toolkit 9.10.0
+
 ## Version 9.9.1.0 (2023-10-19)
-- Updated to id3 Face Toolkit 9.3.2
+- Updated to id3 Face Toolkit 9.9.1
 
 ## Version 9.3.2.0 (2022-12-01)
 - Added iOS Swift Recognition sample
