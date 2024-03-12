@@ -1,5 +1,8 @@
 # id3 Face Toolkit Samples Changelog
 
+## Version 9.10.0.1 (2024-03-12)
+- Upgrade 'System.Drawing.Common' to 5.0.3
+
 ## Version 9.10.0.0 (2024-03-06)
 - Updated to id3 Face Toolkit 9.10.0
 
