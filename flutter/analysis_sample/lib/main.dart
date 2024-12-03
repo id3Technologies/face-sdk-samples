@@ -13,11 +13,9 @@ void main() async {
 
   String hardwareCode;
   if (Platform.isAndroid) {
-    hardwareCode =
-        sdk.FaceLicense.getHostHardwareCode(sdk.LicenseHardwareCodeType.android);
+    hardwareCode = sdk.FaceLicense.getHostHardwareCode(sdk.LicenseHardwareCodeType.android);
   } else {
-    hardwareCode =
-        sdk.FaceLicense.getHostHardwareCode(sdk.LicenseHardwareCodeType.iOS);
+    hardwareCode = sdk.FaceLicense.getHostHardwareCode(sdk.LicenseHardwareCodeType.ios);
   }
   await activateLicense(hardwareCode);
   await loadModels();
@@ -42,8 +40,7 @@ Future<void> activateLicense(String hardwareCode) async {
     For deployment purposes there is also an API to use your id3 account to retrieve the license file.
     This API need the login/password and product package of the SDK you use.
   */
-  final licensePath =
-      '${(await getTemporaryDirectory()).path}/id3/id3license/id3license_$productReference.lic';
+  final licensePath = '${(await getTemporaryDirectory()).path}/id3/id3license/id3license_$productReference.lic';
   final licenseFile = File(licensePath);
   try {
     sdk.FaceLicense.checkLicense(licensePath);
@@ -57,11 +54,9 @@ Future<void> activateLicense(String hardwareCode) async {
       );
     }
 
-    if (login() != "login" &&
-        password() != "password" &&
-        productReference() != "00000000") {
-      licenseBytes = sdk.FaceLicense.activateBuffer(hardwareCode, login(), password(),
-          productReference(), "Activated from face capture sample");
+    if (login() != "login" && password() != "password" && productReference() != "00000000") {
+      licenseBytes = sdk.FaceLicense.activateBuffer(
+          hardwareCode, login(), password(), productReference(), "Activated from face capture sample");
     }
     if (!licenseFile.existsSync()) {
       licenseFile.createSync(recursive: true);
@@ -73,29 +68,25 @@ Future<void> activateLicense(String hardwareCode) async {
 }
 
 Future<void> loadModels() async {
-  final faceDetector =
-      await rootBundle.load('assets/models/face_detector_v4b.id3nn');
+  final faceDetector = await rootBundle.load('assets/models/face_detector_v4b.id3nn');
   sdk.FaceLibrary.loadModelBuffer(
     faceDetector.buffer.asUint8List(),
     sdk.FaceModel.faceDetector4B,
     sdk.ProcessingUnit.cpu,
   );
-  final faceAttackSupportDetector =
-      await rootBundle.load('assets/models/face_pose_estimator_v1a.id3nn');
+  final faceAttackSupportDetector = await rootBundle.load('assets/models/face_pose_estimator_v1a.id3nn');
   sdk.FaceLibrary.loadModelBuffer(
     faceAttackSupportDetector.buffer.asUint8List(),
     sdk.FaceModel.facePoseEstimator1A,
     sdk.ProcessingUnit.cpu,
   );
-  final faceBlurrinessDetector =
-      await rootBundle.load('assets/models/face_occlusion_detector_v2a.id3nn');
+  final faceBlurrinessDetector = await rootBundle.load('assets/models/face_occlusion_detector_v2a.id3nn');
   sdk.FaceLibrary.loadModelBuffer(
     faceBlurrinessDetector.buffer.asUint8List(),
     sdk.FaceModel.faceOcclusionDetector2A,
     sdk.ProcessingUnit.cpu,
   );
-  final faceColorPad = await rootBundle
-      .load('assets/models/face_attributes_classifier_v2a.id3nn');
+  final faceColorPad = await rootBundle.load('assets/models/face_attributes_classifier_v2a.id3nn');
   sdk.FaceLibrary.loadModelBuffer(
     faceColorPad.buffer.asUint8List(),
     sdk.FaceModel.faceAttributesClassifier2A,

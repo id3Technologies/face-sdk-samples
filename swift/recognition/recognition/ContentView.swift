@@ -45,7 +45,7 @@ struct ContentView: View {
                 - first we load the model from the Assets
                 - then we initialize the FaceDetector object
             */
-            let nsdata_detector = NSDataAsset(name: "face_detector_v3b")!.data
+            let nsdata_detector = NSDataAsset(name: "face_detector_v4b")!.data
             try FaceLibrary.loadModelBuffer(modelBuffer: [UInt8](nsdata_detector),
                                             faceModel: FaceModel.faceDetector4B,
                                             processingUnit: ProcessingUnit.cpu)

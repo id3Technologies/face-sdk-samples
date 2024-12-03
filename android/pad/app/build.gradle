@@ -4,12 +4,12 @@ plugins {
 }
 
 android {
-    compileSdk 32
+    compileSdk 34
 
     defaultConfig {
         applicationId "eu.id3.face.samples.pad"
         minSdk 21
-        targetSdk 32
+        targetSdk 34
         versionCode 1
         versionName "1.0"
     }
@@ -31,7 +31,7 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: '../../../sdk/bin/android', include: ['*.aar'])
+    implementation files('../../../sdk/bin/android/eu.id3.face.aar')
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'

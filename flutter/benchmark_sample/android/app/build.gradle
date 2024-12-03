@@ -67,5 +67,5 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation fileTree(dir: '../../../../sdk/bin/android', include: ['*.aar'])
+    implementation files('../../../../sdk/bin/android/eu.id3.face.aar')
 }

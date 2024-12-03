@@ -15,11 +15,9 @@ void main() async {
   String hardwareCode;
 
   if (Platform.isAndroid) {
-    hardwareCode =
-        sdk.FaceLicense.getHostHardwareCode(sdk.LicenseHardwareCodeType.android);
+    hardwareCode = sdk.FaceLicense.getHostHardwareCode(sdk.LicenseHardwareCodeType.android);
   } else {
-    hardwareCode =
-        sdk.FaceLicense.getHostHardwareCode(sdk.LicenseHardwareCodeType.iOS);
+    hardwareCode = sdk.FaceLicense.getHostHardwareCode(sdk.LicenseHardwareCodeType.ios);
   }
 
   await activateLicense(hardwareCode);
@@ -48,7 +46,7 @@ Future<void> activateLicense(String hardwareCode) async {
   final licensePath = '${(await getTemporaryDirectory()).path}/id3/id3license/id3license_$productReference.lic';
   final licenseFile = File(licensePath);
   try {
-   sdk.FaceLicense.checkLicense(licensePath);
+    sdk.FaceLicense.checkLicense(licensePath);
   } catch (_) {
     Uint8List? licenseBytes;
     if (serialKey() != "0000-0000-0000-0000") {
@@ -59,38 +57,33 @@ Future<void> activateLicense(String hardwareCode) async {
       );
     }
 
-    if (login() != "login" &&
-        password() != "password" &&
-        productReference() != "00000000") {
-      licenseBytes = sdk.FaceLicense.activateBuffer(hardwareCode, login(), password(),
-          productReference(), "Activated from face capture sample");
+    if (login() != "login" && password() != "password" && productReference() != "00000000") {
+      licenseBytes = sdk.FaceLicense.activateBuffer(
+          hardwareCode, login(), password(), productReference(), "Activated from face capture sample");
     }
     if (!licenseFile.existsSync()) {
       licenseFile.createSync(recursive: true);
     }
     licenseFile.writeAsBytesSync(licenseBytes!);
- 
+
     sdk.FaceLicense.checkLicense(licensePath);
   }
 }
 
 Future<void> loadModels() async {
-  final faceDetector =
-      await rootBundle.load('assets/models/face_detector_v4b.id3nn');
+  final faceDetector = await rootBundle.load('assets/models/face_detector_v4b.id3nn');
   sdk.FaceLibrary.loadModelBuffer(
     faceDetector.buffer.asUint8List(),
     sdk.FaceModel.faceDetector4B,
     sdk.ProcessingUnit.cpu,
   );
-  final faceEncoder =
-      await rootBundle.load('assets/models/face_encoder_v9b.id3nn');
+  final faceEncoder = await rootBundle.load('assets/models/face_encoder_v9b.id3nn');
   sdk.FaceLibrary.loadModelBuffer(
     faceEncoder.buffer.asUint8List(),
     sdk.FaceModel.faceEncoder9B,
     sdk.ProcessingUnit.cpu,
   );
-  final faceQuality = await rootBundle
-      .load('assets/models/face_encoding_quality_estimator_v3a.id3nn');
+  final faceQuality = await rootBundle.load('assets/models/face_encoding_quality_estimator_v3a.id3nn');
   sdk.FaceLibrary.loadModelBuffer(
     faceQuality.buffer.asUint8List(),
     sdk.FaceModel.faceEncodingQualityEstimator3A,
@@ -140,8 +133,7 @@ class _CapturePageState extends State<CapturePage> {
     // we check available cameras and create controller with the front camera
     availableCameras().then((cameras) {
       controller = CameraController(
-        cameras.firstWhere(
-            (camera) => camera.lensDirection == CameraLensDirection.front),
+        cameras.firstWhere((camera) => camera.lensDirection == CameraLensDirection.front),
         ResolutionPreset.max,
         enableAudio: false,
       );
@@ -197,9 +189,7 @@ class _CapturePageState extends State<CapturePage> {
                     });
                   }
                 },
-                child: Text((controller?.value.isStreamingImages ?? false)
-                    ? 'STOP CAPTURE'
-                    : 'START CAPTURE'),
+                child: Text((controller?.value.isStreamingImages ?? false) ? 'STOP CAPTURE' : 'START CAPTURE'),
               ),
               ElevatedButton(
                 onPressed: () async {
@@ -256,8 +246,7 @@ EnrollResult onEnroll(CaptureProcessResult result) {
   final faceEncoder = sdk.FaceEncoder();
   faceEncoder.setModel(sdk.FaceModel.faceEncoder9B);
 
-  final image =
-      sdk.Image.fromBuffer(result.imageBytes, sdk.PixelFormat.bgr24Bits);
+  final image = sdk.Image.fromBuffer(result.imageBytes, sdk.PixelFormat.bgr24Bits);
 
   final detectedFace = sdk.DetectedFace.fromBuffer(result.detectedFaceBytes);
   // get a cropped image of face with ICAO settings
@@ -285,16 +274,13 @@ class MatchResult {
   final int score;
 }
 
-MatchResult onMatch(
-    CaptureProcessResult captureResult, EnrollResult enrollResult) {
+MatchResult onMatch(CaptureProcessResult captureResult, EnrollResult enrollResult) {
   final faceEncoder = sdk.FaceEncoder();
   faceEncoder.setModel(sdk.FaceModel.faceEncoder9B);
 
-  final image =
-      sdk.Image.fromBuffer(captureResult.imageBytes, sdk.PixelFormat.bgr24Bits);
+  final image = sdk.Image.fromBuffer(captureResult.imageBytes, sdk.PixelFormat.bgr24Bits);
 
-  final detectedFace =
-      sdk.DetectedFace.fromBuffer(captureResult.detectedFaceBytes);
+  final detectedFace = sdk.DetectedFace.fromBuffer(captureResult.detectedFaceBytes);
 
   final quality = faceEncoder.computeQuality(image, detectedFace);
 

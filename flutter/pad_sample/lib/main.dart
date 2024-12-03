@@ -15,11 +15,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   String hardwareCode;
   if (Platform.isAndroid) {
-    hardwareCode =
-        sdk.FaceLicense.getHostHardwareCode(sdk.LicenseHardwareCodeType.android);
+    hardwareCode = sdk.FaceLicense.getHostHardwareCode(sdk.LicenseHardwareCodeType.android);
   } else {
-    hardwareCode =
-        sdk.FaceLicense.getHostHardwareCode(sdk.LicenseHardwareCodeType.iOS);
+    hardwareCode = sdk.FaceLicense.getHostHardwareCode(sdk.LicenseHardwareCodeType.ios);
   }
   await activateLicense(hardwareCode);
   await loadModels();
@@ -44,8 +42,7 @@ Future<void> activateLicense(String hardwareCode) async {
     For deployment purposes there is also an API to use your id3 account to retrieve the license file.
     This API need the login/password and product package of the SDK you use.
   */
-  final licensePath =
-      '${(await getTemporaryDirectory()).path}/id3/id3license/id3license_$productReference.lic';
+  final licensePath = '${(await getTemporaryDirectory()).path}/id3/id3license/id3license_$productReference.lic';
   final licenseFile = File(licensePath);
   try {
     sdk.FaceLicense.checkLicense(licensePath);
@@ -58,11 +55,9 @@ Future<void> activateLicense(String hardwareCode) async {
         "Activated from Face capture sample",
       );
     }
-    if (login() != "login" &&
-        password() != "password" &&
-        productReference() != "00000000") {
-      licenseBytes = sdk.FaceLicense.activateBuffer(hardwareCode, login(),
-          password(), productReference(), "Activated from face capture sample");
+    if (login() != "login" && password() != "password" && productReference() != "00000000") {
+      licenseBytes = sdk.FaceLicense.activateBuffer(
+          hardwareCode, login(), password(), productReference(), "Activated from face capture sample");
     }
     if (!licenseFile.existsSync()) {
       licenseFile.createSync(recursive: true);
@@ -74,30 +69,26 @@ Future<void> activateLicense(String hardwareCode) async {
 }
 
 Future<void> loadModels() async {
-  final faceDetector =
-      await rootBundle.load('assets/models/face_detector_v4b.id3nn');
+  final faceDetector = await rootBundle.load('assets/models/face_detector_v4b.id3nn');
   sdk.FaceLibrary.loadModelBuffer(
     faceDetector.buffer.asUint8List(),
     sdk.FaceModel.faceDetector4B,
     sdk.ProcessingUnit.cpu,
   );
 
-  final faceAttackSupportDetector = await rootBundle
-      .load('assets/models/face_attack_support_detector_v3a.id3nn');
+  final faceAttackSupportDetector = await rootBundle.load('assets/models/face_attack_support_detector_v3a.id3nn');
   sdk.FaceLibrary.loadModelBuffer(
     faceAttackSupportDetector.buffer.asUint8List(),
     sdk.FaceModel.faceAttackSupportDetector3A,
     sdk.ProcessingUnit.cpu,
   );
-  final faceBlurrinessDetector =
-      await rootBundle.load('assets/models/face_blurriness_detector_v1a.id3nn');
+  final faceBlurrinessDetector = await rootBundle.load('assets/models/face_blurriness_detector_v1a.id3nn');
   sdk.FaceLibrary.loadModelBuffer(
     faceBlurrinessDetector.buffer.asUint8List(),
     sdk.FaceModel.faceBlurrinessDetector1A,
     sdk.ProcessingUnit.cpu,
   );
-  final faceColorPad =
-      await rootBundle.load('assets/models/face_color_pad_v2a.id3nn');
+  final faceColorPad = await rootBundle.load('assets/models/face_color_pad_v2a.id3nn');
   sdk.FaceLibrary.loadModelBuffer(
     faceColorPad.buffer.asUint8List(),
     sdk.FaceModel.faceColorBasedPad2A,
@@ -145,8 +136,7 @@ class _CapturePageState extends State<CapturePage> {
     super.initState();
     availableCameras().then((cameras) {
       controller = CameraController(
-        cameras.firstWhere(
-            (camera) => camera.lensDirection == CameraLensDirection.front),
+        cameras.firstWhere((camera) => camera.lensDirection == CameraLensDirection.front),
         ResolutionPreset.max,
         enableAudio: false,
       );
@@ -203,9 +193,7 @@ class _CapturePageState extends State<CapturePage> {
                     });
                   }
                 },
-                child: Text((controller?.value.isStreamingImages ?? false)
-                    ? 'STOP CAPTURE'
-                    : 'START CAPTURE'),
+                child: Text((controller?.value.isStreamingImages ?? false) ? 'STOP CAPTURE' : 'START CAPTURE'),
               ),
               ElevatedButton(
                 onPressed: () async {
@@ -241,8 +229,7 @@ class _CapturePageState extends State<CapturePage> {
                         PadResult(
                           spoofCondition: analyzeResult.isAttackSpoof,
                           bonaFideText: "No attack support",
-                          spoofText:
-                              "Attack support detected ${analyzeResult.detectedAttackSupport.name}",
+                          spoofText: "Attack support detected ${analyzeResult.detectedAttackSupport.name}",
                         ),
                         PadResult(
                           spoofCondition: analyzeResult.isBlurSpoof,
@@ -351,8 +338,7 @@ class AnalyzeFaceResult {
 AnalyzeFaceResult onAnalyze(CaptureProcessResult result) {
   final facePad = sdk.FacePad();
   try {
-    final image =
-        sdk.Image.fromBuffer(result.imageBytes, sdk.PixelFormat.bgr24Bits);
+    final image = sdk.Image.fromBuffer(result.imageBytes, sdk.PixelFormat.bgr24Bits);
 
     final detectedFace = sdk.DetectedFace.fromBuffer(result.detectedFaceBytes);
 
@@ -362,8 +348,7 @@ AnalyzeFaceResult onAnalyze(CaptureProcessResult result) {
 
     cropped.flip(true, false);
 
-    final detectedAttackSupport =
-        facePad.detectAttackSupport(image, detectedFace);
+    final detectedAttackSupport = facePad.detectAttackSupport(image, detectedFace);
 
     final faceAttackSupport = sdk.FaceAttackSupportX.fromValue(
       detectedAttackSupport.struct.AttackSupport,
@@ -371,8 +356,7 @@ AnalyzeFaceResult onAnalyze(CaptureProcessResult result) {
 
     final blurScore = facePad.computeBlurrinessScore(image, detectedFace);
 
-    final colorScoreResults =
-        facePad.computeColorBasedScore(image, detectedFace);
+    final colorScoreResults = facePad.computeColorBasedScore(image, detectedFace);
     int colorScore = colorScoreResults.struct.Score;
     int colorScoreConfidence = colorScoreResults.struct.Confidence;
 

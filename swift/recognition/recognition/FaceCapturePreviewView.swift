@@ -185,22 +185,22 @@ extension FaceCapturePreviewUIView : AVCaptureVideoDataOutputSampleBufferDelegat
     
     // This function will load the CMSSampleBuffer provided by the camera into a id3Face.Image object will can be used with the id3 SDKs
     private func imageFromCMSampleBuffer(cmsBuffer: CMSampleBuffer) throws -> id3Face.Image {
-        let imageBuffer = CMSampleBufferGetImageBuffer(cmsBuffer)!
-        CVPixelBufferLockBaseAddress(imageBuffer, CVPixelBufferLockFlags(rawValue: 0))
-        let byterPerRow = CVPixelBufferGetBytesPerRow(imageBuffer)
-        let height = CVPixelBufferGetHeight(imageBuffer)
-        let width = CVPixelBufferGetWidth(imageBuffer)
-        let srcBuff = CVPixelBufferGetBaseAddress(imageBuffer)
-        CVPixelBufferUnlockBaseAddress(imageBuffer, CVPixelBufferLockFlags(rawValue: 0))
-        
-        return try id3Face.Image.fromRawBuffer(pixels: srcBuff!.bindMemory(to: UInt8.self, capacity: byterPerRow*height),
-                                               pixelsSize: Int32(byterPerRow*height),
-                                               width: Int32(width),
-                                               height: Int32(height),
-                                               stride: Int32(byterPerRow),
-                                               srcPixelFormat: PixelFormat.bgra,
-                                               dstPixelFormat: PixelFormat.bgr24Bits)
-    }
+            let imageBuffer = CMSampleBufferGetImageBuffer(cmsBuffer)!
+            CVPixelBufferLockBaseAddress(imageBuffer, CVPixelBufferLockFlags(rawValue: 0))
+            let bytesPerRow = CVPixelBufferGetBytesPerRow(imageBuffer)
+            let height = CVPixelBufferGetHeight(imageBuffer)
+            let width = CVPixelBufferGetWidth(imageBuffer)
+            let srcBuff = CVPixelBufferGetBaseAddress(imageBuffer)
+            CVPixelBufferUnlockBaseAddress(imageBuffer, CVPixelBufferLockFlags(rawValue: 0))
+            let pixelArray = Array(UnsafeBufferPointer(start: srcBuff!.assumingMemoryBound(to: UInt8.self), count: bytesPerRow * height))
+
+            return try id3Face.Image.fromRawBuffer(pixels: pixelArray,
+                width: Int32(width),
+                height: Int32(height),
+                stride: Int32(bytesPerRow),
+                srcPixelFormat: PixelFormat.bgra,
+                dstPixelFormat: PixelFormat.bgr24Bits)
+        }
     
     /**
      * Draws a yellow rectange around the detected face

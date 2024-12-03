@@ -13,11 +13,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   String hardwareCode;
   if (Platform.isAndroid) {
-   hardwareCode =
-        sdk.FaceLicense.getHostHardwareCode(sdk.LicenseHardwareCodeType.android);
+    hardwareCode = sdk.FaceLicense.getHostHardwareCode(sdk.LicenseHardwareCodeType.android);
   } else {
-    hardwareCode =
-        sdk.FaceLicense.getHostHardwareCode(sdk.LicenseHardwareCodeType.iOS);
+    hardwareCode = sdk.FaceLicense.getHostHardwareCode(sdk.LicenseHardwareCodeType.ios);
   }
   await activateLicense(hardwareCode);
 
@@ -73,17 +71,15 @@ Future<void> activateLicense(String hardwareCode) async {
       );
     }
 
-    if (login() != "login" &&
-        password() != "password" &&
-        productReference() != "00000000") {
-      licenseBytes = sdk.FaceLicense.activateBuffer(hardwareCode, login(), password(),
-          productReference(), "Activated from face capture sample");
+    if (login() != "login" && password() != "password" && productReference() != "00000000") {
+      licenseBytes = sdk.FaceLicense.activateBuffer(
+          hardwareCode, login(), password(), productReference(), "Activated from face capture sample");
     }
     if (!licenseFile.existsSync()) {
       licenseFile.createSync(recursive: true);
     }
     licenseFile.writeAsBytesSync(licenseBytes!);
-   
+
     sdk.FaceLicense.checkLicense(licensePath);
   }
 }

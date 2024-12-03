@@ -39,7 +39,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
-    implementation fileTree(dir: '../../../sdk/bin/android', include: ['*.aar'])
+    implementation files('../../../sdk/bin/android/eu.id3.face.aar')
 
     def camerax_version = "1.1.0"
     implementation "androidx.camera:camera-core:${camerax_version}"
