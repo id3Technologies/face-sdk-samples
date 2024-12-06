@@ -116,7 +116,7 @@ struct ContentView: View {
         do {
             NSLog("Beginning register...\n")
             
-            let hardwareCode: String = try FaceLicense.getHostHardwareCode(hardwareCodeType: LicenseHardwareCodeType.iOS)
+            let hardwareCode: String = try FaceLicense.getHostHardwareCode(hardwareCodeType: LicenseHardwareCodeType.ios)
 
             // Check if the license is registered in the device
             let documentsDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
@@ -133,7 +133,7 @@ struct ContentView: View {
             
             } else {
                 // The license has not been found
-                let hardwareCode: String = try FaceLicense.getHostHardwareCode(hardwareCodeType: LicenseHardwareCodeType.iOS)
+                let hardwareCode: String = try FaceLicense.getHostHardwareCode(hardwareCodeType: LicenseHardwareCodeType.ios)
                 
                 NSLog("Hardware code: " + hardwareCode + "  OK !\n")
                 let licBuff = try FaceLicense.activateBuffer(hardwareCode: hardwareCode,
