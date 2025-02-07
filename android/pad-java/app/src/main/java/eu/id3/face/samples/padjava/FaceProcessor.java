@@ -9,23 +9,27 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import eu.id3.face.ColorBasedPadResult;
 import eu.id3.face.DetectedFace;
-import eu.id3.face.DetectedFaceAttackSupport;
 import eu.id3.face.DetectedFaceList;
 import eu.id3.face.FaceDetector;
 import eu.id3.face.FaceException;
 import eu.id3.face.FaceLibrary;
 import eu.id3.face.FaceModel;
-import eu.id3.face.FacePad;
 import eu.id3.face.Image;
 import eu.id3.face.ImageFormat;
+import eu.id3.face.PadStatus;
+import eu.id3.face.Portrait;
+import eu.id3.face.PortraitInstruction;
+import eu.id3.face.PortraitProcessor;
 import eu.id3.face.ProcessingUnit;
 import eu.id3.face.Rectangle;
 
 public class FaceProcessor {
     private FaceDetector faceDetector = null;
-    private FacePad facePad = null;
+
+    private PortraitProcessor processor;
+    private Portrait portrait;
+    private boolean portraitCreated;
 
     public FaceProcessor(Context context) {
         String LOG_TAG = "FaceProcessor";
@@ -36,31 +40,38 @@ public class FaceProcessor {
              * Only one FaceDetector object is needed to perform all of your detection operation.
              */
             FaceLibrary.loadModelBuffer(
-                    readAllBytes(context.getAssets().open("models/face_detector_v3b.id3nn")),
-                    FaceModel.FACE_DETECTOR_3B, ProcessingUnit.CPU
+                    readAllBytes(context.getAssets().open("models/face_detector_v4b.id3nn")),
+                    FaceModel.FACE_DETECTOR_4B, ProcessingUnit.CPU
             );
             faceDetector = new FaceDetector();
             faceDetector.setConfidenceThreshold(Parameters.detectorConfidenceThreshold);
-            faceDetector.setModel(FaceModel.FACE_DETECTOR_3B);
+            faceDetector.setModel(FaceModel.FACE_DETECTOR_4B);
             faceDetector.setThreadCount(Parameters.detectorThreadCount);
 
-            /**
-             * Load a face presentation attack detector (PAD).
-             * First load the models from the Assets and then initialize the FacePad object.
+            /*
+             * Load portrait processor.
+             * First load the models from the Assets and then initialize the PortraitProcessor object.
              */
             FaceLibrary.loadModelBuffer(
-                    readAllBytes(context.getAssets().open("models/face_attack_support_detector_v2a.id3nn")),
-                    FaceModel.FACE_ATTACK_SUPPORT_DETECTOR_2A, ProcessingUnit.CPU
+                    readAllBytes(context.getAssets().open("models/face_encoder_v9b.id3nn")),
+                    FaceModel.FACE_ENCODER_9B, ProcessingUnit.CPU
             );
             FaceLibrary.loadModelBuffer(
-                    readAllBytes(context.getAssets().open("models/face_color_pad_v2a.id3nn")),
-                    FaceModel.FACE_COLOR_BASED_PAD_2A, ProcessingUnit.CPU
+                    readAllBytes(context.getAssets().open("models/face_landmarks_estimator_v2a.id3nn")),
+                    FaceModel.FACE_LANDMARKS_ESTIMATOR_2A, ProcessingUnit.CPU
             );
             FaceLibrary.loadModelBuffer(
-                    readAllBytes(context.getAssets().open("models/face_blurriness_detector_v1a.id3nn")),
-                    FaceModel.FACE_BLURRINESS_DETECTOR_1A, ProcessingUnit.CPU
+                    readAllBytes(context.getAssets().open("models/face_pose_estimator_v1a.id3nn")),
+                    FaceModel.FACE_POSE_ESTIMATOR_1A, ProcessingUnit.CPU
             );
-            facePad = new FacePad();
+            FaceLibrary.loadModelBuffer(
+                    readAllBytes(context.getAssets().open("models/face_color_pad_v3a.id3nn")),
+                    FaceModel.FACE_COLOR_BASED_PAD_3A, ProcessingUnit.CPU
+            );
+
+            processor = new PortraitProcessor();
+            portraitCreated = false;
+
             Log.v(LOG_TAG, "Load models: OK !");
         } catch (FaceException | IOException e) {
             e.printStackTrace();
@@ -89,6 +100,10 @@ public class FaceProcessor {
         }
     }
 
+    public void resetPortrait() {
+        portraitCreated = false;
+    }
+
     public DetectedFace detectLargestFace(eu.id3.face.Image image) {
         /* Track faces in the image. */
         DetectedFaceList detectedFaceList = faceDetector.detectFaces(image);
@@ -103,14 +118,17 @@ public class FaceProcessor {
 
     public AnalyzeLargestFaceResult analyzeLargestFace(eu.id3.face.Image image, DetectedFace detectedFace) {
         try {
-            /* Detects attack support if any. */
-            DetectedFaceAttackSupport detectedAttackSupport = facePad.detectAttackSupport(image, detectedFace);
+            /* Initialize or update portrait */
+            if (!portraitCreated)
+            {
+                portrait = new Portrait();
+                portraitCreated = true;
+            }
 
-            /* Computes blurriness score. */
-            int blurScore = facePad.computeBlurrinessScore(image, detectedFace);
-
-            /* Computes color-based PAD score. */
-            ColorBasedPadResult colorScoreResult = facePad.computeColorBasedScore(image, detectedFace);
+            /* Detects attack support with portrait processor. */
+            processor.updatePortrait(portrait, image);
+            processor.estimatePhotographicQuality(portrait);
+            processor.detectPresentationAttack(portrait);
 
             /* Extracts the portrait image of the detected face to display it. */
             Rectangle portraitBounds = detectedFace.getPortraitBounds(0.25f, 0.45f, 1.33f);
@@ -124,44 +142,38 @@ public class FaceProcessor {
 
             return new AnalyzeLargestFaceResult(
                     jpegPortraitImageBuffer,
-                    detectedAttackSupport,
-                    blurScore,
-                    colorScoreResult.score,
-                    colorScoreResult.confidence,
+                    portrait.getInstruction(),
+                    portrait.getPadStatus(),
+                    portrait.getPadScore(),
                     0
             );
         } catch (FaceException e) {
             return new AnalyzeLargestFaceResult(
                     null,
-                    new DetectedFaceAttackSupport(),
-                    0,
-                    0,
+                    PortraitInstruction.NONE,
+                    PadStatus.UNKNOWN,
                     0,
                     e.getErrorCode()
             );
         }
-
     }
 
     static class AnalyzeLargestFaceResult {
         private final byte[] jpegPortraitImageBuffer_;
-        private final DetectedFaceAttackSupport detectedFaceAttackSupport_;
-        private final int blurScore_;
-        private final int colorScore_;
-        private final int colorScoreConfidence_;
+        private final PortraitInstruction instruction_;
+        private final PadStatus status_;
+        private final int score_;
         private final int errorCode_;
 
         public AnalyzeLargestFaceResult(byte[] jpegPortraitImageBuffer,
-                                        DetectedFaceAttackSupport detectedFaceAttackSupport,
-                                        int blurScore,
-                                        int colorScore,
-                                        int colorScoreConfidence,
+                                        PortraitInstruction instruction,
+                                        PadStatus status,
+                                        int score,
                                         int errorCode) {
             jpegPortraitImageBuffer_ = jpegPortraitImageBuffer;
-            detectedFaceAttackSupport_ = detectedFaceAttackSupport;
-            blurScore_ = blurScore;
-            colorScore_ = colorScore;
-            colorScoreConfidence_ = colorScoreConfidence;
+            instruction_ = instruction;
+            status_ = status;
+            score_ = score;
             errorCode_ = errorCode;
         }
 
@@ -169,20 +181,16 @@ public class FaceProcessor {
             return jpegPortraitImageBuffer_;
         }
 
-        public DetectedFaceAttackSupport getDetectedFaceAttackSupport() {
-            return detectedFaceAttackSupport_;
+        public PortraitInstruction getInstruction() {
+            return instruction_;
         }
 
-        public int getBlurScore() {
-            return blurScore_;
+        public PadStatus getStatus() {
+            return status_;
         }
 
-        public int getColorScore() {
-            return colorScore_;
-        }
-
-        public int getColorScoreConfidence() {
-            return colorScoreConfidence_;
+        public int getScore() {
+            return score_;
         }
 
         public int getErrorCode() {

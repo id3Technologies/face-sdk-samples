@@ -12,9 +12,17 @@ using id3.Face;
 
 namespace id3.Face.Samples.PadWF
 {
-
     public partial class Form1 : Form
     {
+        /*
+         * Put here the webcam index to use.
+         */
+        private int _cameraIndex = 0;
+
+        private PortraitProcessor _processor;
+        private Portrait _portrait;
+        private bool _portraitCreated;
+
         class WorkerProgress
         {
             public long TrackTime;
@@ -32,9 +40,9 @@ namespace id3.Face.Samples.PadWF
             public FacePadResult() {}
             public FacePadResult(string message) { this.message = message; }
             public string message;
-            public int blurrinessScore;
-            public ColorBasedPadResult colorScoreResult;
-            public DetectedFaceAttackSupport attackSupport;
+            public PortraitInstruction Instruction;
+            public PadStatus Status;
+            public int Score;
         }
 
         Bitmap[] bitmapBuffer;
@@ -89,9 +97,10 @@ namespace id3.Face.Samples.PadWF
             {
                 // Once a model is loaded in the desired processing unit (CPU or GPU) several instances of the associated processor can be created.
                 FaceLibrary.LoadModel(modelPath, FaceModel.FaceDetector4B, ProcessingUnit.Cpu);
-                FaceLibrary.LoadModel(modelPath, FaceModel.FaceBlurrinessDetector1A, ProcessingUnit.Cpu);
-                FaceLibrary.LoadModel(modelPath, FaceModel.FaceColorBasedPad2A, ProcessingUnit.Cpu);
-                FaceLibrary.LoadModel(modelPath, FaceModel.FaceAttackSupportDetector3A, ProcessingUnit.Cpu);
+                FaceLibrary.LoadModel(modelPath, FaceModel.FaceEncoder9B, ProcessingUnit.Cpu);
+                FaceLibrary.LoadModel(modelPath, FaceModel.FaceLandmarksEstimator2A, ProcessingUnit.Cpu);
+                FaceLibrary.LoadModel(modelPath, FaceModel.FacePoseEstimator1A, ProcessingUnit.Cpu);
+                FaceLibrary.LoadModel(modelPath, FaceModel.FaceColorBasedPad3A, ProcessingUnit.Cpu);
             }
             catch (FaceException ex)
             {
@@ -100,6 +109,9 @@ namespace id3.Face.Samples.PadWF
             }
 
             queue = new ConcurrentQueue<QueueData>();
+
+            _processor = new PortraitProcessor();
+            _portraitCreated = false;
 
             // PAD background worker
             pad = new BackgroundWorker()
@@ -149,20 +161,27 @@ namespace id3.Face.Samples.PadWF
 
         private void Pad_DoWork(object sender, DoWorkEventArgs e)
         {
-            var facePad = new FacePad();
             while (!pad.CancellationPending)
             {
-                QueueData queueData;
-                if (queue.TryDequeue(out queueData))
+                if (queue.TryDequeue(out QueueData queueData))
                 {
-                    // Compute PAD scores.
+                    // Compute PAD properties.
                     try
                     {
-                        var facePadResult = new FacePadResult()
+                        if (!_portraitCreated)
                         {
-                            blurrinessScore = facePad.ComputeBlurrinessScore(queueData.image, queueData.detectedFace),
-                            colorScoreResult = facePad.ComputeColorBasedScore(queueData.image, queueData.detectedFace),
-                            attackSupport = facePad.DetectAttackSupport(queueData.image, queueData.detectedFace)
+                            _portrait = new Portrait();
+                            _portraitCreated = true;
+                        }                     
+                        _processor.UpdatePortrait(_portrait, queueData.image);
+                        _processor.EstimatePhotographicQuality(_portrait);
+                        _processor.DetectPresentationAttack(_portrait);
+
+                        FacePadResult facePadResult = new FacePadResult()
+                        {
+                            Instruction = _portrait.Instruction,
+                            Status = _portrait.PadStatus,
+                            Score = _portrait.PadScore,
                         };
                         pad.ReportProgress(0, facePadResult);
                     }
@@ -180,21 +199,17 @@ namespace id3.Face.Samples.PadWF
 
         private void Pad_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            var facePadResult = (FacePadResult)e.UserState;
-            if(string.IsNullOrEmpty(facePadResult.message))
+            FacePadResult facePadResult = (FacePadResult)e.UserState;
+            if (string.IsNullOrEmpty(facePadResult.message))
             {
-                labelColorPadScore.Text = $"Color PAD score: {facePadResult.colorScoreResult.Score}";
-                labelColorPadConfidence.Text = $"Color PAD confidence: {facePadResult.colorScoreResult.Confidence}";
-                labelBlurrinessScore.Text = $"Blurriness score: {facePadResult.blurrinessScore}";
-                labelAttackSupportScore.Text = $"Attack support score: {facePadResult.attackSupport.Score}";
-                labelPadStatus.Text = "PAD Status: ok";
+                labelInstruction.Text = $"Instruction: {facePadResult.Instruction}";
+                labelColorPadScore.Text = $"Color PAD score: {facePadResult.Score}";
+                labelPadStatus.Text = $"PAD Status: {facePadResult.Status}";
             }
             else
             {
+                labelInstruction.Text = "Instruction:";
                 labelColorPadScore.Text = "Color PAD score:";
-                labelColorPadConfidence.Text = "Color PAD confidence:";
-                labelBlurrinessScore.Text = "Blurriness score:";
-                labelAttackSupportScore.Text = "Attack support score:";
                 labelPadStatus.Text = $"PAD Status: {facePadResult.message}";
             }
         }
@@ -213,7 +228,7 @@ namespace id3.Face.Samples.PadWF
 
             var frame = new Mat();
             capture = new VideoCapture(0);
-            capture.Open(0);
+            capture.Open(_cameraIndex);
 
             int bitmapIndex = 0;
 
@@ -299,7 +314,7 @@ namespace id3.Face.Samples.PadWF
         private bool IsCameraPlugged()
         {
             capture = new VideoCapture(0);
-            bool ret = capture.Open(0);
+            bool ret = capture.Open(_cameraIndex);
             if (ret)
             {
                 capture.Release();
@@ -309,6 +324,7 @@ namespace id3.Face.Samples.PadWF
 
         private void StartCaptureCamera()
         {
+            _portraitCreated = false;
             camera.RunWorkerAsync();
             isCameraRunning = true;
         }

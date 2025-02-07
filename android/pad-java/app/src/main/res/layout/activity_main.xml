@@ -27,21 +27,8 @@
         android:maxHeight="40dp"
         android:text="@string/start_capture_button_label"
         android:textSize="12sp"
-        app:layout_constraintEnd_toStartOf="@+id/analyzeFaceButton"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cameraFragment" />
-
-    <Button
-        android:id="@+id/analyzeFaceButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="@string/analyze_face_button_label"
-        android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/startCaptureButton"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cameraFragment" />
 
     <ImageView

@@ -19,11 +19,17 @@ import eu.id3.face.FaceMatcher;
 import eu.id3.face.FaceModel;
 import eu.id3.face.FaceTemplate;
 import eu.id3.face.ImageFormat;
+import eu.id3.face.Portrait;
+import eu.id3.face.PortraitProcessor;
 import eu.id3.face.ProcessingUnit;
 
 public class FaceProcessor {
     private FaceDetector faceDetector = null;
     private FaceEncoder faceEncoder = null;
+
+    private PortraitProcessor processor = null;
+    private Portrait portrait = null;
+
     private FaceTemplate enrolledTemplate;
 
     public FaceProcessor(Context context) {
@@ -35,12 +41,12 @@ public class FaceProcessor {
              * Only one FaceDetector object is needed to perform all of your detection operation.
              */
             FaceLibrary.loadModelBuffer(
-                    readAllBytes(context.getAssets().open("models/face_detector_v3b.id3nn")),
-                    FaceModel.FACE_DETECTOR_3B, ProcessingUnit.CPU
+                    readAllBytes(context.getAssets().open("models/face_detector_v4b.id3nn")),
+                    FaceModel.FACE_DETECTOR_4B, ProcessingUnit.CPU
             );
             faceDetector = new FaceDetector();
             faceDetector.setConfidenceThreshold(Parameters.detectorConfidenceThreshold);
-            faceDetector.setModel(FaceModel.FACE_DETECTOR_3B);
+            faceDetector.setModel(FaceModel.FACE_DETECTOR_4B);
             faceDetector.setThreadCount(Parameters.detectorThreadCount);
 
             /*
@@ -52,12 +58,27 @@ public class FaceProcessor {
                     FaceModel.FACE_ENCODER_9B, ProcessingUnit.CPU
             );
             FaceLibrary.loadModelBuffer(
-                    readAllBytes(context.getAssets().open("models/face_encoding_quality_estimator_v3a.id3nn")),
-                    FaceModel.FACE_ENCODING_QUALITY_ESTIMATOR_3A, ProcessingUnit.CPU
+                    readAllBytes(context.getAssets().open("models/face_pose_estimator_v1a.id3nn")),
+                    FaceModel.FACE_POSE_ESTIMATOR_1A, ProcessingUnit.CPU
+            );
+            FaceLibrary.loadModelBuffer(
+                    readAllBytes(context.getAssets().open("models/face_occlusion_detector_v2a.id3nn")),
+                    FaceModel.FACE_OCCLUSION_DETECTOR_2A, ProcessingUnit.CPU
+            );
+            FaceLibrary.loadModelBuffer(
+                    readAllBytes(context.getAssets().open("models/face_attributes_classifier_v2a.id3nn")),
+                    FaceModel.FACE_ATTRIBUTES_CLASSIFIER_2A, ProcessingUnit.CPU
+            );
+            FaceLibrary.loadModelBuffer(
+                    readAllBytes(context.getAssets().open("models/face_landmarks_estimator_v2a.id3nn")),
+                    FaceModel.FACE_LANDMARKS_ESTIMATOR_2A, ProcessingUnit.CPU
             );
             faceEncoder = new FaceEncoder();
             faceEncoder.setModel(FaceModel.FACE_ENCODER_9B);
             faceEncoder.setThreadCount(Parameters.encoderThreadCount);
+
+            processor = new PortraitProcessor();
+
             Log.v(LOG_TAG, "Load models: OK !");
         } catch (FaceException | IOException e) {
             e.printStackTrace();
@@ -103,7 +124,7 @@ public class FaceProcessor {
         enrolledTemplate = faceEncoder.createTemplate(image, detectedFace);
 
         /* Compute template quality to make sure it will good enough for face recognition. */
-        int quality = faceEncoder.computeQuality(image, detectedFace);
+        int quality = computeQuality(image);
 
         /* Extracts the portrait image of the detected face to display it. */
         eu.id3.face.Rectangle portraitBounds = detectedFace.getPortraitBounds(0.25f, 0.45f, 1.33f);
@@ -123,13 +144,22 @@ public class FaceProcessor {
         FaceTemplate probeTemplate = faceEncoder.createTemplate(image, detectedFace);
 
         /* Compute template quality to make sure it will good enough for face recognition. */
-        int quality = faceEncoder.computeQuality(image, detectedFace);
+        int quality = computeQuality(image);
 
         /* Initialize a face matcher and compare probe template to the previously enrolled one. */
         FaceMatcher faceMatcher = new FaceMatcher();
         int score = faceMatcher.compareTemplates(probeTemplate, enrolledTemplate);
 
         return new VerifyLargestFaceResult(quality, score);
+    }
+
+    int computeQuality(eu.id3.face.Image image) {
+        portrait = processor.createPortrait(image);
+        processor.detectOcclusions(portrait);
+        processor.estimateFaceAttributes(portrait);
+        processor.estimatePhotographicQuality(portrait);
+
+        return portrait.getQualityScore();
     }
 
     static class EnrollLargestFaceResult {

@@ -14,6 +14,9 @@ class FaceProcessor(context: Context) {
     private lateinit var faceDetector: FaceDetector
     private lateinit var faceEncoder: FaceEncoder
 
+    private lateinit var processor: PortraitProcessor
+    private lateinit var portrait: Portrait
+
     private var enrolledTemplate: FaceTemplate? = null
 
     init {
@@ -24,29 +27,43 @@ class FaceProcessor(context: Context) {
              * Only one FaceDetector object is needed to perform all of your detection operation.
              */
             FaceLibrary.loadModelBuffer(
-                context.assets.open("models/face_detector_v3b.id3nn").readBytes(),
-                FaceModel.FACE_DETECTOR_3B, ProcessingUnit.CPU
+                context.assets.open("models/face_detector_v4b.id3nn").readBytes(),
+                FaceModel.FACE_DETECTOR_4B, ProcessingUnit.CPU
             )
             faceDetector = FaceDetector()
             faceDetector.confidenceThreshold = Parameters.detectorConfidenceThreshold
-            faceDetector.model = FaceModel.FACE_DETECTOR_3B
+            faceDetector.model = FaceModel.FACE_DETECTOR_4B
             faceDetector.threadCount = Parameters.detectorThreadCount
 
             /**
              * Load a face encoder.
-             * First load the model from the Assets and then initialize the FaceEncoder object.
+             * First load the models from the Assets and then initialize the FaceEncoder object.
              */
             FaceLibrary.loadModelBuffer(
                 context.assets.open("models/face_encoder_v9b.id3nn").readBytes(),
                 FaceModel.FACE_ENCODER_9B, ProcessingUnit.CPU
             )
             FaceLibrary.loadModelBuffer(
-                context.assets.open("models/face_encoding_quality_estimator_v3a.id3nn").readBytes(),
-                FaceModel.FACE_ENCODING_QUALITY_ESTIMATOR_3A, ProcessingUnit.CPU
+                context.assets.open("models/face_pose_estimator_v1a.id3nn").readBytes(),
+                FaceModel.FACE_POSE_ESTIMATOR_1A, ProcessingUnit.CPU
+            )
+            FaceLibrary.loadModelBuffer(
+                context.assets.open("models/face_occlusion_detector_v2a.id3nn").readBytes(),
+                FaceModel.FACE_OCCLUSION_DETECTOR_2A, ProcessingUnit.CPU
+            )
+            FaceLibrary.loadModelBuffer(
+                context.assets.open("models/face_attributes_classifier_v2a.id3nn").readBytes(),
+                FaceModel.FACE_ATTRIBUTES_CLASSIFIER_2A, ProcessingUnit.CPU
+            )
+            FaceLibrary.loadModelBuffer(
+                context.assets.open("models/face_landmarks_estimator_v2a.id3nn").readBytes(),
+                FaceModel.FACE_LANDMARKS_ESTIMATOR_2A, ProcessingUnit.CPU
             )
             faceEncoder = FaceEncoder()
             faceEncoder.model = FaceModel.FACE_ENCODER_9B
             faceEncoder.threadCount = Parameters.encoderThreadCount
+
+            processor = PortraitProcessor()
 
             Log.v(LOG_TAG, "Load models: OK !")
         } catch (e: FaceException) {
@@ -88,7 +105,7 @@ class FaceProcessor(context: Context) {
         enrolledTemplate = faceEncoder.createTemplate(image, detectedFace)
 
         /** Compute template quality to make sure it will good enough for face recognition. */
-        val quality = faceEncoder.computeQuality(image, detectedFace)
+        val quality = computeQuality(image)
 
         /** Extracts the portrait image of the detected face to display it. */
         val portraitBounds = detectedFace.getPortraitBounds(0.25f, 0.45f, 1.33f)
@@ -121,13 +138,22 @@ class FaceProcessor(context: Context) {
         val probeTemplate = faceEncoder.createTemplate(image, detectedFace)
 
         /** Compute template quality to make sure it will good enough for face recognition. */
-        val quality = faceEncoder.computeQuality(image, detectedFace)
+        val quality = computeQuality(image)
 
         /** Initialize a face matcher and compare probe template to the previously enrolled one. */
         val faceMatcher = FaceMatcher()
         val score = faceMatcher.compareTemplates(probeTemplate, enrolledTemplate!!)
 
         return VerifyLargestFaceResult(quality, score)
+    }
+
+    fun computeQuality(image: eu.id3.face.Image) : Int {
+        portrait = processor.createPortrait(image)
+        processor.detectOcclusions(portrait)
+        processor.estimateFaceAttributes(portrait)
+        processor.estimatePhotographicQuality(portrait)
+
+        return portrait.qualityScore
     }
 
     companion object {

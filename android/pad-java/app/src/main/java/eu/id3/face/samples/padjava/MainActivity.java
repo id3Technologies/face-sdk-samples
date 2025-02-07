@@ -20,8 +20,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import eu.id3.face.FaceAttackSupport;
 import eu.id3.face.FaceError;
+import eu.id3.face.PadStatus;
+import eu.id3.face.PortraitInstruction;
 
 public class MainActivity extends AppCompatActivity implements FaceProcessorListener {
     private final SpannableString okLabel = new SpannableString("OK");
@@ -32,7 +33,6 @@ public class MainActivity extends AppCompatActivity implements FaceProcessorList
      * View elements
      */
     private Button startCaptureButton;
-    private Button analyzeButton;
     private ImageView portraitFaceView;
     private TextView padAnalysisTextView;
     private CameraFragment captureFragment = new CameraFragment();
@@ -74,7 +74,6 @@ public class MainActivity extends AppCompatActivity implements FaceProcessorList
             if (errorCode == 0) {
                 byte[] jpegPortraitImageBuffer = analyzeLargestFaceResult.getJpegPortraitImageBuffer();
                 SpannableStringBuilder padAnalysisText = new SpannableStringBuilder();
-                boolean isBonaFide = true;
 
                 /* Create a bitmap image for drawing using the portrait image JPEG buffer. */
                 Bitmap bitmap = BitmapFactory.decodeByteArray(
@@ -84,104 +83,25 @@ public class MainActivity extends AppCompatActivity implements FaceProcessorList
                 );
                 portraitFaceView.setImageBitmap(bitmap);
 
-                /* Check if detected attack support score is below threshold or not and print feedback. */
-                if (analyzeLargestFaceResult.getDetectedFaceAttackSupport().attackSupport == FaceAttackSupport.NONE) {
-                    okLabel.setSpan(
-                            new ForegroundColorSpan(colorOk),
-                            0,
-                            2,
-                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                    );
-                    padAnalysisText.append(okLabel);
-                    padAnalysisText.append(" : No attack support\n");
+                /* Display user instruction */
+                PortraitInstruction instruction = analyzeLargestFaceResult.getInstruction();
+                if (instruction == PortraitInstruction.NONE) {
+                    padAnalysisText.append("\n");
                 } else {
-                    isBonaFide = false;
-                    notOkLabel.setSpan(
-                            new ForegroundColorSpan(colorNotOk),
-                            0,
-                            6,
-                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                    );
-                    padAnalysisText.append(notOkLabel);
-                    padAnalysisText.append(" : Attack support detected: " + analyzeLargestFaceResult.getDetectedFaceAttackSupport().attackSupport.name() + "\n");
+                    padAnalysisText.append(instruction.name().replace('_', ' ')).append("\n");
                 }
 
-                /* Check if blur score is below max threshold or not and print feedback. */
-                if (analyzeLargestFaceResult.getBlurScore() < Parameters.blurScoreMaxThreshold) {
-                    okLabel.setSpan(
-                            new ForegroundColorSpan(colorOk),
-                            0,
-                            2,
-                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                    );
-                    padAnalysisText.append(okLabel);
-                    padAnalysisText.append(" : Not blurry\n");
-                } else {
-                    isBonaFide = false;
-                    notOkLabel.setSpan(
-                            new ForegroundColorSpan(colorNotOk),
-                            0,
-                            6,
-                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                    );
-                    padAnalysisText.append(notOkLabel);
-                    padAnalysisText.append(" : Blurry\n");
-                }
+                padAnalysisText.append("\n");
 
-                /* Check if color score is above min threshold or not and print feedback. */
-                if (analyzeLargestFaceResult.getColorScore() >= Parameters.colorScoreThreshold) {
-                    okLabel.setSpan(
-                            new ForegroundColorSpan(colorOk),
-                            0,
-                            2,
-                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                    );
-                    padAnalysisText.append(okLabel);
-                    padAnalysisText.append(" : Authentic colors\n");
-                } else {
-                    /* Check if color score confidence is enough to reject the user. */
-                    if (analyzeLargestFaceResult.getColorScoreConfidence() >= Parameters.colorScoreConfidenceThreshold) {
-                        isBonaFide = false;
-                        notOkLabel.setSpan(
-                                new ForegroundColorSpan(colorNotOk),
-                                0,
-                                6,
-                                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                        );
-                        padAnalysisText.append(notOkLabel);
-                        padAnalysisText.append(" : Non-authentic colors\n");
-                    } else {
-                        isBonaFide = false;
-                        notOkLabel.setSpan(
-                                new ForegroundColorSpan(colorNotOk),
-                                0,
-                                6,
-                                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                        );
-                        padAnalysisText.append(notOkLabel);
-                        padAnalysisText.append(" : Image quality too low to get a confident decision\n");
-                    }
-                }
+                /* Display PAD score */
+                int score = analyzeLargestFaceResult.getScore();
+                padAnalysisText.append("Score : ");
+                padAnalysisText.append(String.valueOf(score)).append("\n");
 
-                if (isBonaFide) {
-                    okLabel.setSpan(
-                            new ForegroundColorSpan(colorOk),
-                            0,
-                            2,
-                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                    );
-                    padAnalysisText.append(okLabel);
-                    padAnalysisText.append(" : The presentation is bona-fide");
-                } else {
-                    notOkLabel.setSpan(
-                            new ForegroundColorSpan(colorNotOk),
-                            0,
-                            6,
-                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                    );
-                    padAnalysisText.append(notOkLabel);
-                    padAnalysisText.append(" : The presentation is an attack");
-                }
+                /* Display PAD status */
+                PadStatus status = analyzeLargestFaceResult.getStatus();
+                padAnalysisText.append("Status : ");
+                padAnalysisText.append(status.name());
 
                 padAnalysisTextView.setText(padAnalysisText);
             } else {
@@ -209,7 +129,6 @@ public class MainActivity extends AppCompatActivity implements FaceProcessorList
         padAnalysisTextView = findViewById(R.id.padAnalysisTextView);
 
         startCaptureButton = findViewById(R.id.startCaptureButton);
-        analyzeButton = findViewById(R.id.analyzeFaceButton);
 
         /* Set start capture button on click listener. */
         startCaptureButton.setOnClickListener(v -> {
@@ -232,14 +151,7 @@ public class MainActivity extends AppCompatActivity implements FaceProcessorList
                 captureFragment.startCapture();
                 isCapturing = true;
             }
-            analyzeButton.setEnabled(isCapturing);
         });
-
-        /* Set enroll button on click listener. */
-        analyzeButton.setOnClickListener(v -> {
-            captureFragment.requestProcessing();
-        });
-        analyzeButton.setEnabled(isCapturing);
     }
 
 

@@ -31,10 +31,8 @@
             this.pictureBoxPreview = new System.Windows.Forms.PictureBox();
             this.buttonStartCapture = new System.Windows.Forms.Button();
             this.labelColorPadScore = new System.Windows.Forms.Label();
-            this.labelBlurrinessScore = new System.Windows.Forms.Label();
-            this.labelAttackSupportScore = new System.Windows.Forms.Label();
-            this.labelColorPadConfidence = new System.Windows.Forms.Label();
             this.labelPadStatus = new System.Windows.Forms.Label();
+            this.labelInstruction = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
             this.SuspendLayout();
             // 
@@ -48,6 +46,8 @@
             // 
             // buttonStartCapture
             // 
+            this.buttonStartCapture.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.buttonStartCapture.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonStartCapture.Location = new System.Drawing.Point(42, 530);
             this.buttonStartCapture.Name = "buttonStartCapture";
             this.buttonStartCapture.Size = new System.Drawing.Size(159, 73);
@@ -58,57 +58,40 @@
             // labelColorPadScore
             // 
             this.labelColorPadScore.AutoSize = true;
-            this.labelColorPadScore.Location = new System.Drawing.Point(735, 100);
+            this.labelColorPadScore.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelColorPadScore.Location = new System.Drawing.Point(698, 100);
             this.labelColorPadScore.Name = "labelColorPadScore";
-            this.labelColorPadScore.Size = new System.Drawing.Size(91, 13);
+            this.labelColorPadScore.Size = new System.Drawing.Size(114, 16);
             this.labelColorPadScore.TabIndex = 3;
             this.labelColorPadScore.Text = "Color PAD score: ";
-            // 
-            // labelBlurrinessScore
-            // 
-            this.labelBlurrinessScore.AutoSize = true;
-            this.labelBlurrinessScore.Location = new System.Drawing.Point(735, 154);
-            this.labelBlurrinessScore.Name = "labelBlurrinessScore";
-            this.labelBlurrinessScore.Size = new System.Drawing.Size(87, 13);
-            this.labelBlurrinessScore.TabIndex = 5;
-            this.labelBlurrinessScore.Text = "Blurriness score: ";
-            // 
-            // labelAttackSupportScore
-            // 
-            this.labelAttackSupportScore.AutoSize = true;
-            this.labelAttackSupportScore.Location = new System.Drawing.Point(735, 181);
-            this.labelAttackSupportScore.Name = "labelAttackSupportScore";
-            this.labelAttackSupportScore.Size = new System.Drawing.Size(111, 13);
-            this.labelAttackSupportScore.TabIndex = 6;
-            this.labelAttackSupportScore.Text = "Attack support score: ";
-            // 
-            // labelColorPadConfidence
-            // 
-            this.labelColorPadConfidence.AutoSize = true;
-            this.labelColorPadConfidence.Location = new System.Drawing.Point(735, 127);
-            this.labelColorPadConfidence.Name = "labelColorPadConfidence";
-            this.labelColorPadConfidence.Size = new System.Drawing.Size(118, 13);
-            this.labelColorPadConfidence.TabIndex = 7;
-            this.labelColorPadConfidence.Text = "Color PAD confidence: ";
             // 
             // labelPadStatus
             // 
             this.labelPadStatus.AutoSize = true;
+            this.labelPadStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelPadStatus.Location = new System.Drawing.Point(39, 505);
             this.labelPadStatus.Name = "labelPadStatus";
-            this.labelPadStatus.Size = new System.Drawing.Size(68, 13);
+            this.labelPadStatus.Size = new System.Drawing.Size(94, 16);
             this.labelPadStatus.TabIndex = 8;
             this.labelPadStatus.Text = "PAD Status: ";
+            // 
+            // labelInstruction
+            // 
+            this.labelInstruction.AutoSize = true;
+            this.labelInstruction.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelInstruction.Location = new System.Drawing.Point(698, 73);
+            this.labelInstruction.Name = "labelInstruction";
+            this.labelInstruction.Size = new System.Drawing.Size(86, 16);
+            this.labelInstruction.TabIndex = 9;
+            this.labelInstruction.Text = "Instruction: ";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(947, 648);
+            this.Controls.Add(this.labelInstruction);
             this.Controls.Add(this.labelPadStatus);
-            this.Controls.Add(this.labelColorPadConfidence);
-            this.Controls.Add(this.labelAttackSupportScore);
-            this.Controls.Add(this.labelBlurrinessScore);
             this.Controls.Add(this.labelColorPadScore);
             this.Controls.Add(this.buttonStartCapture);
             this.Controls.Add(this.pictureBoxPreview);
@@ -126,10 +109,8 @@
         private System.Windows.Forms.PictureBox pictureBoxPreview;
         private System.Windows.Forms.Button buttonStartCapture;
         private System.Windows.Forms.Label labelColorPadScore;
-        private System.Windows.Forms.Label labelBlurrinessScore;
-        private System.Windows.Forms.Label labelAttackSupportScore;
-        private System.Windows.Forms.Label labelColorPadConfidence;
         private System.Windows.Forms.Label labelPadStatus;
+        private System.Windows.Forms.Label labelInstruction;
     }
 }
 

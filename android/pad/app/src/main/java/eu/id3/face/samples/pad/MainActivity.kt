@@ -7,8 +7,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
-import android.text.Spanned
-import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
@@ -17,9 +15,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import eu.id3.face.FaceAttackSupport
 import eu.id3.face.FaceError
+import eu.id3.face.PortraitInstruction
 import kotlin.system.exitProcess
+
 
 private const val LOG_TAG = "MainActivity"
 
@@ -35,7 +34,6 @@ private const val colorNotOk = Color.RED
 class MainActivity : AppCompatActivity(), CameraFragment.FaceProcessorListener {
     /** View elements */
     private lateinit var startCaptureButton: Button
-    private lateinit var analyzeButton: Button
     private lateinit var portraitFaceView: ImageView
     private lateinit var padAnalysisTextView: TextView
     private lateinit var captureFragment: CameraFragment
@@ -74,7 +72,6 @@ class MainActivity : AppCompatActivity(), CameraFragment.FaceProcessorListener {
             if (errorCode == 0) {
                 val jpegPortraitImageBuffer = analyzeLargestFaceResult.getJpegPortraitImageBuffer()
                 val padAnalysisText = SpannableStringBuilder()
-                var isBonaFide = true
 
                 /** Create a bitmap image for drawing using the portrait image JPEG buffer. */
                 val bitmap = BitmapFactory.decodeByteArray(
@@ -84,104 +81,25 @@ class MainActivity : AppCompatActivity(), CameraFragment.FaceProcessorListener {
                 )
                 portraitFaceView.setImageBitmap(bitmap)
 
-                /** Check if detected attack support score is below threshold or not and print feedback. */
-                if (analyzeLargestFaceResult.getDetectedAttackSupport().attackSupport == FaceAttackSupport.NONE) {
-                    okLabel.setSpan(
-                        ForegroundColorSpan(colorOk),
-                        0,
-                        2,
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
-                    padAnalysisText.append(okLabel)
-                    padAnalysisText.append(" : No attack support\n")
+                /** Display user instruction */
+                val instruction: PortraitInstruction = analyzeLargestFaceResult.getInstruction()
+                if (instruction == PortraitInstruction.NONE) {
+                    padAnalysisText.append("\n")
                 } else {
-                    isBonaFide = false
-                    notOkLabel.setSpan(
-                        ForegroundColorSpan(colorNotOk),
-                        0,
-                        6,
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
-                    padAnalysisText.append(notOkLabel)
-                    padAnalysisText.append(" : Attack support detected: " + analyzeLargestFaceResult.getDetectedAttackSupport().attackSupport.name + "\n")
+                    padAnalysisText.append(instruction.name.replace('_', ' ')).append("\n")
                 }
 
-                /** Check if blur score is below max threshold or not and print feedback. */
-                if (analyzeLargestFaceResult.getBlurScore() < Parameters.blurScoreMaxThreshold) {
-                    okLabel.setSpan(
-                        ForegroundColorSpan(colorOk),
-                        0,
-                        2,
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
-                    padAnalysisText.append(okLabel)
-                    padAnalysisText.append(" : Not blurry\n")
-                } else {
-                    isBonaFide = false
-                    notOkLabel.setSpan(
-                        ForegroundColorSpan(colorNotOk),
-                        0,
-                        6,
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
-                    padAnalysisText.append(notOkLabel)
-                    padAnalysisText.append(" : Blurry\n")
-                }
+                padAnalysisText.append("\n")
 
-                /** Check if color score is above min threshold or not and print feedback. */
-                if (analyzeLargestFaceResult.getColorScore() >= Parameters.colorScoreThreshold) {
-                    okLabel.setSpan(
-                        ForegroundColorSpan(colorOk),
-                        0,
-                        2,
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
-                    padAnalysisText.append(okLabel)
-                    padAnalysisText.append(" : Authentic colors\n")
-                } else {
-                    /** Check if color score confidence is enough to reject the user. */
-                    if (analyzeLargestFaceResult.getColorScoreConfidence() >= Parameters.colorScoreConfidenceThreshold) {
-                        isBonaFide = false
-                        notOkLabel.setSpan(
-                            ForegroundColorSpan(colorNotOk),
-                            0,
-                            6,
-                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                        )
-                        padAnalysisText.append(notOkLabel)
-                        padAnalysisText.append(" : Non-authentic colors\n")
-                    } else {
-                        isBonaFide = false
-                        notOkLabel.setSpan(
-                            ForegroundColorSpan(colorNotOk),
-                            0,
-                            6,
-                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                        )
-                        padAnalysisText.append(notOkLabel)
-                        padAnalysisText.append(" : Image quality too low to get a confident decision\n")
-                    }
-                }
+                /** Display PAD score */
+                val score = analyzeLargestFaceResult.getScore()
+                padAnalysisText.append("Score : ")
+                padAnalysisText.append(score.toString()).append("\n")
 
-                if (isBonaFide) {
-                    okLabel.setSpan(
-                        ForegroundColorSpan(colorOk),
-                        0,
-                        2,
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
-                    padAnalysisText.append(okLabel)
-                    padAnalysisText.append(" : The presentation is bona-fide")
-                } else {
-                    notOkLabel.setSpan(
-                        ForegroundColorSpan(colorNotOk),
-                        0,
-                        6,
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
-                    padAnalysisText.append(notOkLabel)
-                    padAnalysisText.append(" : The presentation is an attack")
-                }
+                /** Display PAD status */
+                val status = analyzeLargestFaceResult.getStatus()
+                padAnalysisText.append("Status : ")
+                padAnalysisText.append(status.name)
 
                 padAnalysisTextView.text = padAnalysisText
             } else {
@@ -209,7 +127,6 @@ class MainActivity : AppCompatActivity(), CameraFragment.FaceProcessorListener {
         padAnalysisTextView = findViewById(R.id.padAnalysisTextView)
 
         startCaptureButton = findViewById(R.id.startCaptureButton)
-        analyzeButton = findViewById(R.id.analyzeFaceButton)
 
         /** Set start capture button on click listener. */
         startCaptureButton.setOnClickListener {
@@ -236,14 +153,7 @@ class MainActivity : AppCompatActivity(), CameraFragment.FaceProcessorListener {
                 captureFragment.startCapture()
                 isCapturing = true
             }
-            analyzeButton.isEnabled = isCapturing
         }
-
-        /** Set analysis button on click listener. */
-        analyzeButton.setOnClickListener {
-            captureFragment.requestProcessing()
-        }
-        analyzeButton.isEnabled = isCapturing
     }
 
     /**

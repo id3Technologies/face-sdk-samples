@@ -3,17 +3,30 @@ package eu.id3.face.samples.pad
 import android.content.Context
 import android.media.Image
 import android.util.Log
-import eu.id3.face.*
+import eu.id3.face.DetectedFace
+import eu.id3.face.FaceDetector
+import eu.id3.face.FaceException
+import eu.id3.face.FaceLibrary
+import eu.id3.face.FaceModel
+import eu.id3.face.ImageFormat
+import eu.id3.face.PadStatus
+import eu.id3.face.PixelFormat
+import eu.id3.face.Portrait
+import eu.id3.face.PortraitInstruction
+import eu.id3.face.PortraitProcessor
+import eu.id3.face.ProcessingUnit
 import java.nio.ByteBuffer
+
 
 private const val LOG_TAG = "FaceProcessor"
 
 class FaceProcessor(context: Context) {
 
     private lateinit var faceDetector: FaceDetector
-    private lateinit var facePad: FacePad
 
-    private var detectedFaceList = DetectedFaceList()
+    private lateinit var processor: PortraitProcessor
+    private lateinit var portrait: Portrait
+    private var portraitCreated = false
 
     init {
         try {
@@ -23,31 +36,36 @@ class FaceProcessor(context: Context) {
              * Only one FaceDetector object is needed to perform all of your detection operation.
              */
             FaceLibrary.loadModelBuffer(
-                context.assets.open("models/face_detector_v3b.id3nn").readBytes(),
-                FaceModel.FACE_DETECTOR_3B, ProcessingUnit.CPU
+                context.assets.open("models/face_detector_v4b.id3nn").readBytes(),
+                FaceModel.FACE_DETECTOR_4B, ProcessingUnit.CPU
             )
             faceDetector = FaceDetector()
             faceDetector.confidenceThreshold = Parameters.detectorConfidenceThreshold
-            faceDetector.model = FaceModel.FACE_DETECTOR_3B
+            faceDetector.model = FaceModel.FACE_DETECTOR_4B
             faceDetector.threadCount = Parameters.detectorThreadCount
 
             /**
-             * Load a face presentation attack detector (PAD).
-             * First load the models from the Assets and then initialize the FacePad object.
+             * Load portrait processor.
+             * First load the models from the Assets and then initialize the PortraitProcessor object.
              */
             FaceLibrary.loadModelBuffer(
-                context.assets.open("models/face_attack_support_detector_v2a.id3nn").readBytes(),
-                FaceModel.FACE_ATTACK_SUPPORT_DETECTOR_2A, ProcessingUnit.CPU
+                context.assets.open("models/face_encoder_v9b.id3nn").readBytes(),
+                FaceModel.FACE_ENCODER_9B, ProcessingUnit.CPU
             )
             FaceLibrary.loadModelBuffer(
-                context.assets.open("models/face_color_pad_v2a.id3nn").readBytes(),
-                FaceModel.FACE_COLOR_BASED_PAD_2A, ProcessingUnit.CPU
+                context.assets.open("models/face_landmarks_estimator_v2a.id3nn").readBytes(),
+                FaceModel.FACE_LANDMARKS_ESTIMATOR_2A, ProcessingUnit.CPU
             )
             FaceLibrary.loadModelBuffer(
-                context.assets.open("models/face_blurriness_detector_v1a.id3nn").readBytes(),
-                FaceModel.FACE_BLURRINESS_DETECTOR_1A, ProcessingUnit.CPU
+                context.assets.open("models/face_pose_estimator_v1a.id3nn").readBytes(),
+                FaceModel.FACE_POSE_ESTIMATOR_1A, ProcessingUnit.CPU
             )
-            facePad = FacePad()
+            FaceLibrary.loadModelBuffer(
+                context.assets.open("models/face_color_pad_v3a.id3nn").readBytes(),
+                FaceModel.FACE_COLOR_BASED_PAD_3A, ProcessingUnit.CPU
+            )
+            processor = PortraitProcessor()
+            portraitCreated = false
 
             Log.v(LOG_TAG, "Load models: OK !")
         } catch (e: FaceException) {
@@ -68,37 +86,8 @@ class FaceProcessor(context: Context) {
         }
     }
 
-    class AnalyzeLargestFaceResult(
-        private var jpegPortraitImageBuffer: ByteArray,
-        private var detectedFaceAttackSupport: DetectedFaceAttackSupport,
-        private var blurScore: Int,
-        private var colorScore: Int,
-        private var colorScoreConfidence: Int,
-        private var errorCode: Int
-    ) {
-        fun getJpegPortraitImageBuffer(): ByteArray {
-            return jpegPortraitImageBuffer
-        }
-
-        fun getDetectedAttackSupport(): DetectedFaceAttackSupport {
-            return detectedFaceAttackSupport
-        }
-
-        fun getBlurScore(): Int {
-            return blurScore
-        }
-
-        fun getColorScore(): Int {
-            return colorScore
-        }
-
-        fun getColorScoreConfidence(): Int {
-            return colorScoreConfidence
-        }
-
-        fun getErrorCode(): Int {
-            return errorCode
-        }
+    fun resetPortrait() {
+        portraitCreated = false
     }
 
     fun analyzeLargestFace(
@@ -106,14 +95,16 @@ class FaceProcessor(context: Context) {
         detectedFace: DetectedFace
     ): AnalyzeLargestFaceResult {
         try {
-            /** Detects attack support if any. */
-            val detectedAttackSupport = facePad.detectAttackSupport(image, detectedFace)
+            /** Initialize or update portrait. */
+            if (!portraitCreated) {
+                portrait = Portrait()
+                portraitCreated = true
+            }
 
-            /** Computes blurriness score. */
-            val blurScore = facePad.computeBlurrinessScore(image, detectedFace)
-
-            /** Computes color-based PAD score. */
-            val colorScoreResult = facePad.computeColorBasedScore(image, detectedFace)
+            /** Detects attack support with portrait processor. */
+            processor.updatePortrait(portrait, image)
+            processor.estimatePhotographicQuality(portrait)
+            processor.detectPresentationAttack(portrait)
 
             /** Extracts the portrait image of the detected face to display it. */
             val portraitBounds = detectedFace.getPortraitBounds(0.25f, 0.45f, 1.33f)
@@ -125,21 +116,47 @@ class FaceProcessor(context: Context) {
 
             return AnalyzeLargestFaceResult(
                 jpegPortraitImageBuffer,
-                detectedAttackSupport,
-                blurScore,
-                colorScoreResult.score,
-                colorScoreResult.confidence,
+                portrait.instruction,
+                portrait.padStatus,
+                portrait.padScore,
                 0
             )
         } catch (e: FaceException) {
             return AnalyzeLargestFaceResult(
                 ByteArray(0),
-                DetectedFaceAttackSupport(),
-                0,
-                0,
+                PortraitInstruction.NONE,
+                PadStatus.UNKNOWN,
                 0,
                 e.errorCode
             )
+        }
+    }
+
+    class AnalyzeLargestFaceResult(
+        private var jpegPortraitImageBuffer: ByteArray,
+        private var instruction: PortraitInstruction,
+        private var status: PadStatus,
+        private var score: Int,
+        private var errorCode: Int
+    ) {
+        fun getJpegPortraitImageBuffer(): ByteArray {
+            return jpegPortraitImageBuffer
+        }
+
+        fun getInstruction(): PortraitInstruction {
+            return instruction
+        }
+
+        fun getStatus(): PadStatus {
+            return status
+        }
+
+        fun getScore(): Int {
+            return score
+        }
+
+        fun getErrorCode(): Int {
+            return errorCode
         }
     }
 

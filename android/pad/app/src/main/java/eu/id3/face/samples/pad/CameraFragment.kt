@@ -491,6 +491,7 @@ class CameraFragment : Fragment() {
                 boundsView.update(rect, processingImage.width, processingImage.height)
 
                 /** Process frame if requested by UI. */
+                needsToProcess = true
                 if (needsToProcess) {
                     val analyzeLargestFaceResult =
                         faceProcessor!!.analyzeLargestFace(processingImage, detectedFace)
@@ -498,9 +499,11 @@ class CameraFragment : Fragment() {
                     needsToProcess = false
                 }
             } else {
+                faceProcessor!!.resetPortrait()
                 boundsView.update(null, 0, 0)
             }
         } else {
+            faceProcessor!!.resetPortrait()
             boundsView.update(null, 0, 0)
         }
 
