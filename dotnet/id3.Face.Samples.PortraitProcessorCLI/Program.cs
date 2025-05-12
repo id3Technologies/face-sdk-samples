@@ -12,7 +12,6 @@ namespace id3.Face.Samples.PortraitProcessorCLI
             Console.WriteLine("id3.Face.Samples.PortraitProcessorCLI");
             Console.WriteLine("-------------------------------------");
 
-
             // This sample shows how to use PortraitProcessor to compute face ICAO and landmarks values.
             try
             {
@@ -142,9 +141,9 @@ namespace id3.Face.Samples.PortraitProcessorCLI
                 int rightEyeVisibilityScore = portrait.RightEyeVisibility;
                 int rightEyeOpeningScore = portrait.RightEyeOpening;
                 Console.Write($"\tLeft eye visibility score:    \t{leftEyeVisibilityScore}\n");
-                Console.Write($"\tLeft eye opening score:       \t{leftEyeVisibilityScore}\n");
+                Console.Write($"\tLeft eye opening score:       \t{leftEyeOpeningScore}\n");
                 Console.Write($"\tRight eye visibility score:   \t{rightEyeVisibilityScore}\n");
-                Console.Write($"\tRight eye opening score:      \t{rightEyeVisibilityScore}\n");
+                Console.Write($"\tRight eye opening score:      \t{rightEyeOpeningScore}\n");
 
                 int genderMaleScore = portrait.GenderMale;
                 int glassesScore = portrait.Glasses;

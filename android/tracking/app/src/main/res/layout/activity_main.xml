@@ -22,12 +22,12 @@
         android:id="@+id/startCaptureButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="132dp"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="5dp"
         android:maxWidth="360dp"
         android:maxHeight="40dp"
         android:text="@string/start_capture_button_label"
         android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cameraFragment" />
 

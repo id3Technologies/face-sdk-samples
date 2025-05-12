@@ -16,17 +16,19 @@ Once everything is setup you can proceed to the following steps.
 
 Before to build any of the JAVA samples, you need to fill in the path to your license in the source code. Look for the following line in **RecognitionCLI.java** and overwrite `licensePath` with your correct path.
 
-```
-std::string license_path = "id3Face.lic";
+```java
+String license_path = "id3Face.lic";
 ```
 
 ### Ensuring models are present
 
 Following models are required to be in the sdk/models/ directory:
+
 - For RecognitionCLI sample:
-    - face_detector_v3b.id3nn
-    - face_encoder_v9a.id3nn
+  - face_detector_v3b.id3nn
+  - face_encoder_v9a.id3nn
 
 ### Build and run
+
 Samples build will directly use the java and javac tools.
 For conveniency a .bat windows script and a .sh linux script are provided.

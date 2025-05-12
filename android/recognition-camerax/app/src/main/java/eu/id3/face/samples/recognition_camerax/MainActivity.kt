@@ -88,11 +88,11 @@ class MainActivity : AppCompatActivity() {
          * Please note that it is mandatory to set which model will be used in the FaceDetector.
          */
         FaceLibrary.loadModelBuffer(
-            assets.open("models/face_detector_v3b.id3nn").readBytes(),
-            FaceModel.FACE_DETECTOR_3B, ProcessingUnit.CPU
+            assets.open("models/face_detector_v4b.id3nn").readBytes(),
+            FaceModel.FACE_DETECTOR_4B, ProcessingUnit.CPU
         )
         faceDetector = FaceDetector()
-        faceDetector.model = FaceModel.FACE_DETECTOR_3B
+        faceDetector.model = FaceModel.FACE_DETECTOR_4B
 
         /**
          * Load a face encoder.

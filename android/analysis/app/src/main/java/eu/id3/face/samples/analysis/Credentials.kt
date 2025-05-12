@@ -2,7 +2,6 @@ package eu.id3.face.samples.analysis
 
 import android.util.Log
 import eu.id3.face.FaceException
-import eu.id3.face.FaceLibrary
 import eu.id3.face.FaceLicense
 import eu.id3.face.LicenseHardwareCodeType
 import java.io.BufferedOutputStream
@@ -18,17 +17,8 @@ private const val LOG_TAG = "Credentials"
  * and package reference!
  */
 internal object Credentials {
-    /** Serial key is... */
-    private fun getLicenseSerialKey() = "0000-0000-0000-0000"
-
-    /** id3 account login is ... */
-    private fun getAccountLogin() = "login"
-
-    /** id3 account password is ... */
-    private fun getAccountPassword() = "password"
-
-    /** Package reference is ... */
-    private fun getPackageReference() = "00000000"
+    /** Activation key is... */
+    private fun getLicenseActivationKey() = "00000000-0000-0000-0000-000000000000"
 
     /**
      * Any id3 SDK needs a valid license to work.
@@ -44,8 +34,8 @@ internal object Credentials {
      * This API needs the login/password and product package of the SDK.
      */
     fun registerSdkLicense(licenseFilePath: String): Boolean {
-        Log.e("ACCOUNT",getAccountLogin())
         val licenseFile = File(licenseFilePath)
+        val licenseActivationKey = getLicenseActivationKey()
         if (!licenseFile.exists()) {
             Log.v(LOG_TAG, "License file not found on file system.")
 
@@ -54,56 +44,27 @@ internal object Credentials {
              * If the license file does not exist, try to recover it from internet using the
              * specified serial key OR the specified login/password and package reference.
              */
-            if (getLicenseSerialKey() == "0000-0000-0000-0000" &&
-                (getAccountLogin() == "login" ||
-                        getAccountPassword() == "password" ||
-                        getPackageReference() == "00000000")
-            ) {
+            if (licenseActivationKey == "00000000-0000-0000-0000-000000000000") {
                 Log.e(
                     LOG_TAG,
-                    "Please update the sample with a correct serial key OR a correct id3 account login/password and package reference."
+                    "Please update the sample with a correct activation key."
                 )
                 return false
             }
 
-            val hardwareCode = FaceLicense.getHostHardwareCode(LicenseHardwareCodeType.ANDROID)
-            if (getLicenseSerialKey() != "0000-0000-0000-0000") {
-                try {
-                    lic = FaceLicense.activateSerialKeyBuffer(
-                        hardwareCode,
-                        getLicenseSerialKey(), "Activated from recognition sample"
-                    )
-                } catch (e1: FaceException) {
-                    e1.printStackTrace()
-                    Log.e(
-                        LOG_TAG,
-                        "Error during online license retrieval using serial key: " + e1.message
-                    )
-                    return false
-                }
-            }
-            if (getAccountLogin() != "login" &&
-                getAccountPassword() != "password" &&
-                getPackageReference() != "00000000"
-            ) {
-                try {
-                    lic = FaceLicense.activateBuffer(
-                        hardwareCode,
-                        getAccountLogin(),
-                        getAccountPassword(),
-                        getPackageReference(),
-                        "Activated from Kotlin Credentials sample class."
-                    )
-                } catch (e1: FaceException) {
-                    e1.printStackTrace()
-                    Log.e(
-                        LOG_TAG,
-                        "Error during online license retrieval using id3 account and package reference: " + e1.message
-                    )
-                    return false
-                } catch (e2: Exception) {
-                    e2.printStackTrace()
-                }
+            try {
+                val hardwareCode = FaceLicense.getHostHardwareCode(LicenseHardwareCodeType.ANDROID)
+                lic = FaceLicense.activateActivationKeyBuffer(
+                    hardwareCode,
+                    licenseActivationKey, "Activated from analysis sample"
+                )
+            } catch (e1: FaceException) {
+                e1.printStackTrace()
+                Log.e(
+                    LOG_TAG,
+                    "Error during online license retrieval using activation key: " + e1.message
+                )
+                return false
             }
             /** Save the license file on storage. */
             val bos: BufferedOutputStream?

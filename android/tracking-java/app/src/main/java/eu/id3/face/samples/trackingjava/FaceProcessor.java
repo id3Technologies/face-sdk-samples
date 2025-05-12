@@ -37,14 +37,14 @@ public class FaceProcessor {
              * A FaceTracker object needs two main models to be initialized:
              * - a face detector model (Default is FACE_DETECTOR_3B but can be adjusted according to
              * application needs)
-             * - a face encoder model (Default is FACE_ENCODER_3B but can be adjusted according to
+             * - a face encoder model (Default is FACE_ENCODER_4B but can be adjusted according to
              * application needs)
              * First load the model from the Assets and then initialize the FaceTracker object.
              * Only one Facetracker object is needed to perform all of your tracking operation.
              */
             FaceLibrary.loadModelBuffer(
-                    readAllBytes(context.getAssets().open("models/face_detector_v3b.id3nn")),
-                    FaceModel.FACE_DETECTOR_3B, ProcessingUnit.CPU
+                    readAllBytes(context.getAssets().open("models/face_detector_v4b.id3nn")),
+                    FaceModel.FACE_DETECTOR_4B, ProcessingUnit.CPU
             );
 
             FaceLibrary.loadModelBuffer(
@@ -56,7 +56,7 @@ public class FaceProcessor {
             faceTracker = new FaceTracker();
 
             // Set the face detector and encoder models
-            faceTracker.setDetectionModel(FaceModel.FACE_DETECTOR_3B);
+            faceTracker.setDetectionModel(FaceModel.FACE_DETECTOR_4B);
             faceTracker.setEncodingModel(FaceModel.FACE_ENCODER_9B);
 
             // The FaceTracker object has multiple parameters which must be tuned in order to respect

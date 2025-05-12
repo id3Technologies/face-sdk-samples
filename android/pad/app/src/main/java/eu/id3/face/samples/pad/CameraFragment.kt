@@ -500,10 +500,12 @@ class CameraFragment : Fragment() {
                 }
             } else {
                 faceProcessor!!.resetPortrait()
+                faceProcessorListener!!.onResetFaceProcessed()
                 boundsView.update(null, 0, 0)
             }
         } else {
             faceProcessor!!.resetPortrait()
+            faceProcessorListener!!.onResetFaceProcessed()
             boundsView.update(null, 0, 0)
         }
 
@@ -567,5 +569,6 @@ class CameraFragment : Fragment() {
      */
     interface FaceProcessorListener {
         fun onLargestFaceProcessed(analyzeLargestFaceResult: FaceProcessor.AnalyzeLargestFaceResult)
+        fun onResetFaceProcessed()
     }
 }

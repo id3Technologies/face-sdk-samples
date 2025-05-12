@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.5)
 
 project(id3FaceSdkCppSamples)
 
@@ -28,8 +28,14 @@ endif ()
 
 link_directories(${LINK_DIR})
 
+# Compile Face Recognition Sample CLI
 add_executable(id3FaceRecognitionSampleCLI id3FaceRecognitionSampleCLI.cpp)
 target_link_libraries(id3FaceRecognitionSampleCLI id3Face)
+set(TO_COYPY_FR ${LINK_DIR})
+postBuildCopyDirectory(id3FaceRecognitionSampleCLI $<TARGET_FILE_DIR:id3FaceRecognitionSampleCLI> ${TO_COYPY_FR})
 
-set(TO_COPY ${LINK_DIR})
-postBuildCopyDirectory(id3FaceRecognitionSampleCLI $<TARGET_FILE_DIR:id3FaceRecognitionSampleCLI> ${TO_COPY})
+# Compile Portrait Processor Sample CLI
+add_executable(id3PortraitProcessorSampleCLI id3PortraitProcessorSampleCLI.cpp)
+target_link_libraries(id3PortraitProcessorSampleCLI id3Face)
+set(TO_COPY_PP ${LINK_DIR})
+postBuildCopyDirectory(id3PortraitProcessorSampleCLI $<TARGET_FILE_DIR:id3PortraitProcessorSampleCLI> ${TO_COPY_PP})

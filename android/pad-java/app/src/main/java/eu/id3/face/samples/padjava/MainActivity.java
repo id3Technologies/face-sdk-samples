@@ -117,6 +117,15 @@ public class MainActivity extends AppCompatActivity implements FaceProcessorList
         });
     }
 
+    public void onResetFaceProcessed() {
+        runOnUiThread(() -> {
+            portraitFaceView = findViewById(R.id.portraitFaceView);
+            portraitFaceView.setImageResource(R.drawable.empty_avatar);
+
+            padAnalysisTextView.setText("");
+        });
+    }
+
     private void setupViewElements() {
         /* Initialize the capture fragment. */
         captureFragment = (CameraFragment) getSupportFragmentManager().findFragmentById(R.id.cameraFragment);

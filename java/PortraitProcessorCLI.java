@@ -117,9 +117,9 @@ public class PortraitProcessorCLI {
         int rightEyeVisibilityScore = portrait.getRightEyeVisibility();
         int rightEyeOpeningScore = portrait.getRightEyeOpening();
         System.out.println("\tLeft eye visibility score:    \t" + leftEyeVisibilityScore);
-        System.out.println("\tLeft eye opening score:       \t" + leftEyeVisibilityScore);
+        System.out.println("\tLeft eye opening score:       \t" + leftEyeOpeningScore);
         System.out.println("\tRight eye visibility score:   \t" + rightEyeVisibilityScore);
-        System.out.println("\tRight eye opening score:      \t" + rightEyeVisibilityScore);
+        System.out.println("\tRight eye opening score:      \t" + rightEyeOpeningScore);
 
         int genderMaleScore = portrait.getGenderMale();
         int glassesScore = portrait.getGlasses();

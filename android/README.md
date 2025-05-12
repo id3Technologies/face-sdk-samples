@@ -30,31 +30,30 @@ Each sample uses deep learning models from the Face SDK. They must be copied in 
         ...
 
 The following models are required per project:
+
 * Analysis
-    * face_attributes_classifier_v2a.id3nn
-    * face_detector_v3b.id3nn
-    * face_occlusion_detector_v2a.id3nn
-    * face_pose_estimator_v1a.id3nn
+  * face_attributes_classifier_v2a.id3nn
+  * face_detector_v3b.id3nn
+  * face_occlusion_detector_v2a.id3nn
+  * face_pose_estimator_v1a.id3nn
 * PAD
-    * face_attack_support_detector_v2a.id3nn
-    * face_blurriness_detector_v1a.id3nn
-    * face_color_pad_v2a.id3nn
-    * face_detector_v3b.id3nn
+  * face_attack_support_detector_v2a.id3nn
+  * face_blurriness_detector_v1a.id3nn
+  * face_color_pad_v2a.id3nn
+  * face_detector_v3b.id3nn
 * Recognition
-    * face_detector_v3b.id3nn
-    * face_encoder_v9b.id3nn
-    * face_encoding_quality_estimator_v3a.id3nn
+  * face_detector_v3b.id3nn
+  * face_encoder_v9b.id3nn
+  * face_encoding_quality_estimator_v3a.id3nn
 
 ## License
 
-Each project has a source file called **Credentials.kt** or **Credentials.java**, reading license necessary information in environment variables or in code. 
+Each project has a source file called **Credentials.kt** or **Credentials.java**, reading license necessary information in environment variables or in code.
 
-Either set the following environment variables (the serial key or the triplet login/password/reference) : 
-```
-export ID3_LICENSE_SERIAL_KEY=<value>
-export ID3_ACCOUNT_LOGIN=<value>
-export ID3_ACCOUNT_PASSWORD=<value>
-export ID3_PACKAGE_REFERENCE=<value>
+Either set the following environment variables (the activation key):
+
+```sh
+export ID3_LICENSE_ACTIVATION_KEY=<value>
 ./gradlew generateDebugBuildConfig
 ```
 
@@ -62,7 +61,7 @@ Or replace the zeros by your valid license serial key in the following line:
 
     private fun getLicenseSerialKey() = System.getenv("ID3_LICENSE_SERIAL_KEY") ?: "0000-0000-0000-0000"
 
-The license file will be downloaded into the app file system the first time you launch the sample, so you will an internet connexion. 
+The license file will be downloaded into the app file system the first time you launch the sample, so you will an internet connexion.
 
 Then it will simply be checked by the sample without requiring an internet connexion.
 

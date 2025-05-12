@@ -25,13 +25,11 @@ namespace id3.Face.Samples.PadWF
 
         class WorkerProgress
         {
-            public long TrackTime;
             public long IndexToDraw;
         }
 
         class QueueData
         {
-            public DetectedFace detectedFace;
             public Image image;
         }
 
@@ -218,14 +216,6 @@ namespace id3.Face.Samples.PadWF
 
         private void Camera_DoWork(object sender, DoWorkEventArgs e)
         {
-            var detectedFaceList = new DetectedFaceList();
-            var faceDetector = new FaceDetector()
-            {
-                ConfidenceThreshold = 50,
-                ProcessingUnit = ProcessingUnit.Cpu,
-                ThreadCount = 4
-            };
-
             var frame = new Mat();
             capture = new VideoCapture(0);
             capture.Open(_cameraIndex);
@@ -252,30 +242,23 @@ namespace id3.Face.Samples.PadWF
                     // Resize for real-time capacity
                     scale = image.Downscale(maxSize);
 
-                    var stopWatch = Stopwatch.StartNew();
-
-                    // Track faces
-                    faceDetector.TrackFaces(image, detectedFaceList);
-
-                    long trackTime = stopWatch.ElapsedMilliseconds;
-
-                    // For each detected face...
-                    foreach (DetectedFace detectedFace in detectedFaceList)
+                    // Draw tracked face bounds
+                    if (_portrait != null && _portrait.TrackedFace != null)
                     {
-                        // ...draw results
                         using (Graphics gr = Graphics.FromImage(bitmap))
                         {
-                            detectedFace.Rescale(1 / scale);
-                            gr.DrawRectangle(new Pen(Color.Green, 2), ConvertRectangle(detectedFace.Bounds));
+                            TrackedFace trackedFace = (TrackedFace)_portrait.TrackedFace.Clone();
+                            trackedFace.Rescale(1 / scale);
+                            gr.DrawRectangle(new Pen(Color.Green, 2), ConvertRectangle(trackedFace.Bounds));
                         }
                     }
-                    if (detectedFaceList.Count != 0)
+
+                    // Add image for processing
                     {
                         if (queue.Count == 0)
                         {
                             var queueData = new QueueData()
                             {
-                                detectedFace = (DetectedFace)detectedFaceList.GetLargestFace().Clone(),
                                 image = (Image)image.Clone()
                             };
                             queue.Enqueue(queueData);
@@ -286,7 +269,6 @@ namespace id3.Face.Samples.PadWF
 
                     var workerProgress = new WorkerProgress()
                     {
-                        TrackTime = trackTime,
                         IndexToDraw = bitmapIndex
                     };
 

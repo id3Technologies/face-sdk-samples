@@ -114,6 +114,14 @@ class MainActivity : AppCompatActivity(), CameraFragment.FaceProcessorListener {
             }
         }
     }
+    override fun onResetFaceProcessed() {
+        runOnUiThread {
+            portraitFaceView = findViewById(R.id.portraitFaceView);
+            portraitFaceView.setImageResource(R.drawable.empty_avatar)
+
+            padAnalysisTextView.text = ""
+        }
+    }
 
     private fun setupViewElements() {
         /** Initialize the capture fragment. */

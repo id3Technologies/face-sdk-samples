@@ -14,35 +14,14 @@ import eu.id3.face.LicenseHardwareCodeType;
 
 /**
  * This class handles the credentials to use the SDK.
- * Before anything else, update either your license serial key OR your id3 account login/password
+ * Before anything else, update either your license activation key
  * and package reference!
  */
 class Credentials {
     /**
-     * Serial key is...
+     * Activation key is...
      */
-    private static String getLicenseSerialKey() {
-        return "0000-0000-0000-0000";
-    }
-    /**
-     * id3 account login is ...
-     */
-    private static String getAccountLogin() {
-        return "login";
-    }
-    /**
-     * id3 account password is ...
-     */
-    private static String getAccountPassword() {
-        return "password";
-    }
-    /**
-     * Package reference is ...
-     */
-    private static String getPackageReference() {
-        return "00000000";
-    }
-
+    private static String getLicenseActivationKey() { return "00000000-0000-0000-0000-000000000000"; }
 
     /**
      * Any id3 SDK needs a valid license to work.
@@ -52,18 +31,13 @@ class Credentials {
      * applications.
      * This function tries to load a license file from internal storage and register it.
      * If the license file do not exist it tries to download a new license using the specified
-     * serial key.
-     * For deployment purposes there is also an API to use your id3 account to retrieve the license
-     * file.
+     * activation key.
      * This API needs the login/password and product package of the SDK.
      */
     public static boolean registerSdkLicense(String licenseFilePath) {
         File licenseFile = new File(licenseFilePath);
         String LOG_TAG = "Credentials Class";
-        String licenseSerialKey = getLicenseSerialKey();
-        String accountLogin = getAccountLogin();
-        String accountPassword = getAccountPassword();
-        String packageReference = getPackageReference();
+        String licenseActivationKey = getLicenseActivationKey();
 
         if (!licenseFile.exists()) {
             Log.v(LOG_TAG, "License file not found on file system.");
@@ -71,58 +45,29 @@ class Credentials {
             byte[] lic = null;
             /*
              * If the license file does not exist, try to recover it from internet using the
-             * specified serial key OR the specified login/password and package reference.
+             * specified activation key.
              */
-            if (licenseSerialKey.equals("0000-0000-0000-0000") &&
-                    (accountLogin.equals("login") ||
-                            accountPassword.equals("password") ||
-                            packageReference.equals("00000000"))
-            ) {
+            if (licenseActivationKey.equals("00000000-0000-0000-0000-000000000000")) {
                 Log.e(
                         LOG_TAG,
-                        "Please update the sample with a correct serial key OR a correct id3 account login/password and package reference."
+                        "Please update the sample with a correct activation key."
                 );
                 return false;
             }
 
-            String hardwareCode = FaceLicense.getHostHardwareCode(LicenseHardwareCodeType.ANDROID);
-            if (!licenseSerialKey.equals("0000-0000-0000-0000")) {
-                try {
-                    lic = FaceLicense.activateSerialKeyBuffer(
-                            hardwareCode,
-                            licenseSerialKey, "Activated from recognition sample"
-                    );
-                } catch (FaceException e1) {
-                    e1.printStackTrace();
-                    Log.e(
-                            LOG_TAG,
-                            "Error during online license retrieval using serial key: " + e1.getMessage()
-                    );
-                    return false;
-                }
-            }
-            if (!accountLogin.equals("login") &&
-                    !accountPassword.equals("password") &&
-                    !packageReference.equals("00000000")
-            ) {
-                try {
-                    lic = FaceLicense.activateBuffer(
-                            hardwareCode,
-                            accountLogin,
-                            accountPassword,
-                            packageReference,
-                            "Activated from Kotlin Credentials sample class."
-                    );
-                } catch (FaceException e1) {
-                    e1.printStackTrace();
-                    Log.e(
-                            LOG_TAG,
-                            "Error during online license retrieval using id3 account and package reference: " + e1.getMessage()
-                    );
-                    return false;
-                } catch (Exception e2) {
-                    e2.printStackTrace();
-                }
+            try {
+                String hardwareCode = FaceLicense.getHostHardwareCode(LicenseHardwareCodeType.ANDROID);
+                lic = FaceLicense.activateActivationKeyBuffer(
+                        hardwareCode,
+                        licenseActivationKey, "Activated from pad sample"
+                );
+            } catch (FaceException e1) {
+                e1.printStackTrace();
+                Log.e(
+                        LOG_TAG,
+                        "Error during online license retrieval using activation key: " + e1.getMessage()
+                );
+                return false;
             }
             /* Save the license file on storage. */
             BufferedOutputStream bos;

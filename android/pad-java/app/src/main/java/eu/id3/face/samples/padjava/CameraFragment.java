@@ -50,6 +50,7 @@ import eu.id3.face.PixelFormat;
  */
 interface FaceProcessorListener {
     void onLargestFaceProcessed(FaceProcessor.AnalyzeLargestFaceResult analyseLargestFaceResult);
+    void onResetFaceProcessed();
 }
 
 public class CameraFragment extends Fragment {
@@ -179,10 +180,12 @@ public class CameraFragment extends Fragment {
                     }
                 } else {
                     faceProcessor.resetPortrait();
+                    faceProcessorListener.onResetFaceProcessed();
                     boundsView.update(null, 0, 0);
                 }
             } else {
                 faceProcessor.resetPortrait();
+                faceProcessorListener.onResetFaceProcessed();
                 boundsView.update(null, 0, 0);
             }
             image.close();
