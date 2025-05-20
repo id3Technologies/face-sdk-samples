@@ -1,132 +1,275 @@
-# Face SDK samples
+# Face SDK Samples
 
-## Introduction
+[![License](https://img.shields.io/badge/license-Commercial-red)](https://id3.eu)
+[![Version](https://img.shields.io/badge/version-9.15.3.4-blue)](README.md)
 
-### Content
+## Table of Contents
 
-This repository contains basic samples for multiple features (mostly recognition, PAD and portrait quality analysis) and languages (C/C++, C#, Dart, Java, Swift) supported by the **id3 Technologies** Face SDK.
+- [Overview](#overview)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [License Activation](#license-activation)
+- [Sample Projects Overview](#sample-projects-overview)
+  - [Android](#android)
+  - [C++](#cpp)
+  - [C#/.NET](#net)
+  - [Flutter](#flutter)
+  - [Java](#java)
+  - [Python](#python)
+  - [Swift](#swift)
+- [Troubleshooting](#troubleshooting)
+- [Support](#support)
+- [License](#license)
 
-Going through those samples before trying to integrate it in your applications is strongly recommended.
+## Overview
 
-### A word on version format
+The id3 Technologies Face SDK Samples repository provides a collection of example implementations showcasing various features of the id3 Face SDK. These samples are designed to help developers quickly understand and integrate the SDK into their applications.
 
-The version of this repository is made of 4 digits:
+> 📘 **SDK Documentation**: For complete API reference and detailed documentation, visit the [id3 Face SDK Developer Portal](https://developers.id3.eu/face/).
 
-* The first 3 correspond to the version of the Face SDK that is currently supported in this repository.
-* The forth digit contains updates dedicated to the samples (evolutions, bug fixes, doc, etc).
+### Features Demonstrated
 
-This strategy is employed to ensure version consistency among the various supported languages. When updating the Face SDK version, all the samples are updated as well.
+- Face Recognition
+- Presentation Attack Detection (PAD)
+- Face Analysis
+- Portrait Processing
+- Real-time Tracking
+- Image Compression
 
-For this release of the samples the version numbers are :
+### Supported Languages
 
-* Samples version: **9.15.3.3**
-* Required id3 Face SDK version: **9.15.3**
+- Android (Kotlin & Java)
+- C++
+- C#/.NET
+- Flutter
+- Java
+- Python
+- Swift
 
-## Getting started
+### Version Information
 
-### Step 1: Get a license and the SDK
+The repository version follows a 4-digit format:
 
-To run any of the samples, you need to get a license from **id3 Technologies**. For that, you must contact us at the following e-mail address: <contact@id3.eu>.
+- First 3 digits: Face SDK version
+- Last digit: Sample updates (evolutions, bug fixes, documentation)
 
-Then, once your request will be accepted, you will receive both a license activation key and a ZIP archive containing the SDK itself. Once you are here, you can move forward to step 2.
+Current versions:
+- Samples version: **9.15.3.4**
+- Required id3 Face SDK version: **9.15.3**
 
-### Step 2: Install the SDK and models
+## Getting Started
 
-Once you have the SDK ZIP archive, you need to unzip it in the *sdk/* subfolder resulting in the following architecture.
+### Prerequisites
 
-    .
-    ├── android
-    ├── cpp
-    ...
-    ├── flutter
-    ├── sdk
-        ├── activation
-        ├── bin
-        ...
-        └── README.md
-    └── README.md
+1. **License and SDK**
+   - Contact us at <contact@id3.eu> to obtain:
+     - License activation key
+     - SDK ZIP archive
 
-Then you need to install the necessary models in the *models/* subfolder resulting in the following architecture.
+2. **Development Environment**
+   - Ensure you have the required development tools for your chosen language:
+     - Android: Android Studio 2020+
+     - C++: CMake >= 2.8.12, GCC (Linux) or Visual Studio >= 15 (Windows)
+     - .NET: Microsoft Visual Studio 2017+
+     - Flutter: Flutter SDK
+     - Java: Java environment with java and javac tools
+     - Python: Python 3.9-3.11 (Windows) or appropriate version (Linux)
+     - Swift: Xcode (iOS)
 
-    .
-    ├── android
-    ├── cpp
-    ...
-    ├── flutter
-    ├── models
-        ├── eye_gaze_estimator_v2a.id3nn
-        ├── eye_openness_detector_v1a.id3nn
-        ...
-        └── face_pose_estimator_v1a.id3nn
-    ...
-    ├── sdk
-        ├── activation
-        ├── bin
-        ...
-        ├── java
-        └── README.md
-    └── README.md
+### Installation
 
-**Notes**
+1. **SDK Setup**
+   - Unzip the SDK archive to the `sdk/` subfolder:
+   ```
+   .
+   ├── sdk/
+   │   ├── activation/
+   │   ├── bin/
+   │   └── README.md
+   ```
 
-* The download address for models can be found in the SDK documentation (developer guide).
-* All models are not mandatory. You do not need to download them all at once. For more details about the required models per sample, please refer to each sample's README file.
+2. **Models Setup**
+   - Download required models from the SDK documentation
+   - Place models in the `models/` directory:
+   ```
+   .
+   ├── models/
+   │   ├── eye_gaze_estimator_v2a.id3nn
+   │   ├── eye_openness_detector_v1a.id3nn
+   │   └── face_pose_estimator_v1a.id3nn
+   ```
+   - Note: Not all models are required - check each sample's README for specific requirements
 
-Once you are here, you can move forward to step 3.
+### License Activation
 
-### Step 3: Activate a license
+The id3 Face SDK requires a valid license file. You can activate your license using one of the following methods:
 
-The id3 Face SDK needs a license file to be used. To retrieve this license file you will need either:
+#### Mobile Systems (Android/iOS)
+```kotlin
+// Example for Android in Kotlin
+val hardwareCode = FaceLicense.getHostHardwareCode(LicenseHardwareCodeType.ANDROID)
+val licenseBuffer = FaceLicense.activateActivationKeyBuffer(
+    hardwareCode, 
+    "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
+    "Activated from Android"
+)
+```
 
-* An id3 activation key (formatted as XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX): it allows activations (and further retrievals of the license file) on several computers and can be re-credited upon request
+#### Windows/Linux Systems
+- **Command Line Interface** (in `sdk/activation/cli-tool/`):
+  ```bash
+  # Windows example
+  .\id3LicenseActivationCLI.exe --activate .\id3Face.lic \
+      --activationkey="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+  ```
 
-This license file can be retrieved through different methods depending of your operating system:
+- **API Activation** (example in C#):
+  ```csharp
+  string hardwareCode = FaceLicense.GetHostHardwareCode(LicenseHardwareCodeType.WindowsOs);
+  FaceLicense.ActivateActivationKey(
+      hardwareCode,
+      "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
+      "Activated through C# API",
+      "id3Face.lic"
+  );
+  ```
 
-* **On mobile systems:**
-  * On most android and ios implementations, the system does not allow retrieval of a true unique hardware identifier to the application developers for privacy purposes. The side effect of this behavior is that you may get a different (but fixed) hardware code for each app you develop even on the same device.
-  * As the hardware code you lock your id3 license on may be different on each app you need to retrieve the license through the app using the FaceLicense_Activate...() APIs
-  * id3 recommends to run the activation at the first launch of the app and then store the license on the device for further uses, this is the behavior which is demonstrated in the mobile samples of this repository
-  * For example the following code retrieves a license on android in Kotlin calling the Java API:
+#### Windows License Manager (Alternative Method)
 
-        ```kotlin
-        val hardwareCode = FaceLicense.getHostHardwareCode(LicenseHardwareCodeType.ANDROID)
-        var licenseBuffer: ByteArray? = null
-        licenseBuffer = FaceLicense.activateActivationKeyBuffer(hardwareCode, "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX", "Activated from Android")
-        ```
+If you're on Windows, you can also use the License Manager tool located in `sdk/activation/windows-tool/` to manage your license. Save the license file in the root of the samples directory as `id3Face.lic`.
 
-  * Notes:
-    * To use the activation APIs you must ensure that your application have the internet usage permission
-    * When using the id3Face Flutter wrapper, the android license activation and check must be performed from a native android class, this behavior is demonstrated in the flutter samples of this repository
-* **On Windows or Linux systems:**
-  * Using the command line interface tool in *sdk/activation/cli-tool*
-    * For example on Windows you can run:
-      * Activation key activation: `.\sdk\activation\cli-tool\windows\x64\id3LicenseActivationCLI.exe --activate .\id3Face.lic --activationkey="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"`
-    * Same examples on Linux:
-      * Activation key activation: `./sdk/activation/cli-tool/linux/x64/id3LicenseActivationCLI --activate ./id3Face.lic --activationkey="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"`
-  * Using the FaceLicense_Activate...() APIs from the SDK:
-    * For example the following code retrieves a license file using the C# API:
+### Running Your First Sample
 
-            ```c#
-            string hardwareCode = id3.Face.FaceLicense.GetHostHardwareCode(id3.Face.LicenseHardwareCodeType.WindowsOs);
-            id3.Face.FaceLicense.ActivateActivationKey(hardwareCode,"XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX", "Activated through C# API", "id3Face.lic");
-            ```
+1. **Choose a Sample**
+   - Browse the [Sample Projects Overview](#sample-projects-overview) below
+   - Select a sample that matches your target platform and language
 
-    * Please see API documentation for more details about usage (retrieve license as file, as buffer, ...)
-  * Using the License Manager tool in *sdk/activation/windows-tool* (only on Windows)
-    Save the license file under the root of samples with the name `id3Face.lic`.
-    .
-    ├── android
-    ...
-    ├── sdk
-    ├── README.md
-    └── id3Face.lic
+2. **Follow the Sample's README**
+   - Each sample has its own README with specific setup instructions
+   - Follow the build and run steps carefully
 
-### Step 4: Play around with the samples
+3. **Explore the Code**
+   - All samples are heavily commented to help you understand the SDK usage
+   - We recommend reading through the code while running the samples
 
-You are now ready to go straight to the directory of your favorite language/platform which will contain a readme file with additional information on how to run the samples.
+## Sample Projects Overview
 
-Sample code is heavily commented in order to give you an overview of the id3 Face SDK usage. We recommend you to read through the code while you run the samples.
+This repository contains sample projects in multiple programming languages to help you get started with the id3 Face SDK. Each sample demonstrates different aspects of the SDK's capabilities.
+
+### Android Samples
+
+| Sample | Description | Language |
+|--------|-------------|----------|
+| Analysis Sample | Face analysis with detection, attributes classification, and pose estimation | Kotlin & Java |
+| PAD Sample | Presentation Attack Detection implementation | Kotlin & Java |
+| Portrait Processor | Advanced portrait processing functionality | Kotlin & Java |
+| Recognition Sample | Face recognition with detection and encoding | Kotlin & Java |
+| Recognition with CameraX | Advanced face recognition using CameraX API | Kotlin |
+| Tracking Sample | Real-time face tracking implementation | Kotlin & Java |
+
+### C++ Samples
+
+| Sample | Description | Type |
+|--------|-------------|------|
+| id3FaceRecognitionSampleCLI | Face recognition command-line interface | CLI |
+| id3PortraitProcessorSampleCLI | Portrait processing command-line tool | CLI |
+
+### .NET Samples
+
+| Sample | Description | Type |
+|--------|-------------|------|
+| CompressToWebpCLI | WebP image compression | CLI |
+| PadWF | Presentation Attack Detection | Windows Forms |
+| PortraitProcessorCLI | Portrait processing | CLI |
+| RecognitionCLI | Face recognition | CLI |
+| RecognitionWF | Face recognition | Windows Forms |
+| RecognitionWPF1toN | 1:N face recognition | WPF |
+
+### Flutter Samples
+
+| Sample | Description | Type |
+|--------|-------------|------|
+| Analysis Sample | Face analysis implementation | Mobile |
+| Benchmark Sample | Performance benchmarking | Mobile |
+| PAD Sample | Presentation Attack Detection | Mobile |
+| Recognition Sample | Face recognition | Mobile |
+
+### Java Samples
+
+| Sample | Description | Type |
+|--------|-------------|------|
+| CompressToWebpCLI | WebP image compression | CLI |
+| PortraitProcessorCLI | Portrait processing | CLI |
+| RecognitionCLI | Face recognition | CLI |
+
+### Python Samples
+
+| Sample | Description | Type |
+|--------|-------------|------|
+| face_analyse.py | Face analysis with detection and landmarks | CLI |
+| face_pad.py | Presentation Attack Detection | CLI |
+| face_recognition.py | Face recognition implementation | CLI |
+| portrait_processor.py | Portrait processing | CLI |
+
+### Swift Samples
+
+| Sample | Description | Platform |
+|--------|-------------|----------|
+| iOS Samples | Face recognition and analysis | iOS |
+- **iOS Samples**: Native iOS implementations showcasing face recognition and analysis capabilities on Apple devices.
 
 ## Troubleshooting
 
-If you get stuck at any step of this procedure, please contact us: <support@id3.eu>.
+If you encounter any issues, please check:
+
+1. **License Issues**
+   - Ensure your license file is correctly placed
+   - Verify the license activation key format
+   - Check for internet connectivity during activation
+
+2. **SDK Installation**
+   - Confirm all required models are present
+   - Verify SDK version compatibility
+   - Check environment variables are set correctly
+
+3. **Development Environment**
+   - Ensure all required dependencies are installed
+   - Verify development tools are up to date
+   - Check system architecture compatibility
+
+If you still have issues, please contact our support team at <support@id3.eu> with:
+- The error message you're encountering
+- Your system configuration
+- The SDK version you're using
+- Any relevant log files
+
+## Support
+
+For support, please contact:
+- Email: <support@id3.eu>
+- Website: [id3technologies.com](https://id3technologies.com)
+
+## License
+
+This software is licensed for commercial use only. For licensing inquiries, please contact:
+- Email: <contact@id3.eu>
+- Website: [id3technologies.com](https://id3technologies.com)
+
+## Contributing
+
+We welcome contributions from the community. Please follow these guidelines:
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a new Pull Request
+
+## Changelog
+
+For detailed changes in each version, see the [CHANGELOG.md](CHANGELOG.md) file.
+
+## Acknowledgments
+
+- id3 Technologies development team
+- All contributors and users who have provided feedback and suggestions
