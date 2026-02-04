@@ -47,10 +47,10 @@ class FaceOverlay : View {
             if (bounds != null) {
                 // Converting id3Face.Rectangle to android Rect
                 this.faceBounds = Rect(
-                    bounds.topLeft.x,
-                    bounds.topLeft.y,
-                    bounds.bottomRight.x,
-                    bounds.bottomRight.y
+                    bounds.getTopLeft().x,
+                    bounds.getTopLeft().y,
+                    bounds.getBottomRight().x,
+                    bounds.getBottomRight().y
                 )
                 isCapturing = true
             } else {

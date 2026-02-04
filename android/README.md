@@ -21,7 +21,7 @@ Each sample uses deep learning models from the Face SDK. They must be copied in 
             ├── main
                 ├── assets
                     ├── models
-                        ├── face_detector_v3b.id3nn
+                        ├── face_detector_v4b.id3nn
                         ...
                 ├── java
                 ├── res
@@ -32,19 +32,43 @@ Each sample uses deep learning models from the Face SDK. They must be copied in 
 The following models are required per project:
 
 * Analysis
+  * face_age_estimator_v1a.id3nn
   * face_attributes_classifier_v2a.id3nn
-  * face_detector_v3b.id3nn
+  * face_background_uniformity_estimator_v1a.id3nn
+  * face_detector_v4b.id3nn
+  * face_encoder_v9b.id3nn
+  * face_landmarks_estimator_v2a.id3nn
   * face_occlusion_detector_v2a.id3nn
   * face_pose_estimator_v1a.id3nn
 * PAD
   * face_attack_support_detector_v2a.id3nn
   * face_blurriness_detector_v1a.id3nn
   * face_color_pad_v2a.id3nn
-  * face_detector_v3b.id3nn
-* Recognition
-  * face_detector_v3b.id3nn
+  * face_color_pad_v3a.id3nn
+  * face_detector_v4b.id3nn
   * face_encoder_v9b.id3nn
-  * face_encoding_quality_estimator_v3a.id3nn
+  * face_landmarks_estimator_v2a.id3nn
+  * face_pose_estimator_v1a.id3nn
+* PortraitProcessor
+  * face_age_estimator_v1a.id3nn
+  * face_attributes_classifier_v2a.id3nn
+  * face_background_uniformity_estimator_v1a.id3nn
+  * face_detector_v4b.id3nn
+  * face_encoder_v9b.id3nn
+  * face_expression_classifier_v1a.id3nn
+  * face_landmarks_estimator_v2a.id3nn
+  * face_occlusion_detector_v2a.id3nn
+  * face_pose_estimator_v1a.id3nn
+* Recognition
+  * face_attributes_classifier_v2a.id3nn
+  * face_detector_v4b.id3nn
+  * face_encoder_v9b.id3nn
+  * face_landmarks_estimator_v2a.id3nn
+  * face_occlusion_detector_v2a.id3nn
+  * face_pose_estimator_v1a.id3nn
+* Tracking
+  * face_detector_v4b.id3nn
+  * face_encoder_v9b.id3nn
 
 ## License
 

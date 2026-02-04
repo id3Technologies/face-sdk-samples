@@ -127,8 +127,7 @@ class CaptureProcess {
         // we downscale the image to accelerate the process
         final scale = resizedImage.downscale(256);
 
-        DetectedFaceList detectedFaceList =
-            faceDetector.detectFaces(resizedImage);
+        DetectedFaceList detectedFaceList = faceDetector.detectFaces(resizedImage);
         if (detectedFaceList.getCount() > 0) {
           DetectedFace detectedFace = detectedFaceList.getLargestFace();
           detectedFace.rescale(1 / scale);
@@ -137,12 +136,12 @@ class CaptureProcess {
             Rectangle bounds = detectedFace.getBounds();
             final rect = Rect.fromPoints(
               Offset(
-                bounds.struct.TopLeft.X.toDouble(),
-                bounds.struct.TopLeft.Y.toDouble(),
+                bounds.topLeft.x.toDouble(),
+                bounds.topLeft.y.toDouble(),
               ),
               Offset(
-                bounds.struct.BottomRight.X.toDouble(),
-                bounds.struct.BottomRight.Y.toDouble(),
+                bounds.bottomRight.x.toDouble(),
+                bounds.bottomRight.y.toDouble(),
               ),
             );
 

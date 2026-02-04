@@ -483,10 +483,10 @@ class CameraFragment : Fragment() {
                  * bounds view.
                  */
                 val rect = Rect(
-                    bounds.topLeft.x,
-                    bounds.topLeft.y,
-                    bounds.bottomRight.x,
-                    bounds.bottomRight.y
+                    bounds.getTopLeft().x,
+                    bounds.getTopLeft().y,
+                    bounds.getBottomRight().x,
+                    bounds.getBottomRight().y
                 )
                 boundsView.update(rect, processingImage.width, processingImage.height)
 

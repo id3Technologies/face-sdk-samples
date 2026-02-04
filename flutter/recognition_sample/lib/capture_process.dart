@@ -135,12 +135,12 @@ class CaptureProcess {
           // we create a flutter rect from the sdk bounds og the face
           final rect = Rect.fromPoints(
             Offset(
-              bounds.struct.TopLeft.X.toDouble(),
-              bounds.struct.TopLeft.Y.toDouble(),
+              bounds.topLeft.x.toDouble(),
+              bounds.topLeft.y.toDouble(),
             ),
             Offset(
-              bounds.struct.BottomRight.X.toDouble(),
-              bounds.struct.BottomRight.Y.toDouble(),
+              bounds.bottomRight.x.toDouble(),
+              bounds.bottomRight.y.toDouble(),
             ),
           );
 

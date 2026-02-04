@@ -150,8 +150,7 @@ int main(int argc, char **argv)
 	int reference_count = 0;
 	err = id3DetectedFaceList_GetCount(reference_list, &reference_count);
 	check(err, "id3DetectedFaceList_GetCount");
-	if (reference_count != 1)
-	{
+	if (reference_count != 1) {
 		std::cout << "Reference image does not contain 1 face" << std::endl;
 		exit(1);
 	}
@@ -162,8 +161,7 @@ int main(int argc, char **argv)
 	int probe_count = 0;
 	err = id3DetectedFaceList_GetCount(reference_list, &probe_count);
 	check(err, "id3DetectedFaceList_GetCount");
-	if (reference_count != 1)
-	{
+	if (reference_count != 1) {
 		std::cout << "Probe image does not contain 1 face" << std::endl;
 		exit(1);
 	}
@@ -210,12 +208,10 @@ int main(int argc, char **argv)
 	err = id3FaceMatcher_CompareTemplates(matcher, probe_template, reference_template, &score);
 	check(err, "id3FaceMatcher_CompareTemplates");
 	std::cout << "   Score: " << score << std::endl;
-	if (score > id3FaceMatcherThreshold_Fmr10000)
-	{
+	if (score > id3FaceMatcherThreshold_Fmr10000) {
 		std::cout << "   Result: MATCH " << std::endl;
 	}
-	else
-	{
+	else {
 		std::cout << "   Result: NO MATCH " << std::endl;
 	}
 
@@ -236,18 +232,16 @@ int main(int argc, char **argv)
 	 */
 	std::cout << "Export probe template as buffer" << std::endl;
 	int probe_template_buffer_size = 0;
-	unsigned char *probe_template_buffer = nullptr;
-	err = id3FaceTemplate_ToBuffer(probe_template, probe_template_buffer, &probe_template_buffer_size);
+	std::vector<unsigned char> probe_template_buffer;
+	err = id3FaceTemplate_ToBuffer(probe_template, nullptr, &probe_template_buffer_size);
 	if (err == id3FaceError_InsufficientBuffer) // expected error as an empty buffer has been provided
 	{
-		probe_template_buffer = (unsigned char *)malloc(probe_template_buffer_size);
-		err = id3FaceTemplate_ToBuffer(probe_template, probe_template_buffer, &probe_template_buffer_size);
+		probe_template_buffer.resize(probe_template_buffer_size);
+		err = id3FaceTemplate_ToBuffer(probe_template, probe_template_buffer.data(), &probe_template_buffer_size);
 		check(err, "id3FaceTemplate_ToBuffer with allocated buffer");
 		// probe_template_buffer now contains the exported template and could be stored, etc
-		free(probe_template_buffer);
 	}
-	else
-	{
+	else {
 		check(err, "id3FaceTemplate_ToBuffer with empty buffer");
 	}
 

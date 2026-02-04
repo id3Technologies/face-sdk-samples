@@ -56,10 +56,10 @@ public class MultipleBoundsView extends View {
                 TrackedFace tf = trackedFaceList.get(i);
                 if(tf.getTrackingStatus() == TrackingStatus.CONFIRMED) {
                     eu.id3.face.Rectangle bounds = tf.getPredictedBounds();
-                    rect.set(bounds.topLeft.x,
-                            bounds.topLeft.y,
-                            bounds.bottomRight.x,
-                            bounds.bottomRight.y);
+                    rect.set(bounds.getTopLeft().x,
+                            bounds.getTopLeft().y,
+                            bounds.getBottomRight().x,
+                            bounds.getBottomRight().y);
                     scaleRect(rect);
                     canvas.drawRect(rect, rectPaint);
 

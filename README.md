@@ -1,7 +1,7 @@
 # Face SDK Samples
 
 [![License](https://img.shields.io/badge/license-Commercial-red)](https://id3.eu)
-[![Version](https://img.shields.io/badge/version-9.15.3.4-blue)](README.md)
+[![Version](https://img.shields.io/badge/version-9.17.0.0-blue)](README.md)
 
 ## Table of Contents
 
@@ -55,8 +55,8 @@ The repository version follows a 4-digit format:
 - Last digit: Sample updates (evolutions, bug fixes, documentation)
 
 Current versions:
-- Samples version: **9.15.3.4**
-- Required id3 Face SDK version: **9.15.3**
+- Samples version: **9.17.0.0**
+- Required id3 Face SDK version: **9.17.0**
 
 ## Getting Started
 
