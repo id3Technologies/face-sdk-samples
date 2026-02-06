@@ -19,7 +19,7 @@ For instance in this sample, we load a detector and the models used by PortraitP
 """
 print("Loading models... ")
 id3face.FaceLibrary.load_model(modelPath, id3face.FaceModel.FACE_DETECTOR_4B, id3face.ProcessingUnit.CPU)
-id3face.FaceLibrary.load_model(modelPath, id3face.FaceModel.FACE_COLOR_BASED_PAD_3A, id3face.ProcessingUnit.CPU)
+id3face.FaceLibrary.load_model(modelPath, id3face.FaceModel.FACE_COLOR_BASED_PAD_4A, id3face.ProcessingUnit.CPU)
 print("Done.\n")
 
 """
@@ -65,6 +65,6 @@ print(f"PAD score:\t{result.score}")
 Unload models.
 """
 id3face.FaceLibrary.unload_model(id3face.FaceModel.FACE_DETECTOR_4B, id3face.ProcessingUnit.CPU)
-id3face.FaceLibrary.unload_model(id3face.FaceModel.FACE_COLOR_BASED_PAD_3A, id3face.ProcessingUnit.CPU)
+id3face.FaceLibrary.unload_model(id3face.FaceModel.FACE_COLOR_BASED_PAD_4A, id3face.ProcessingUnit.CPU)
 
 print("Sample terminated successfully.")

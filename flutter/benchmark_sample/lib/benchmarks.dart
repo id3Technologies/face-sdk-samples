@@ -11,7 +11,7 @@ CompleteBenchmark get completeBenchmark => CompleteBenchmark(
       imagesBytes: images,
       faceDetector4AModelBytes: faceDetector4AModelBytes,
       faceDetector4BModelBytes: faceDetector4BModelBytes,
-      faceEncoder9AModelBytes: faceEncoder9AModelBytes,
+      faceEncoder10AModelBytes: faceEncoder10AModelBytes,
       faceEncoder9BModelBytes: faceEncoder9BModelBytes,
       faceQualityModelBytes: faceQualityModelBytes,
     );
@@ -36,8 +36,8 @@ QualityBenchmark get qualityBenchmark => QualityBenchmark(
     );
 
 EncoderBenchmark get encoder9ABenchmark => EncoderBenchmark(
-    faceEncoderModelBytes: faceEncoder9AModelBytes,
-    faceEncoderModel: sdk.FaceModel.faceEncoder9A,
+    faceEncoderModelBytes: faceEncoder10AModelBytes,
+    faceEncoderModel: sdk.FaceModel.faceEncoder10A,
     imagesBytes: images,
     faceDetectorModelBytes: faceDetector4BModelBytes);
 
@@ -71,12 +71,10 @@ class QualityBenchmark extends Benchmark {
         p, faceEncoderModelBytes, sdk.FaceModel.faceEncoder9B);
     final faceEncoder = sdk.FaceEncoder()
       ..setModel(sdk.FaceModel.faceEncoder9B);
-    loadFaceQualityEstimatorModelBenchmark(p, faceQualityModelBytes);
     loadFaceDetectorModelBenchmark(
         p, faceDetectorModelBytes, sdk.FaceModel.faceDetector4B);
     final faceDetector = sdk.FaceDetector()
       ..setModel(sdk.FaceModel.faceDetector4B);
-    faceQualityBenchmark(p, imagesBytes, faceDetector, faceEncoder);
     faceEncoder.dispose();
     faceDetector.dispose();
   }
@@ -87,12 +85,10 @@ class QualityBenchmark extends Benchmark {
         faceEncoderModelBytes, sdk.FaceModel.faceEncoder9B);
     final faceEncoder = sdk.FaceEncoder()
       ..setModel(sdk.FaceModel.faceEncoder9B);
-    yield* sf.loadFaceQualityEstimatorModelBenchmark(faceQualityModelBytes);
     yield* sf.loadFaceDetectorModelBenchmark(
         faceDetectorModelBytes, sdk.FaceModel.faceDetector4B);
     final faceDetector = sdk.FaceDetector()
       ..setModel(sdk.FaceModel.faceDetector4B);
-    yield* sf.faceQualityBenchmark(imagesBytes, faceDetector, faceEncoder);
     faceEncoder.dispose();
     faceDetector.dispose();
   }
@@ -184,7 +180,7 @@ class CompleteBenchmark extends Benchmark {
   CompleteBenchmark({
     required this.faceDetector4AModelBytes,
     required this.faceDetector4BModelBytes,
-    required this.faceEncoder9AModelBytes,
+    required this.faceEncoder10AModelBytes,
     required this.faceEncoder9BModelBytes,
     required this.faceQualityModelBytes,
     required this.imagesBytes,
@@ -192,7 +188,7 @@ class CompleteBenchmark extends Benchmark {
 
   final Uint8List faceDetector4AModelBytes;
   final Uint8List faceDetector4BModelBytes;
-  final Uint8List faceEncoder9AModelBytes;
+  final Uint8List faceEncoder10AModelBytes;
   final Uint8List faceEncoder9BModelBytes;
   final Uint8List faceQualityModelBytes;
   final List<Uint8List> imagesBytes;
@@ -208,12 +204,11 @@ class CompleteBenchmark extends Benchmark {
         p, faceDetector4BModelBytes, sdk.FaceModel.faceDetector4B);
     final faceDetector4B = sdk.FaceDetector()
       ..setModel(sdk.FaceModel.faceDetector4B);
-    loadFaceQualityEstimatorModelBenchmark(p, faceQualityModelBytes);
 
     loadFaceEncoderModelBenchmark(
-        p, faceEncoder9AModelBytes, sdk.FaceModel.faceEncoder9A);
-    final faceEncoder9A = sdk.FaceEncoder()
-      ..setModel(sdk.FaceModel.faceEncoder9A);
+        p, faceEncoder10AModelBytes, sdk.FaceModel.faceEncoder10A);
+    final faceEncoder10A = sdk.FaceEncoder()
+      ..setModel(sdk.FaceModel.faceEncoder10A);
     loadFaceEncoderModelBenchmark(
         p, faceEncoder9BModelBytes, sdk.FaceModel.faceEncoder9B);
     final faceEncoder9B = sdk.FaceEncoder()
@@ -233,10 +228,8 @@ class CompleteBenchmark extends Benchmark {
       faceDetector4B,
     );
     p.send(separator);
-    faceQualityBenchmark(p, imagesBytes, faceDetector4B, faceEncoder9B);
-    p.send(separator);
-    faceEncoderBenchmark(p, imagesBytes, sdk.FaceModel.faceEncoder9A,
-        faceDetector4B, faceEncoder9A);
+    faceEncoderBenchmark(p, imagesBytes, sdk.FaceModel.faceEncoder10A,
+        faceDetector4B, faceEncoder10A);
     p.send(separator);
     faceEncoderBenchmark(p, imagesBytes, sdk.FaceModel.faceEncoder9B,
         faceDetector4B, faceEncoder9B);
@@ -244,7 +237,7 @@ class CompleteBenchmark extends Benchmark {
 
     faceDetector4A.dispose();
     faceDetector4B.dispose();
-    faceEncoder9A.dispose();
+    faceEncoder10A.dispose();
     faceEncoder9B.dispose();
   }
 
@@ -260,12 +253,11 @@ class CompleteBenchmark extends Benchmark {
         faceDetector4BModelBytes, sdk.FaceModel.faceDetector4B);
     final faceDetector4B = sdk.FaceDetector()
       ..setModel(sdk.FaceModel.faceDetector4B);
-    yield* sf.loadFaceQualityEstimatorModelBenchmark(faceQualityModelBytes);
 
     yield* sf.loadFaceEncoderModelBenchmark(
-        faceEncoder9AModelBytes, sdk.FaceModel.faceEncoder9A);
-    final faceEncoder9A = sdk.FaceEncoder()
-      ..setModel(sdk.FaceModel.faceEncoder9A);
+        faceEncoder10AModelBytes, sdk.FaceModel.faceEncoder10A);
+    final faceEncoder10A = sdk.FaceEncoder()
+      ..setModel(sdk.FaceModel.faceEncoder10A);
     yield* sf.loadFaceEncoderModelBenchmark(
         faceEncoder9BModelBytes, sdk.FaceModel.faceEncoder9B);
     final faceEncoder9B = sdk.FaceEncoder()
@@ -283,10 +275,8 @@ class CompleteBenchmark extends Benchmark {
       faceDetector4B,
     );
     yield* sf.printAndYield(separator);
-    yield* sf.faceQualityBenchmark(imagesBytes, faceDetector4B, faceEncoder9B);
-    yield* sf.printAndYield(separator);
-    yield* sf.faceEncoderBenchmark(imagesBytes, sdk.FaceModel.faceEncoder9A,
-        faceDetector4B, faceEncoder9A);
+    yield* sf.faceEncoderBenchmark(imagesBytes, sdk.FaceModel.faceEncoder10A,
+        faceDetector4B, faceEncoder10A);
     yield* sf.printAndYield(separator);
     yield* sf.faceEncoderBenchmark(imagesBytes, sdk.FaceModel.faceEncoder9B,
         faceDetector4B, faceEncoder9B);
@@ -294,14 +284,14 @@ class CompleteBenchmark extends Benchmark {
 
     faceDetector4A.dispose();
     faceDetector4B.dispose();
-    faceEncoder9A.dispose();
+    faceEncoder10A.dispose();
     faceEncoder9B.dispose();
   }
 }
 
 // sdk.FaceDetector? faceDetector3A;
 // sdk.FaceDetector? faceDetector3B;
-// sdk.FaceEncoder? faceEncoder9A;
+// sdk.FaceEncoder? faceEncoder10A;
 // sdk.FaceEncoder? faceEncoder9B;
 
 

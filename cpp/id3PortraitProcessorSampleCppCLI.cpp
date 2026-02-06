@@ -36,11 +36,10 @@ int main(int argc, char **argv)
          */
 		std::cout << "Loading models" << std::endl;
 		FaceLibrary::loadModel(models_dir.c_str(), id3FaceModel_FaceDetector4B, id3FaceProcessingUnit_Cpu);
-		FaceLibrary::loadModel(models_dir.c_str(), id3FaceModel_FaceEncoder9B, id3FaceProcessingUnit_Cpu);
+		FaceLibrary::loadModel(models_dir.c_str(), id3FaceModel_FaceEncoder10B, id3FaceProcessingUnit_Cpu);
 		FaceLibrary::loadModel(models_dir.c_str(), id3FaceModel_FaceLandmarksEstimator2A, id3FaceProcessingUnit_Cpu);
 		FaceLibrary::loadModel(models_dir.c_str(), id3FaceModel_FacePoseEstimator1A, id3FaceProcessingUnit_Cpu);
-		FaceLibrary::loadModel(models_dir.c_str(), id3FaceModel_FaceColorBasedPad3A, id3FaceProcessingUnit_Cpu);
-		FaceLibrary::loadModel(models_dir.c_str(), id3FaceModel_FaceEncodingQualityEstimator3A, id3FaceProcessingUnit_Cpu);
+		FaceLibrary::loadModel(models_dir.c_str(), id3FaceModel_FaceColorBasedPad4A, id3FaceProcessingUnit_Cpu);
 		FaceLibrary::loadModel(models_dir.c_str(), id3FaceModel_FaceAgeEstimator1A, id3FaceProcessingUnit_Cpu);
 		FaceLibrary::loadModel(models_dir.c_str(), id3FaceModel_FaceExpressionClassifier1A, id3FaceProcessingUnit_Cpu);
 		FaceLibrary::loadModel(models_dir.c_str(), id3FaceModel_FaceAttributesClassifier2A, id3FaceProcessingUnit_Cpu);
@@ -178,7 +177,6 @@ int main(int argc, char **argv)
 		FaceLibrary::unloadModel(id3FaceModel_FaceLandmarksEstimator2A, id3FaceProcessingUnit_Cpu);
 		FaceLibrary::unloadModel(id3FaceModel_FacePoseEstimator1A, id3FaceProcessingUnit_Cpu);
 		FaceLibrary::unloadModel(id3FaceModel_FaceColorBasedPad3A, id3FaceProcessingUnit_Cpu);
-		FaceLibrary::unloadModel(id3FaceModel_FaceEncodingQualityEstimator3A, id3FaceProcessingUnit_Cpu);
 		FaceLibrary::unloadModel(id3FaceModel_FaceAgeEstimator1A, id3FaceProcessingUnit_Cpu);
 		FaceLibrary::unloadModel(id3FaceModel_FaceExpressionClassifier1A, id3FaceProcessingUnit_Cpu);
 		FaceLibrary::unloadModel(id3FaceModel_FaceAttributesClassifier2A, id3FaceProcessingUnit_Cpu);

@@ -40,11 +40,10 @@ namespace id3.Face.Samples.PortraitProcessorCLI
             try
             {
                 FaceLibrary.LoadModel(modelPath, FaceModel.FaceDetector4B, ProcessingUnit.Cpu);
-                FaceLibrary.LoadModel(modelPath, FaceModel.FaceEncoder9B, ProcessingUnit.Cpu);
+                FaceLibrary.LoadModel(modelPath, FaceModel.FaceEncoder10B, ProcessingUnit.Cpu);
                 FaceLibrary.LoadModel(modelPath, FaceModel.FaceLandmarksEstimator2A, ProcessingUnit.Cpu);
                 FaceLibrary.LoadModel(modelPath, FaceModel.FacePoseEstimator1A, ProcessingUnit.Cpu);
-                FaceLibrary.LoadModel(modelPath, FaceModel.FaceColorBasedPad3A, ProcessingUnit.Cpu);
-                FaceLibrary.LoadModel(modelPath, FaceModel.FaceEncodingQualityEstimator3A, ProcessingUnit.Cpu);
+                FaceLibrary.LoadModel(modelPath, FaceModel.FaceColorBasedPad4A, ProcessingUnit.Cpu);
                 FaceLibrary.LoadModel(modelPath, FaceModel.FaceAgeEstimator1A, ProcessingUnit.Cpu);
                 FaceLibrary.LoadModel(modelPath, FaceModel.FaceExpressionClassifier1A, ProcessingUnit.Cpu);
                 FaceLibrary.LoadModel(modelPath, FaceModel.FaceAttributesClassifier2A, ProcessingUnit.Cpu);

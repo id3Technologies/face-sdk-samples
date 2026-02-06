@@ -95,10 +95,10 @@ namespace id3.Face.Samples.PadWF
             {
                 // Once a model is loaded in the desired processing unit (CPU or GPU) several instances of the associated processor can be created.
                 FaceLibrary.LoadModel(modelPath, FaceModel.FaceDetector4B, ProcessingUnit.Cpu);
-                FaceLibrary.LoadModel(modelPath, FaceModel.FaceEncoder9B, ProcessingUnit.Cpu);
+                FaceLibrary.LoadModel(modelPath, FaceModel.FaceEncoder10B, ProcessingUnit.Cpu);
                 FaceLibrary.LoadModel(modelPath, FaceModel.FaceLandmarksEstimator2A, ProcessingUnit.Cpu);
                 FaceLibrary.LoadModel(modelPath, FaceModel.FacePoseEstimator1A, ProcessingUnit.Cpu);
-                FaceLibrary.LoadModel(modelPath, FaceModel.FaceColorBasedPad3A, ProcessingUnit.Cpu);
+                FaceLibrary.LoadModel(modelPath, FaceModel.FaceColorBasedPad4A, ProcessingUnit.Cpu);
             }
             catch (FaceException ex)
             {

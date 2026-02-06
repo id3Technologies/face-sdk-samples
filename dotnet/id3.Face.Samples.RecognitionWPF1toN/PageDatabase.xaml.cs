@@ -128,13 +128,11 @@ namespace id3FaceSearchSampleWPF
 									ImageName = img_name
 								};
 
-								int quality = FaceTools.Encoder.ComputeQuality(img_src, face);
+								//int quality = FaceTools.Encoder.ComputeQuality(img_src, face);
                                 var iod = face.GetInterocularDistance();
                                 if (iod >= 30)
                                 {
-                                    //var roi = img_src.ExtractRoi(face.GetPortraitBounds(0.25f, 0.45f, 1.33f));
                                     var roi = img_src.ExtractRoi(face.GetPortraitBounds(0.45f, 0.45f, 1.33334f));
-                                    //roi.ToFile(@"C:\Users\gpinel\Downloads\Gal_Gadot_2_roi.webp", 100);
                                     facedata.BitmapSource = ImageDrawing.ToBitmapSource(roi);
                                     facedata.BitmapSource.Freeze();
 
@@ -143,11 +141,11 @@ namespace id3FaceSearchSampleWPF
                                         // create template
                                         var sw = Stopwatch.StartNew();
                                         var template = FaceTools.Encoder.CreateTemplate(img_src, face);
-                                        Console.WriteLine($"{filename}: Q={quality} (compute in {sw.ElapsedMilliseconds} ms)");
+                                        Console.WriteLine($"{filename}: Q={template.Quality} (compute in {sw.ElapsedMilliseconds} ms)");
 
                                         // update template list
                                         lock (FaceDatabase.ReferenceListLock)
-                                            FaceDatabase.Add(facedata.UserID.ToString(), template);
+                                            FaceDatabase.Add(facedata.UserID, template);
                                     }
                                     catch (FaceException ex)
                                     {

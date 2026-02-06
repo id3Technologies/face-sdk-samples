@@ -20,19 +20,6 @@ void loadFaceDetectorModelBenchmark(
       "FaceDetector${faceModel.modelNumber} model loading : ${stopwatch.elapsedMilliseconds} ms");
 }
 
-void loadFaceQualityEstimatorModelBenchmark(SendPort p, Uint8List modelBytes) {
-  final stopwatch = Stopwatch()..start();
-
-  sdk.FaceLibrary.loadModelBuffer(
-    modelBytes,
-    sdk.FaceModel.faceEncodingQualityEstimator3A,
-    sdk.ProcessingUnit.cpu,
-  );
-
-  p.send(
-      "FaceEncodingQualityEstimator model loading : ${stopwatch.elapsedMilliseconds} ms");
-}
-
 void loadFaceEncoderModelBenchmark(
     SendPort p, Uint8List faceModelBytes, sdk.FaceModel faceModel) {
   p.send("Beginning of face encoder benchmark ${faceModel.modelNumber}");
@@ -81,39 +68,6 @@ void faceDetectionBenchmark(SendPort p, List<Uint8List> imagesBytes,
     faceDetector.setThreadCount(faceDetectorThreadCount);
   }
   p.send("End of face detection benchmark");
-}
-
-void faceQualityBenchmark(SendPort p, List<Uint8List> imagesBytes,
-    sdk.FaceDetector faceDetector, sdk.FaceEncoder faceEncoder) {
-  p.send("Beginning of face quality computing benchmark");
-
-  // The dimension of an image has no impact on the quality computing time.
-  // So we only benchmark the quality computing time on the first image.
-
-  final image = sdk.Image.fromBuffer(imagesBytes[0], sdk.PixelFormat.bgr24Bits);
-
-  final detectedFaces = faceDetector.detectFaces(image);
-
-  if (detectedFaces.getCount() == 0 || detectedFaces.getCount() > 1) {
-    log("Error : the image 0 should contain 1 face, not ${detectedFaces.getCount()}");
-  } else {
-    //   Benchmark quality estimator. We compute the quality of the image 10 times and we
-    //   take the mean of the time needed to perform each quality estimation.
-
-    p.send(
-        "Quality estimation in ${image.getHeight()}x${image.getWidth()} image");
-
-    final detectedFace = detectedFaces.get(0);
-    var meanQualityComputingTime = 0;
-    for (int i = 0; i < 9; i++) {
-      final stopwatch = Stopwatch()..start();
-      faceEncoder.computeQuality(image, detectedFace);
-      meanQualityComputingTime += stopwatch.elapsedMilliseconds;
-    }
-    meanQualityComputingTime ~/= 10;
-    p.send("Done: ${meanQualityComputingTime}ms");
-    p.send("End of face quality computing benchmark");
-  }
 }
 
 void faceEncoderBenchmark(

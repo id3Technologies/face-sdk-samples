@@ -129,7 +129,7 @@ class CaptureProcess {
 
         DetectedFaceList detectedFaceList = faceDetector.detectFaces(resizedImage);
         if (detectedFaceList.getCount() > 0) {
-          DetectedFace detectedFace = detectedFaceList.getLargestFace();
+          DetectedFace detectedFace = detectedFaceList.getLargestFace()!;
           detectedFace.rescale(1 / scale);
           if (detectedFace.getInterocularDistance() > 64) {
             // we create a flutter rect from the sdk bounds og the face

@@ -93,8 +93,8 @@ int main(int argc, char **argv)
 	 * It is possible to choose which encoder you want to load:
 	 * - Processing unit: choose if you want to use either the CPU or GPU to extract templates.
 	 */
-	std::cout << "Loading face encoder 9A model" << std::endl;
-	err = id3FaceLibrary_LoadModel(models_dir.c_str(), id3FaceModel_FaceEncoder9A, id3FaceProcessingUnit_Cpu);
+	std::cout << "Loading face encoder 10A model" << std::endl;
+	err = id3FaceLibrary_LoadModel(models_dir.c_str(), id3FaceModel_FaceEncoder10A, id3FaceProcessingUnit_Cpu);
 	check(err, "id3FaceLibrary_LoadModel");
 	/**
 	 * Once the model is loaded, it is now possible to instantiate an ID3_FACE_ENCODER object.
@@ -108,7 +108,7 @@ int main(int argc, char **argv)
 	 * to get the exact performance trade-offs. Beware that the models are NOT interoperable (generated templates cannot be cross-matched).
 	 * - ThreadCount: allocating more than 1 thread here can increase the speed of the process.
 	 */
-	err = id3FaceEncoder_SetModel(encoder, id3FaceModel_FaceEncoder9A);
+	err = id3FaceEncoder_SetModel(encoder, id3FaceModel_FaceEncoder10A);
 	check(err, "id3FaceDetector_SetModel");
 	err = id3FaceEncoder_SetThreadCount(encoder, 4);
 	check(err, "id3FaceEncoder_SetThreadCount");
@@ -262,7 +262,7 @@ int main(int argc, char **argv)
 	err = id3FaceDetector_Dispose(&detector);
 	err = id3FaceImage_Dispose(&probe_image);
 	err = id3FaceImage_Dispose(&reference_image);
-	err = id3FaceLibrary_UnloadModel(id3FaceModel_FaceEncoder9A, id3FaceProcessingUnit_Cpu);
+	err = id3FaceLibrary_UnloadModel(id3FaceModel_FaceEncoder10A, id3FaceProcessingUnit_Cpu);
 	err = id3FaceLibrary_UnloadModel(id3FaceModel_FaceDetector4B, id3FaceProcessingUnit_Cpu);
 
 	std::cout << "Sample terminated successfully." << std::endl;

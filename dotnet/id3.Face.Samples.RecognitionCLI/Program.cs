@@ -38,7 +38,7 @@ namespace id3.Face.Samples.RecognitionCLI
             try
             {
                 FaceLibrary.LoadModel(modelPath, FaceModel.FaceDetector4B, ProcessingUnit.Cpu);
-                FaceLibrary.LoadModel(modelPath, FaceModel.FaceEncoder9A, ProcessingUnit.Cpu);
+                FaceLibrary.LoadModel(modelPath, FaceModel.FaceEncoder10A, ProcessingUnit.Cpu);
             }
             catch (FaceException ex)
             {
@@ -83,7 +83,7 @@ namespace id3.Face.Samples.RecognitionCLI
                  */
                 FaceEncoder faceEncoder = new FaceEncoder()
                 {
-                    Model = FaceModel.FaceEncoder9A,
+                    Model = FaceModel.FaceEncoder10A,
                     ThreadCount = 4
                 };
                 /*

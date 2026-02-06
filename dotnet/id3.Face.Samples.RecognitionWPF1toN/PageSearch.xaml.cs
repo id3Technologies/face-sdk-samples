@@ -92,31 +92,17 @@ namespace id3FaceSearchSampleWPF
         #region Match process
 		private void matchProcess(id3.Face.Image img, DetectedFace face, FaceData facedata)
 		{
-            int quality = 0;
-            try
-            {
-                quality = FaceTools.Encoder.ComputeQuality(img, face);
-            }
-            catch (FaceException ex)
-            {
-                MessageBox.Show($"WorkerLive_DoWork.ComputeQuality FaceException: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"WorkerLive_DoWork.ComputeQuality exception: {ex.Message}");
-            }
-
-            facedata.Quality = quality;
             if (FaceDatabase.Count > 0)
 			{
-				if (quality > 30)
-				{
-					try
-					{
-                        var sw = Stopwatch.StartNew();
-                        var template = FaceTools.Encoder.CreateTemplate(img, face);
-                        Console.WriteLine($"Create tempate : {sw.ElapsedMilliseconds} ms");
+                try
+                {
+                    var sw = Stopwatch.StartNew();
+                    var template = FaceTools.Encoder.CreateTemplate(img, face);
+                    Console.WriteLine($"Create tempate : {sw.ElapsedMilliseconds} ms");
 
+                    facedata.Quality = template.Quality;
+                    if (template.Quality > 30)
+                    {
                         sw = Stopwatch.StartNew();
                         var candidates = new FaceCandidateList();
                         _faceMatcher.SearchTemplate(FaceDatabase.ReferenceTemplateList, template, 1, candidates);
@@ -127,31 +113,30 @@ namespace id3FaceSearchSampleWPF
                         Console.WriteLine($"FaceIndexer.SearchTemplate : {sw.ElapsedMilliseconds} ms");
 
                         if (candidates?.Count > 0)
-						{
+                        {
                             var candidate = candidates[0];
                             var candidate2 = candidates2[0];
                             if (candidate.Score >= _faceMatchingThreshold)
-							{
-								// Find the reference data associated with this candidate
-								var referenceData = FaceDatabase.ReferenceDataList.FirstOrDefault(x => x.UserID.ToString() == candidate.Id);
-								if (referenceData != null)
-								{
-                                    facedata.Quality = quality;
+                            {
+                                // Find the reference data associated with this candidate
+                                var referenceData = FaceDatabase.ReferenceDataList.FirstOrDefault(x => x.UserID == candidate.Id);
+                                if (referenceData != null)
+                                {
                                     facedata.CandidateScore = candidate.Score;
                                     facedata.DatabaseItem = referenceData;
                                 }
-							}
-						}
-					}
-					catch (FaceException ex)
-					{
-						MessageBox.Show($"WorkerLive_DoWork.CreateTemplate FaceException: {ex.Message}");
-					}
-					catch (Exception ex)
-					{
-						MessageBox.Show($"WorkerLive_DoWork.CreateTemplate exception: {ex.Message}");
-					}
-				}
+                            }
+                        }
+                    }
+                }
+                catch (FaceException ex)
+                {
+                    MessageBox.Show($"WorkerLive_DoWork.CreateTemplate FaceException: {ex.Message}");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"WorkerLive_DoWork.CreateTemplate exception: {ex.Message}");
+                }
 			}
         }
         #endregion

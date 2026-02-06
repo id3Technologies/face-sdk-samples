@@ -1,5 +1,8 @@
 # id3 Face Toolkit Samples Changelog
 
+## Version 10.0.0.0 (2026-02-06)
+- Updated to id3 Face Toolkit 10.0.0
+
 ## Version 9.17.0.0 (2026-02-04)
 - Updated to id3 Face Toolkit 9.17.0
 

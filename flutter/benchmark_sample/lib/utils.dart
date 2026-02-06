@@ -19,7 +19,7 @@ Future<Uint8List> loadAsset(String assetName) async {
 Future<void> loadAllAssets() async {
   faceDetector4AModelBytes = await loadAsset('face_detector_v4a.id3nn');
   faceDetector4BModelBytes = await loadAsset('face_detector_v4b.id3nn');
-  faceEncoder9AModelBytes = await loadAsset('face_encoder_v9a.id3nn');
+  faceEncoder10AModelBytes = await loadAsset('face_encoder_v9a.id3nn');
   faceEncoder9BModelBytes = await loadAsset('face_encoder_v9b.id3nn');
   faceQualityModelBytes =
       await loadAsset('face_encoding_quality_estimator_v3a.id3nn');
@@ -28,7 +28,7 @@ Future<void> loadAllAssets() async {
 late List<Uint8List> images;
 late Uint8List faceDetector4AModelBytes;
 late Uint8List faceDetector4BModelBytes;
-late Uint8List faceEncoder9AModelBytes;
+late Uint8List faceEncoder10AModelBytes;
 late Uint8List faceEncoder9BModelBytes;
 late Uint8List faceQualityModelBytes;
 const separator = "--------------------------------------------------------";
@@ -40,7 +40,7 @@ extension FaceModelX on sdk.FaceModel {
         return "4A";
       case sdk.FaceModel.faceDetector4B:
         return "4B";
-      case sdk.FaceModel.faceEncoder9A:
+      case sdk.FaceModel.faceEncoder10A:
         return "9A";
       case sdk.FaceModel.faceEncoder9B:
         return "9B";

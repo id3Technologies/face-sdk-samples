@@ -83,12 +83,6 @@ Future<void> loadModels() async {
     sdk.FaceModel.faceEncoder9B,
     sdk.ProcessingUnit.cpu,
   );
-  final faceQuality = await rootBundle.load('assets/models/face_encoding_quality_estimator_v3a.id3nn');
-  sdk.FaceLibrary.loadModelBuffer(
-    faceQuality.buffer.asUint8List(),
-    sdk.FaceModel.faceEncodingQualityEstimator3A,
-    sdk.ProcessingUnit.cpu,
-  );
 }
 
 class App extends StatelessWidget {
@@ -258,12 +252,10 @@ EnrollResult onEnroll(CaptureProcessResult result) {
 
   final template = faceEncoder.createTemplate(image, detectedFace);
 
-  final quality = faceEncoder.computeQuality(image, detectedFace);
-
   return EnrollResult(
     jpg,
     template.toBuffer(),
-    quality,
+    template.getQuality(),
   );
 }
 
@@ -282,13 +274,11 @@ MatchResult onMatch(CaptureProcessResult captureResult, EnrollResult enrollResul
 
   final detectedFace = sdk.DetectedFace.fromBuffer(captureResult.detectedFaceBytes);
 
-  final quality = faceEncoder.computeQuality(image, detectedFace);
-
   final template = faceEncoder.createTemplate(image, detectedFace);
 
   final faceMatcher = sdk.FaceMatcher();
   final refTemplate = sdk.FaceTemplate.fromBuffer(enrollResult.templateBytes);
   final score = faceMatcher.compareTemplates(refTemplate, template);
 
-  return MatchResult(quality, score);
+  return MatchResult(template.getQuality(), score);
 }

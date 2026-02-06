@@ -27,7 +27,7 @@ public class RecognitionCLI {
          */
         System.out.println("Loading models... ");
         FaceLibrary.loadModel(modelPath, FaceModel.FACE_DETECTOR_4B, ProcessingUnit.CPU);
-        FaceLibrary.loadModel(modelPath, FaceModel.FACE_ENCODER_9A, ProcessingUnit.CPU);
+        FaceLibrary.loadModel(modelPath, FaceModel.FACE_ENCODER_10A, ProcessingUnit.CPU);
         System.out.println("Done.\n");
         /**
          * Load sample images from files.
@@ -66,7 +66,7 @@ public class RecognitionCLI {
          * the process.
          */
         FaceEncoder faceEncoder = new FaceEncoder();
-        faceEncoder.setModel(FaceModel.FACE_ENCODER_9A);
+        faceEncoder.setModel(FaceModel.FACE_ENCODER_10A);
         faceEncoder.setThreadCount(4);
         /**
          * Create the template from the largest detected faces in each image.
@@ -157,7 +157,7 @@ public class RecognitionCLI {
         /**
          * Unload models
          */
-        FaceLibrary.unloadModel(FaceModel.FACE_ENCODER_9A, ProcessingUnit.CPU);
+        FaceLibrary.unloadModel(FaceModel.FACE_ENCODER_10A, ProcessingUnit.CPU);
         FaceLibrary.unloadModel(FaceModel.FACE_DETECTOR_4B, ProcessingUnit.CPU);
 
         System.out.println("Sample terminated successfully.");

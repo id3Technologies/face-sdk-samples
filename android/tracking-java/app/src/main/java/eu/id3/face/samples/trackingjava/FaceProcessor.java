@@ -48,8 +48,8 @@ public class FaceProcessor {
             );
 
             FaceLibrary.loadModelBuffer(
-                    readAllBytes(context.getAssets().open("models/face_encoder_v9b.id3nn")),
-                    FaceModel.FACE_ENCODER_9B, ProcessingUnit.CPU
+                    readAllBytes(context.getAssets().open("models/face_encoder_v10b.id3nn")),
+                    FaceModel.FACE_ENCODER_10B, ProcessingUnit.CPU
             );
             Log.v(LOG_TAG, "Load models: OK !");
 
@@ -57,7 +57,7 @@ public class FaceProcessor {
 
             // Set the face detector and encoder models
             faceTracker.setDetectionModel(FaceModel.FACE_DETECTOR_4B);
-            faceTracker.setEncodingModel(FaceModel.FACE_ENCODER_9B);
+            faceTracker.setEncodingModel(FaceModel.FACE_ENCODER_10B);
 
             // The FaceTracker object has multiple parameters which must be tuned in order to respect
             // your application needs.

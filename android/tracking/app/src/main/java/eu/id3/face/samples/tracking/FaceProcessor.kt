@@ -30,8 +30,8 @@ class FaceProcessor(context: Context) {
                 FaceModel.FACE_DETECTOR_4B, ProcessingUnit.CPU
             )
             FaceLibrary.loadModelBuffer(
-                context.assets.open("models/face_encoder_v9b.id3nn").readBytes(),
-                FaceModel.FACE_ENCODER_9B, ProcessingUnit.CPU
+                context.assets.open("models/face_encoder_v10b.id3nn").readBytes(),
+                FaceModel.FACE_ENCODER_10B, ProcessingUnit.CPU
             )
 
             faceTracker = FaceTracker()
@@ -40,7 +40,7 @@ class FaceProcessor(context: Context) {
 
             // Set the face detector and encoder models
             faceTracker.detectionModel = FaceModel.FACE_DETECTOR_4B
-            faceTracker.encodingModel = FaceModel.FACE_ENCODER_9B
+            faceTracker.encodingModel = FaceModel.FACE_ENCODER_10B
 
             // The FaceTracker object has multiple parameters which must be tuned in order to respect
             // your application needs.

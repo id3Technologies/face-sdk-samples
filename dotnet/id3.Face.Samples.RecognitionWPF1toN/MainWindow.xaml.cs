@@ -21,12 +21,10 @@ namespace id3FaceSearchSampleWPF
         static readonly List<FaceModel> FaceModels = new List<FaceModel>()
         {
             // Detector model
-            FaceModel.FaceDetector3B,
-            // Quality model
-            FaceModel.FaceEncodingQualityEstimator3A,
+            FaceModel.FaceDetector4B
         };
         // Encoder model
-        static readonly FaceModel FaceTemplateModels = FaceModel.FaceEncoder9A;
+        static readonly FaceModel FaceTemplateModels = FaceModel.FaceEncoder10B;
 
         PageDatabase pageDatabase;
 		PageSearch pageSearch;
@@ -55,7 +53,7 @@ namespace id3FaceSearchSampleWPF
             // Load model in background
             string modelPath = @"..\..\..\..\models";
 
-            FaceDatabase.Initialize(1000, FaceTemplateFormat.V9A);
+            FaceDatabase.Initialize(1000, FaceTemplateFormat.V10B);
 
             FaceTools.LoadingCompleted += FaceEngine_LoadingCompleted;
             FaceTools.Initialize(modelPath, FaceModels, FaceTemplateModels);

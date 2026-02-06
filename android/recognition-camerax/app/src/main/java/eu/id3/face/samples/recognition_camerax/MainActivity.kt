@@ -104,19 +104,12 @@ class MainActivity : AppCompatActivity() {
          * Please note that it is mandatory to set which model will be used in the FaceEncoder.
          */
         FaceLibrary.loadModelBuffer(
-            assets.open("models/face_encoder_v9b.id3nn").readBytes(),
-            FaceModel.FACE_ENCODER_9B, ProcessingUnit.CPU
+            assets.open("models/face_encoder_v10b.id3nn").readBytes(),
+            FaceModel.FACE_ENCODER_10B, ProcessingUnit.CPU
         )
 
-        /**
-         * To be able to retrieve template encoding quality it is mandatory to load the associated model
-         */
-        FaceLibrary.loadModelBuffer(
-            assets.open("models/face_encoding_quality_estimator_v3a.id3nn").readBytes(),
-            FaceModel.FACE_ENCODING_QUALITY_ESTIMATOR_3A, ProcessingUnit.CPU
-        )
         faceEncoder = FaceEncoder()
-        faceEncoder.model = FaceModel.FACE_ENCODER_9B
+        faceEncoder.model = FaceModel.FACE_ENCODER_10B
 
         /**
          * Face matcher module does not require any model
@@ -291,7 +284,7 @@ class MainActivity : AppCompatActivity() {
     private fun enrollClick() {
         synchronized(encoderLock) {
             enrolledTemplate = faceEncoder.createTemplate(lastDetectedImage, lastDetectedFace)
-            val quality = faceEncoder.computeQuality(lastDetectedImage, lastDetectedFace)
+            val quality = enrolledTemplate.getQuality()
 
             // Update enrollee display with a well cropped portrait view
             val portraitBounds = lastDetectedFace.getPortraitBounds(0.25f, 0.45f, 1.33f)

@@ -28,11 +28,10 @@ public class PortraitProcessorCLI {
          */
         System.out.println("Loading models... ");
         FaceLibrary.loadModel(modelPath, FaceModel.FACE_DETECTOR_4B, ProcessingUnit.CPU);
-        FaceLibrary.loadModel(modelPath, FaceModel.FACE_ENCODER_9B, ProcessingUnit.CPU);
+        FaceLibrary.loadModel(modelPath, FaceModel.FACE_ENCODER_10B, ProcessingUnit.CPU);
         FaceLibrary.loadModel(modelPath, FaceModel.FACE_LANDMARKS_ESTIMATOR_2A, ProcessingUnit.CPU);
         FaceLibrary.loadModel(modelPath, FaceModel.FACE_POSE_ESTIMATOR_1A, ProcessingUnit.CPU);
-        FaceLibrary.loadModel(modelPath, FaceModel.FACE_COLOR_BASED_PAD_3A, ProcessingUnit.CPU);
-        FaceLibrary.loadModel(modelPath, FaceModel.FACE_ENCODING_QUALITY_ESTIMATOR_3A, ProcessingUnit.CPU);
+        FaceLibrary.loadModel(modelPath, FaceModel.FACE_COLOR_BASED_PAD_4A, ProcessingUnit.CPU);
         FaceLibrary.loadModel(modelPath, FaceModel.FACE_AGE_ESTIMATOR_1A, ProcessingUnit.CPU);
         FaceLibrary.loadModel(modelPath, FaceModel.FACE_EXPRESSION_CLASSIFIER_1A, ProcessingUnit.CPU);
         FaceLibrary.loadModel(modelPath, FaceModel.FACE_ATTRIBUTES_CLASSIFIER_2A, ProcessingUnit.CPU);
@@ -159,11 +158,10 @@ public class PortraitProcessorCLI {
          * Unload models
          */
         FaceLibrary.unloadModel(FaceModel.FACE_DETECTOR_4B, ProcessingUnit.CPU);
-        FaceLibrary.unloadModel(FaceModel.FACE_ENCODER_9B, ProcessingUnit.CPU);
+        FaceLibrary.unloadModel(FaceModel.FACE_ENCODER_10B, ProcessingUnit.CPU);
         FaceLibrary.unloadModel(FaceModel.FACE_LANDMARKS_ESTIMATOR_2A, ProcessingUnit.CPU);
         FaceLibrary.unloadModel(FaceModel.FACE_POSE_ESTIMATOR_1A, ProcessingUnit.CPU);
-        FaceLibrary.unloadModel(FaceModel.FACE_COLOR_BASED_PAD_3A, ProcessingUnit.CPU);
-        FaceLibrary.unloadModel(FaceModel.FACE_ENCODING_QUALITY_ESTIMATOR_3A, ProcessingUnit.CPU);
+        FaceLibrary.unloadModel(FaceModel.FACE_COLOR_BASED_PAD_4A, ProcessingUnit.CPU);
         FaceLibrary.unloadModel(FaceModel.FACE_AGE_ESTIMATOR_1A, ProcessingUnit.CPU);
         FaceLibrary.unloadModel(FaceModel.FACE_EXPRESSION_CLASSIFIER_1A, ProcessingUnit.CPU);
         FaceLibrary.unloadModel(FaceModel.FACE_ATTRIBUTES_CLASSIFIER_2A, ProcessingUnit.CPU);

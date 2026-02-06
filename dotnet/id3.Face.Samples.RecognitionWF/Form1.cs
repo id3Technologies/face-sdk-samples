@@ -99,7 +99,7 @@ namespace id3.Face.Samples.RecognitionWF
                 * Once a model is loaded in the desired processing unit (CPU or GPU) several instances of the associated processor can be created.
                 */
                 FaceLibrary.LoadModel(modelPath, FaceModel.FaceDetector4B, ProcessingUnit.Cpu);
-                FaceLibrary.LoadModel(modelPath, FaceModel.FaceEncoder9B, ProcessingUnit.Cpu);
+                FaceLibrary.LoadModel(modelPath, FaceModel.FaceEncoder10B, ProcessingUnit.Cpu);
                 FaceLibrary.LoadModel(modelPath, FaceModel.FacePoseEstimator1A, ProcessingUnit.Cpu);
 
                 /*
@@ -116,7 +116,7 @@ namespace id3.Face.Samples.RecognitionWF
                 };
                 faceEncoder = new FaceEncoder()
                 {
-                    Model = FaceModel.FaceEncoder9B,
+                    Model = FaceModel.FaceEncoder10B,
                     ProcessingUnit = ProcessingUnit.Cpu,
                     ThreadCount = 4
                 };
@@ -303,7 +303,7 @@ namespace id3.Face.Samples.RecognitionWF
             Rectangle portraitBounds = detectedFace.GetPortraitBounds(0.25f, 0.45f, 1.33f);
             Image enrolleePortrait = image.ExtractRoi(portraitBounds);
 
-            using (MemoryStream memStream = new MemoryStream(enrolleePortrait.ToBuffer(ImageFormat.Jpeg, 0)))
+            using (MemoryStream memStream = new MemoryStream(enrolleePortrait.ToBuffer(ImageFormat.Jpeg, 100)))
             {
                 pictureBox.Image = System.Drawing.Image.FromStream(memStream);
             }

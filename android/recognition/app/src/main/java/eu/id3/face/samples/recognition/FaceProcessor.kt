@@ -40,8 +40,8 @@ class FaceProcessor(context: Context) {
              * First load the models from the Assets and then initialize the FaceEncoder object.
              */
             FaceLibrary.loadModelBuffer(
-                context.assets.open("models/face_encoder_v9b.id3nn").readBytes(),
-                FaceModel.FACE_ENCODER_9B, ProcessingUnit.CPU
+                context.assets.open("models/face_encoder_v10b.id3nn").readBytes(),
+                FaceModel.FACE_ENCODER_10B, ProcessingUnit.CPU
             )
             FaceLibrary.loadModelBuffer(
                 context.assets.open("models/face_pose_estimator_v1a.id3nn").readBytes(),
@@ -60,7 +60,7 @@ class FaceProcessor(context: Context) {
                 FaceModel.FACE_LANDMARKS_ESTIMATOR_2A, ProcessingUnit.CPU
             )
             faceEncoder = FaceEncoder()
-            faceEncoder.model = FaceModel.FACE_ENCODER_9B
+            faceEncoder.model = FaceModel.FACE_ENCODER_10B
             faceEncoder.threadCount = Parameters.encoderThreadCount
 
             processor = PortraitProcessor()
@@ -102,22 +102,28 @@ class FaceProcessor(context: Context) {
         detectedFace: DetectedFace
     ): EnrollLargestFaceResult {
         /** Create template of the detected face. */
-        enrolledTemplate = faceEncoder.createTemplate(image, detectedFace)
+        try {
+            enrolledTemplate = faceEncoder.createTemplate(image, detectedFace)
 
-        /** Compute template quality to make sure it will good enough for face recognition. */
-        val quality = computeQuality(image)
+            /** Compute template quality to make sure it will good enough for face recognition. */
+            val quality = computeQuality(image)
 
-        /** Extracts the portrait image of the detected face to display it. */
-        val portraitBounds = detectedFace.getPortraitBounds(0.25f, 0.45f, 1.33f)
-        val portraitImage = image.extractRoi(portraitBounds)
-        if (Parameters.cameraType == CameraCharacteristics.LENS_FACING_FRONT) {
-            portraitImage.flip(true, false)
+            /** Extracts the portrait image of the detected face to display it. */
+            val portraitBounds = detectedFace.getPortraitBounds(0.25f, 0.45f, 1.33f)
+            val portraitImage = image.extractRoi(portraitBounds)
+            if (Parameters.cameraType == CameraCharacteristics.LENS_FACING_FRONT) {
+                portraitImage.flip(true, false)
+            }
+
+            /** Compress the portrait image buffer as a JPEG buffer. */
+            val jpegPortraitImageBuffer = portraitImage.toBuffer(ImageFormat.JPEG, 75.0f)
+
+            return EnrollLargestFaceResult(jpegPortraitImageBuffer, quality)
+        } catch (e: FaceException) {
+            // handle exception
         }
 
-        /** Compress the portrait image buffer as a JPEG buffer. */
-        val jpegPortraitImageBuffer = portraitImage.toBuffer(ImageFormat.JPEG, 75.0f)
-
-        return EnrollLargestFaceResult(jpegPortraitImageBuffer, quality)
+        return EnrollLargestFaceResult(ByteArray(0), 0)
     }
 
     class VerifyLargestFaceResult(private var quality: Int, private var score: Int) {
@@ -135,16 +141,23 @@ class FaceProcessor(context: Context) {
         detectedFace: DetectedFace
     ): VerifyLargestFaceResult {
         /** Create template of the detected face. */
-        val probeTemplate = faceEncoder.createTemplate(image, detectedFace)
+        try {
+            val probeTemplate = faceEncoder.createTemplate(image, detectedFace)
 
-        /** Compute template quality to make sure it will good enough for face recognition. */
-        val quality = computeQuality(image)
+            /** Compute template quality to make sure it will good enough for face recognition. */
+            val quality = computeQuality(image)
 
-        /** Initialize a face matcher and compare probe template to the previously enrolled one. */
-        val faceMatcher = FaceMatcher()
-        val score = faceMatcher.compareTemplates(probeTemplate, enrolledTemplate!!)
+            /** Initialize a face matcher and compare probe template to the previously enrolled one. */
+            val faceMatcher = FaceMatcher()
+            val score = faceMatcher.compareTemplates(probeTemplate, enrolledTemplate!!)
 
-        return VerifyLargestFaceResult(quality, score)
+            return VerifyLargestFaceResult(quality, score)
+        } catch (e: FaceException) {
+            // handle exception
+        }
+
+        // fallback
+        return VerifyLargestFaceResult(0,0)
     }
 
     fun computeQuality(image: eu.id3.face.Image) : Int {

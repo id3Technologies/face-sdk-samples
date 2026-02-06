@@ -1,5 +1,7 @@
 ﻿using id3.Face;
+using System;
 using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Data;
 
 namespace id3FaceSearchSampleWPF
@@ -19,13 +21,20 @@ namespace id3FaceSearchSampleWPF
             ReferenceDataList = new ObservableCollection<FaceDatabaseItem>();
             BindingOperations.EnableCollectionSynchronization(ReferenceDataList, ReferenceListLock);
 
-            FaceIndexer = FaceIndexer.Create(maximumTemplateCount, format);
+            try
+            {
+                FaceIndexer = FaceIndexer.Create(maximumTemplateCount, format);
+            }
+            catch (FaceException ex)
+            {
+                MessageBox.Show(string.Format("FaceIndexer.Create FaceException: {0}", ex.Message));
+            }
         }
 
-        public static void Add(string key, FaceTemplate faceTemplateItem)
+        public static void Add(int key, FaceTemplate faceTemplateItem)
         {
             ReferenceTemplateList.Add(key, faceTemplateItem);
-            FaceIndexer.AddTemplate(faceTemplateItem, key);
+            FaceIndexer.Add(faceTemplateItem, new Guid(key, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0).ToByteArray());
         }
 
         public static int Count
@@ -41,9 +50,9 @@ namespace id3FaceSearchSampleWPF
             }
         }
 
-        public static FaceCandidateList SearchTemplate(FaceTemplate probe, int maxCandidates)
+        public static FaceCandidateIndexerList SearchTemplate(FaceTemplate probe, int maxCandidates)
         {
-            return FaceIndexer.SearchTemplate(probe, maxCandidates);
+            return FaceIndexer.Search(probe, maxCandidates);
         }
     }
 }

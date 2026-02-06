@@ -60,8 +60,8 @@ class FaceProcessor(context: Context) {
                 FaceModel.FACE_ATTRIBUTES_CLASSIFIER_2A, ProcessingUnit.CPU
             )
             FaceLibrary.loadModelBuffer(
-                context.assets.open("models/face_encoder_v9b.id3nn").readBytes(),
-                FaceModel.FACE_ENCODER_9B, ProcessingUnit.CPU
+                context.assets.open("models/face_encoder_v10b.id3nn").readBytes(),
+                FaceModel.FACE_ENCODER_10B, ProcessingUnit.CPU
             )
             FaceLibrary.loadModelBuffer(
                 context.assets.open("models/face_landmarks_estimator_v2a.id3nn").readBytes(),

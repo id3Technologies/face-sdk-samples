@@ -49,8 +49,8 @@ class FaceProcessor(context: Context) {
              * First load the models from the Assets and then initialize the PortraitProcessor object.
              */
             FaceLibrary.loadModelBuffer(
-                context.assets.open("models/face_encoder_v9b.id3nn").readBytes(),
-                FaceModel.FACE_ENCODER_9B, ProcessingUnit.CPU
+                context.assets.open("models/face_encoder_v10b.id3nn").readBytes(),
+                FaceModel.FACE_ENCODER_10B, ProcessingUnit.CPU
             )
             FaceLibrary.loadModelBuffer(
                 context.assets.open("models/face_landmarks_estimator_v2a.id3nn").readBytes(),
@@ -62,7 +62,7 @@ class FaceProcessor(context: Context) {
             )
             FaceLibrary.loadModelBuffer(
                 context.assets.open("models/face_color_pad_v3a.id3nn").readBytes(),
-                FaceModel.FACE_COLOR_BASED_PAD_3A, ProcessingUnit.CPU
+                FaceModel.FACE_COLOR_BASED_PAD_4A, ProcessingUnit.CPU
             )
             processor = PortraitProcessor()
             portraitCreated = false

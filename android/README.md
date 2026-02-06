@@ -36,17 +36,16 @@ The following models are required per project:
   * face_attributes_classifier_v2a.id3nn
   * face_background_uniformity_estimator_v1a.id3nn
   * face_detector_v4b.id3nn
-  * face_encoder_v9b.id3nn
+  * face_encoder_v10b.id3nn
   * face_landmarks_estimator_v2a.id3nn
   * face_occlusion_detector_v2a.id3nn
   * face_pose_estimator_v1a.id3nn
 * PAD
   * face_attack_support_detector_v2a.id3nn
   * face_blurriness_detector_v1a.id3nn
-  * face_color_pad_v2a.id3nn
-  * face_color_pad_v3a.id3nn
+  * face_color_pad_v4a.id3nn
   * face_detector_v4b.id3nn
-  * face_encoder_v9b.id3nn
+  * face_encoder_v10b.id3nn
   * face_landmarks_estimator_v2a.id3nn
   * face_pose_estimator_v1a.id3nn
 * PortraitProcessor
@@ -54,7 +53,7 @@ The following models are required per project:
   * face_attributes_classifier_v2a.id3nn
   * face_background_uniformity_estimator_v1a.id3nn
   * face_detector_v4b.id3nn
-  * face_encoder_v9b.id3nn
+  * face_encoder_v10b.id3nn
   * face_expression_classifier_v1a.id3nn
   * face_landmarks_estimator_v2a.id3nn
   * face_occlusion_detector_v2a.id3nn
@@ -62,13 +61,13 @@ The following models are required per project:
 * Recognition
   * face_attributes_classifier_v2a.id3nn
   * face_detector_v4b.id3nn
-  * face_encoder_v9b.id3nn
+  * face_encoder_v10b.id3nn
   * face_landmarks_estimator_v2a.id3nn
   * face_occlusion_detector_v2a.id3nn
   * face_pose_estimator_v1a.id3nn
 * Tracking
   * face_detector_v4b.id3nn
-  * face_encoder_v9b.id3nn
+  * face_encoder_v10b.id3nn
 
 ## License
 

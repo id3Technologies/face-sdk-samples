@@ -43,21 +43,33 @@ int main(int argc, char **argv)
 	 */
 	std::cout << "Loading models" << std::endl;
 	err = id3FaceLibrary_LoadModel(models_dir.c_str(), id3FaceModel_FaceDetector4B, id3FaceProcessingUnit_Cpu);
-	err = id3FaceLibrary_LoadModel(models_dir.c_str(), id3FaceModel_FaceEncoder9B, id3FaceProcessingUnit_Cpu);
+	check(err, "id3FaceLibrary_LoadModel FaceDetector4B");
+	err = id3FaceLibrary_LoadModel(models_dir.c_str(), id3FaceModel_FaceEncoder10B, id3FaceProcessingUnit_Cpu);
+	check(err, "id3FaceLibrary_LoadModel FaceEncoder10B");
 	err = id3FaceLibrary_LoadModel(models_dir.c_str(), id3FaceModel_FaceLandmarksEstimator2A, id3FaceProcessingUnit_Cpu);
+    check(err, "id3FaceLibrary_LoadModel FaceLandmarksEstimator2A");
 	err = id3FaceLibrary_LoadModel(models_dir.c_str(), id3FaceModel_FacePoseEstimator1A, id3FaceProcessingUnit_Cpu);
-	err = id3FaceLibrary_LoadModel(models_dir.c_str(), id3FaceModel_FaceColorBasedPad3A, id3FaceProcessingUnit_Cpu);
-	err = id3FaceLibrary_LoadModel(models_dir.c_str(), id3FaceModel_FaceEncodingQualityEstimator3A, id3FaceProcessingUnit_Cpu);
+	check(err, "id3FaceLibrary_LoadModel FacePoseEstimator1A");
+	err = id3FaceLibrary_LoadModel(models_dir.c_str(), id3FaceModel_FaceColorBasedPad4A, id3FaceProcessingUnit_Cpu);
+	check(err, "id3FaceLibrary_LoadModel FaceColorBasedPad4A");
 	err = id3FaceLibrary_LoadModel(models_dir.c_str(), id3FaceModel_FaceAgeEstimator1A, id3FaceProcessingUnit_Cpu);
+	check(err, "id3FaceLibrary_LoadModel FaceAgeEstimator1A");
 	err = id3FaceLibrary_LoadModel(models_dir.c_str(), id3FaceModel_FaceExpressionClassifier1A, id3FaceProcessingUnit_Cpu);
+	check(err, "id3FaceLibrary_LoadModel FaceExpressionClassifier1A");
 	err = id3FaceLibrary_LoadModel(models_dir.c_str(), id3FaceModel_FaceAttributesClassifier2A, id3FaceProcessingUnit_Cpu);
+	check(err, "id3FaceLibrary_LoadModel FaceAttributesClassifier2A");
 	err = id3FaceLibrary_LoadModel(models_dir.c_str(), id3FaceModel_FaceOcclusionDetector2A, id3FaceProcessingUnit_Cpu);
+	check(err, "id3FaceLibrary_LoadModel FaceOcclusionDetector2A");
 	err = id3FaceLibrary_LoadModel(models_dir.c_str(), id3FaceModel_EyeGazeEstimator2A, id3FaceProcessingUnit_Cpu);
+	check(err, "id3FaceLibrary_LoadModel EyeGazeEstimator2A");
 	err = id3FaceLibrary_LoadModel(models_dir.c_str(), id3FaceModel_EyeOpennessDetector1A, id3FaceProcessingUnit_Cpu);
+	check(err, "id3FaceLibrary_LoadModel EyeOpennessDetector1A");
 	err = id3FaceLibrary_LoadModel(models_dir.c_str(), id3FaceModel_EyeRednessDetector1A, id3FaceProcessingUnit_Cpu);
+	check(err, "id3FaceLibrary_LoadModel EyeRednessDetector1A");
 	err = id3FaceLibrary_LoadModel(models_dir.c_str(), id3FaceModel_FaceMaskClassifier2A, id3FaceProcessingUnit_Cpu);
+	check(err, "id3FaceLibrary_LoadModel FaceMaskClassifier2A");
 	err = id3FaceLibrary_LoadModel(models_dir.c_str(), id3FaceModel_FaceBackgroundUniformity1A, id3FaceProcessingUnit_Cpu);
-	check(err, "id3FaceLibrary_LoadModel");
+	check(err, "id3FaceLibrary_LoadModel FaceBackgroundUniformity1A");
 	/**
 	 * Load picture from files.
 	 */
@@ -251,7 +263,6 @@ int main(int argc, char **argv)
 	err = id3FaceLibrary_UnloadModel(id3FaceModel_FaceLandmarksEstimator2A, id3FaceProcessingUnit_Cpu);
 	err = id3FaceLibrary_UnloadModel(id3FaceModel_FacePoseEstimator1A, id3FaceProcessingUnit_Cpu);
 	err = id3FaceLibrary_UnloadModel(id3FaceModel_FaceColorBasedPad3A, id3FaceProcessingUnit_Cpu);
-	err = id3FaceLibrary_UnloadModel(id3FaceModel_FaceEncodingQualityEstimator3A, id3FaceProcessingUnit_Cpu);
 	err = id3FaceLibrary_UnloadModel(id3FaceModel_FaceAgeEstimator1A, id3FaceProcessingUnit_Cpu);
 	err = id3FaceLibrary_UnloadModel(id3FaceModel_FaceExpressionClassifier1A, id3FaceProcessingUnit_Cpu);
 	err = id3FaceLibrary_UnloadModel(id3FaceModel_FaceAttributesClassifier2A, id3FaceProcessingUnit_Cpu);
