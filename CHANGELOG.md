@@ -1,5 +1,9 @@
 # id3 Face Toolkit Samples Changelog
 
+## Version 9.18.1.0 (2026-02-27)
+- Updated to id3 Face Toolkit 9.18.1
+- Added Android recognition-java-idbox sample for ELYCTIS ID-BOX.
+
 ## Version 9.17.0.0 (2026-02-04)
 - Updated to id3 Face Toolkit 9.17.0
 
