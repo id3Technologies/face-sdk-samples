@@ -1,5 +1,10 @@
 # id3 Face Toolkit Samples Changelog
 
+## Version 10.1.0.0 (2026-02-06)
+- Updated to id3 Face Toolkit 10.1.0
+- Fixed Android sample
+- Fixed Flutter version to 3.41.0
+
 ## Version 10.0.0.0 (2026-02-06)
 - Updated to id3 Face Toolkit 10.0.0
 
